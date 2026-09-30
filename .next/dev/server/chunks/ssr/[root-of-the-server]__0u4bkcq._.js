@@ -129,15 +129,15 @@ module.exports = mod;
 "use strict";
 
 __turbopack_context__.s([
-    "000b1f44d700e1d3ed8305113ef8268172bb041356",
+    "0032c2d205ddc8dee6e3d3b91ae7920db367ae997b",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$account$2d$auth$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["signOutAccount"],
-    "40681cf68fea5701f05f02e60029e71a09188c6fde",
+    "408359faeb6185a20beb9df88d203bf0b265d340ba",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$demo$2d$trading$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["placeDemoTrade"],
-    "40fff6697fd10626c35a440d5b392df1842a6e7727",
+    "40ccf9f346c3c29981f26d1ba3f13774492416b82c",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$demo$2d$trading$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["settleDemoTrade"],
-    "6028d8d6d13d41ce7df7792b7957f6cdcff726f7c6",
+    "60b58429cb8ef76d205e142ffa4d14c029ca80bb5d",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$account$2d$auth$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["signUpAccount"],
-    "607f61d45337cf11c6ff04448995ff9626108996c7",
+    "60f2f987098bb7a97f23747fd3dc8d2bdeeff17013",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$account$2d$auth$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["signInAccount"]
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f2e$next$2d$internal$2f$server$2f$app$2f$page$2f$actions$2e$js__$7b$__ACTIONS_MODULE0__$3d3e$__$225b$project$5d2f$app$2f$actions$2f$account$2d$auth$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29222c$__ACTIONS_MODULE1__$3d3e$__$225b$project$5d2f$app$2f$actions$2f$demo$2d$trading$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$2922$__$7d$__$5b$app$2d$rsc$5d$__$28$server__actions__loader$2c$__ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i('[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => "[project]/app/actions/account-auth.ts [app-rsc] (ecmascript)", ACTIONS_MODULE1 => "[project]/app/actions/demo-trading.ts [app-rsc] (ecmascript)" } [app-rsc] (server actions loader, ecmascript) <locals>');
@@ -159,7 +159,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$demo$2d$tr
 "[project]/app/actions/account-auth.ts [app-rsc] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-/* __next_internal_action_entry_do_not_use__ [{"000b1f44d700e1d3ed8305113ef8268172bb041356":{"name":"signOutAccount"},"6028d8d6d13d41ce7df7792b7957f6cdcff726f7c6":{"name":"signUpAccount"},"607f61d45337cf11c6ff04448995ff9626108996c7":{"name":"signInAccount"}},"app/actions/account-auth.ts",""] */ __turbopack_context__.s([
+/* __next_internal_action_entry_do_not_use__ [{"0032c2d205ddc8dee6e3d3b91ae7920db367ae997b":{"name":"signOutAccount"},"60b58429cb8ef76d205e142ffa4d14c029ca80bb5d":{"name":"signUpAccount"},"60f2f987098bb7a97f23747fd3dc8d2bdeeff17013":{"name":"signInAccount"}},"app/actions/account-auth.ts",""] */ __turbopack_context__.s([
     "signInAccount",
     ()=>signInAccount,
     "signOutAccount",
@@ -340,14 +340,14 @@ async function signOutAccount() {
     signInAccount,
     signOutAccount
 ]);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(signUpAccount, "6028d8d6d13d41ce7df7792b7957f6cdcff726f7c6", null);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(signInAccount, "607f61d45337cf11c6ff04448995ff9626108996c7", null);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(signOutAccount, "000b1f44d700e1d3ed8305113ef8268172bb041356", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(signUpAccount, "60b58429cb8ef76d205e142ffa4d14c029ca80bb5d", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(signInAccount, "60f2f987098bb7a97f23747fd3dc8d2bdeeff17013", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(signOutAccount, "0032c2d205ddc8dee6e3d3b91ae7920db367ae997b", null);
 }),
 "[project]/app/actions/demo-trading.ts [app-rsc] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-/* __next_internal_action_entry_do_not_use__ [{"40681cf68fea5701f05f02e60029e71a09188c6fde":{"name":"placeDemoTrade"},"40fff6697fd10626c35a440d5b392df1842a6e7727":{"name":"settleDemoTrade"}},"app/actions/demo-trading.ts",""] */ __turbopack_context__.s([
+/* __next_internal_action_entry_do_not_use__ [{"408359faeb6185a20beb9df88d203bf0b265d340ba":{"name":"placeDemoTrade"},"40ccf9f346c3c29981f26d1ba3f13774492416b82c":{"name":"settleDemoTrade"}},"app/actions/demo-trading.ts",""] */ __turbopack_context__.s([
     "placeDemoTrade",
     ()=>placeDemoTrade,
     "settleDemoTrade",
@@ -555,8 +555,8 @@ async function settleDemoTrade(tradeId) {
     placeDemoTrade,
     settleDemoTrade
 ]);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(placeDemoTrade, "40681cf68fea5701f05f02e60029e71a09188c6fde", null);
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(settleDemoTrade, "40fff6697fd10626c35a440d5b392df1842a6e7727", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(placeDemoTrade, "408359faeb6185a20beb9df88d203bf0b265d340ba", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(settleDemoTrade, "40ccf9f346c3c29981f26d1ba3f13774492416b82c", null);
 }),
 "[project]/lib/supabase/admin.ts [app-rsc] (ecmascript)", ((__turbopack_context__) => {
 "use strict";

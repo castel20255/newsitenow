@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Localize } from '@deriv-com/translations';
-import { prefetchAuthReferral } from '@/hooks/use-auth';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,17 +32,13 @@ function LoginPromptActions({
   onLogin,
   onSignUp,
 }: Pick<LoginPromptDialogProps, 'onLogin' | 'onSignUp'> & { onClose: () => void }) {
-  // One handoff per mount: Radix/vaul keep the closing CTAs clickable through
-  // animate-out, and a second activation would rebuild the PKCE verifier/state
-  // the first OAuth URL was minted with. The ref resets when the prompt
-  // reopens (the content unmounts on close), so a failed handoff is retryable
-  // by reopening — no module state, no listeners.
+  // Prevent double activation while the prompt is closing.
   const startedRef = useRef(false);
   const start = (action: () => Promise<void>) => {
     onClose();
     if (startedRef.current) return;
     startedRef.current = true;
-    action();
+    void action();
   };
 
   return (
@@ -59,10 +54,8 @@ function LoginPromptActions({
 }
 
 /**
- * Prompt shown when a logged-out user activates Buy (Trader's auth-prompt
- * parity): a centered dialog on desktop, a bottom sheet on mobile. Freely
- * dismissible; both actions hand off to the existing OAuth flows the header
- * buttons use.
+ * Prompt shown when a logged-out user activates Buy: a centered dialog on
+ * desktop, a bottom sheet on mobile. Both actions open the site's own auth form.
  */
 export function LoginPromptDialog({
   open,
@@ -72,14 +65,6 @@ export function LoginPromptDialog({
 }: LoginPromptDialogProps) {
   const isMobile = useIsMobile();
   const close = () => onOpenChange(false);
-
-  // Resolve affiliate attribution while the user reads the prompt: the Scaleo
-  // lookup is what made login()/signUp() await a network round-trip inside
-  // the CTA click, and prefetching it here restores Trader's synchronous
-  // click-path shape (its getAuthConfig has no network step at all).
-  useEffect(() => {
-    if (open) prefetchAuthReferral();
-  }, [open]);
 
   if (isMobile) {
     return (

@@ -1,4 +1,60 @@
 {
-  "node": {},
+  "node": {
+    "602566306f9a90b1be0c70f2465268475b017799a6": {
+      "workers": {
+        "app/page": {
+          "moduleId": 56482,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "exportedName": "signInAccount",
+      "filename": "app/actions/account-auth.ts"
+    },
+    "60519c82f236e677fb054963316255406a980bb5f5": {
+      "workers": {
+        "app/page": {
+          "moduleId": 56482,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "exportedName": "signUpAccount",
+      "filename": "app/actions/account-auth.ts"
+    },
+    "001e72c47d11cf1a56d3c9be520a6babba684f006e": {
+      "workers": {
+        "app/page": {
+          "moduleId": 56482,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "exportedName": "signOutAccount",
+      "filename": "app/actions/account-auth.ts"
+    },
+    "4098f8ae6fddaec5e0f844318712e4613fb966727c": {
+      "workers": {
+        "app/page": {
+          "moduleId": 56482,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "exportedName": "settleDemoTrade",
+      "filename": "app/actions/demo-trading.ts"
+    },
+    "405215f564f523ca5327ff158314fbd7e4a7bf28d9": {
+      "workers": {
+        "app/page": {
+          "moduleId": 56482,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "exportedName": "placeDemoTrade",
+      "filename": "app/actions/demo-trading.ts"
+    }
+  },
   "edge": {}
 }
