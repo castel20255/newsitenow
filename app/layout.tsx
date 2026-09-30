@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="h-full lg:h-auto" suppressHydrationWarning>
       <body
-        className={`${fontClass} ${ibmPlexSans.variable} bg-background flex min-h-dvh flex-col overflow-hidden max-lg:h-dvh max-lg:overflow-hidden lg:block lg:h-auto lg:min-h-screen lg:overflow-x-hidden lg:overflow-y-auto`}
+        className={`${fontClass} ${ibmPlexSans.variable} bg-background flex h-dvh min-h-0 flex-col overflow-hidden`}
       >
         <TemplateI18nProvider>
           <TemplateLayout>

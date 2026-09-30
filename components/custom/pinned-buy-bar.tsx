@@ -82,7 +82,7 @@ export function PinnedBuyBar({
             // Symmetric vertical padding: `pt-2` alone left the selection ring
             // flush against the button's bottom edge (8px above, 0 below), and
             // gave the deployed button no breathing room over the footer.
-            'mx-auto w-full max-w-md px-3 py-2',
+            'w-full px-3 py-2',
             editMode && 'pointer-events-none select-none'
           )}
         >

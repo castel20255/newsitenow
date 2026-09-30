@@ -95,7 +95,7 @@ export function SmartChartWrapper({
   barriers,
   contractsArray,
 }: SmartChartWrapperProps) {
-  const [chartType, setChartType] = useState<string | undefined>('line');
+  const [chartType, setChartType] = useState<string | undefined>('candles');
   const [granularity, setGranularity] = useState(defaultGranularity);
 
   // Defer SmartChart mounting until this wrapper is committed to the DOM.
@@ -156,7 +156,7 @@ export function SmartChartWrapper({
   );
 
   return (
-    <div className="relative h-full min-h-0 w-full overflow-clip rounded-md border border-border/50 dark:border-white/[0.08] bg-muted/30">
+    <div className="relative h-full min-h-0 w-full overflow-clip">
       {isReadyToMount && <SmartChart
         key={symbolKey}
         chartControlsWidgets={null}
@@ -164,6 +164,7 @@ export function SmartChartWrapper({
         chartStatusListener={() => {}}
         chartType={chartType}
         clearChart={false}
+        feedCall={{ activeSymbols: false, tradingTimes: false }}
         drawingToolFloatingMenuPosition={
           isMobile ? SMART_CHART_DRAWING_TOOL_POSITION.mobile : SMART_CHART_DRAWING_TOOL_POSITION.desktop
         }

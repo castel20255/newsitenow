@@ -5,8 +5,10 @@ import { Localize } from '@deriv-com/translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Footer, FooterBar } from '@/components/custom/footer';
 import { Header } from '@/components/custom/header';
-import { LoginPromptDialog } from '@/components/custom/login-prompt-dialog';
 import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
+import { useSiteAuth } from '@/components/custom/site-auth-provider';
+import { placeDemoTrade } from '@/app/actions/demo-trading';
+import { computeEndTimeEpoch } from '@/lib/duration-utils';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { SymbolSelector } from '@/components/custom/symbol-selector';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
@@ -15,6 +17,7 @@ import { useIsMobile } from '@/hooks/use-is-mobile';
 import { useContractMarkers } from '@/hooks/use-contract-markers';
 import { useCallback, useMemo, useState, type CSSProperties } from 'react';
 import { Ban } from 'lucide-react';
+import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
 import { ConfigurableTradeControls, ConfigurableBuyButton } from './configurable-trade-controls';
 import type { RiseFallAppConfig } from '../lib/app-config';
@@ -61,13 +64,12 @@ function FixedZone({
   );
 }
 import type {
-  AuthState,
-  DerivAccount,
   ActiveSymbol,
   ProposalInfo,
   BuyResult,
   DerivWS,
 } from '@deriv/core';
+import type { SiteAuthState, SiteTradingAccount } from '@/components/custom/site-auth-provider';
 import type { Direction, DurationSelectUnit, DurationOption } from '../lib/types';
 import type { UseSmartChartsApiReturn } from '@/hooks/use-smartcharts-api';
 import type { SmartChartChartData } from '@/hooks/use-smartchart-chart-data';
@@ -86,9 +88,9 @@ const noopAsyncAuth = async () => {};
 
 export interface RiseFallViewProps {
   // Auth
-  authState: AuthState;
-  accounts: DerivAccount[];
-  activeAccount: DerivAccount | null;
+  authState: SiteAuthState;
+  accounts: SiteTradingAccount[];
+  activeAccount: SiteTradingAccount | null;
   onLogin: () => Promise<void>;
   onSignUp: () => Promise<void>;
   onLogout: () => void;
@@ -252,7 +254,8 @@ export function RiseFallView({
   // regression.
   const inFlowFooter = !!appConfig && isMobile;
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
+  const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
   // would fail with a "Purchase Failed" toast. One gate covers every Buy
@@ -260,15 +263,75 @@ export function RiseFallView({
   // editor owns Buy clicks there, and its auth actions are already no-ops.
   const handleBuy = useCallback(async () => {
     if (editMode) return;
-    // Mid-OAuth (the ?code= callback) the header already shows a login in
-    // progress — don't stack a "please log in" prompt on top of it.
-    if (authState === 'authenticating') return;
     if (authState !== 'authenticated') {
-      setShowLoginPrompt(true);
+      openAuth('signup');
       return;
     }
-    await buyContract();
-  }, [editMode, authState, buyContract]);
+    if (activeAccount?.account_type !== 'demo' || activeAccount.status !== 'active') {
+      toast.error('Real-money trading is unavailable until an execution provider is connected.');
+      return;
+    }
+    const currentQuote = prices?.[prices.length - 1];
+    if (!proposal || !activeSymbol || !currentQuote || !Number.isFinite(currentQuote)) {
+      toast.error('Market pricing is not ready. Try again in a moment.');
+      return;
+    }
+
+    const expiryEpoch = proposal.dateExpiry ?? (
+      durationUnit === 'end-time' ? computeEndTimeEpoch(endDate, endTime) ?? undefined : undefined
+    );
+    const unitSeconds: Partial<Record<DurationSelectUnit, number>> = {
+      t: 1,
+      s: 1,
+      m: 60,
+      h: 3600,
+      d: 86400,
+    };
+    const durationSeconds = expiryEpoch
+      ? Math.ceil(expiryEpoch - Date.now() / 1000)
+      : Math.round(duration * (unitSeconds[durationUnit] ?? 1));
+    const contractType = allowEquals ? `${direction}E` as const : direction;
+
+    setIsPlacingDemoTrade(true);
+    try {
+      const result = await placeDemoTrade({
+        symbol: activeSymbol.underlying_symbol,
+        contractType,
+        stake: Number(stake),
+        duration: durationSeconds,
+        durationUnit: 's',
+        dateExpiry: expiryEpoch,
+      });
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success('Demo trade placed. Your balance and trade history are updating.');
+      await refreshSiteAuth();
+    } catch {
+      toast.error('Could not place the demo trade. Try again.');
+    } finally {
+      setIsPlacingDemoTrade(false);
+    }
+  }, [
+    editMode,
+    authState,
+    activeAccount,
+    openAuth,
+    prices,
+    proposal,
+    activeSymbol,
+    durationUnit,
+    endDate,
+    endTime,
+    duration,
+    allowEquals,
+    direction,
+    stake,
+    refreshSiteAuth,
+  ]);
+
+  const tradeIsPending = isBuying || isPlacingDemoTrade;
 
   // In edit mode, login/sign-up/account actions are inert (no OAuth navigation
   // out of the editor) — only the theme toggle stays interactive.
@@ -326,11 +389,11 @@ export function RiseFallView({
           )}
         </div>
       ) : (
-        <div className="relative max-lg:h-[45dvh] lg:h-[min(33.6rem,66vh)] lg:min-h-[384px]">
+        <div className="rf-chart-frame relative">
           <div className={`h-full ${editMode ? 'pointer-events-none select-none' : ''}`}>
             {chartData ? (
               <RiseFallChart
-                symbolKey="rise-fall-chart"
+                symbolKey={activeSymbol?.underlying_symbol ?? 'rise-fall-chart'}
                 symbol={activeSymbol?.underlying_symbol}
                 isConnectionOpened={isConnected}
                 isMobile={isMobile}
@@ -344,7 +407,7 @@ export function RiseFallView({
                 contractsArray={contractMarkers}
               />
             ) : (
-              <Skeleton className="h-full w-full rounded-md" />
+              <Skeleton className="h-full w-full" />
             )}
           </div>
 
@@ -423,7 +486,7 @@ export function RiseFallView({
         activeSymbol={activeSymbol}
         proposal={proposal}
         onBuy={handleBuy}
-        isBuying={isBuying}
+        isBuying={tradeIsPending}
         buyResult={buyResult}
         buyError={buyError}
         onClearBuyResult={clearBuyResult}
@@ -439,7 +502,7 @@ export function RiseFallView({
 
   return (
     <main
-      className={`flex flex-col max-lg:h-dvh lg:overflow-visible ${
+      className={`flex h-dvh min-h-0 w-full flex-col overflow-hidden ${
         editMode ? 'bg-muted/50' : 'bg-background'
       }`}
     >
@@ -465,18 +528,16 @@ export function RiseFallView({
           /* No-code mobile layout: a single, reorderable column of blocks. The
              chart + symbol dropdown is one block (chartSlot); controls follow
              the configured order. */
-          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-            <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-3 py-3">
-              {isLoading ? <Skeleton className="h-48 w-full rounded-xl" /> : renderConfigurable(true)}
-            </div>
+          <div className="w-full flex-1 min-h-0 overflow-y-auto overscroll-contain">
+            {isLoading ? <Skeleton className="h-[42dvh] w-full" /> : renderConfigurable(true)}
           </div>
         ) : chartHidden ? (
           /* No-code desktop, chart OFF: a single centered column (symbol picker
              + controls stacked) at the controls' width — no wide empty chart
              column, and the height grows to fit its content (no inner scroll). */
-          <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-4 py-4">
+          <div className="w-full flex-1 min-h-0 overflow-y-auto p-4">
             {isLoading ? (
-              <Skeleton className="h-96 w-full rounded-xl" />
+              <Skeleton className="h-full w-full" />
             ) : (
               renderConfigurable(true)
             )}
@@ -485,61 +546,57 @@ export function RiseFallView({
           /* No-code desktop, chart ON: 2-column (chart left, controls card
              right). The card grows to its content height (no fixed height /
              inner scrollbar) — desktop has the vertical space. */
-          <div className="flex w-full max-w-7xl mx-auto flex-col px-4 py-4 gap-3">
-            <div className="grid grid-cols-[1fr_400px] gap-4 items-start">
-              <div>{chartBlock}</div>
+          <div className="w-full flex-1 min-h-0 overflow-hidden">
+            <div className="rf-workspace-grid h-full min-h-0">
+              <div className="min-w-0 min-h-0">{chartBlock}</div>
               {isLoading ? (
-                <Skeleton className="h-[min(33.6rem,66vh)] min-h-[384px] w-full rounded-xl" />
+                <Skeleton className="h-full w-full" />
               ) : (
-                <Card>
-                  <CardContent className="pt-4">{renderConfigurable(false)}</CardContent>
-                </Card>
+                <div className="min-h-0 overflow-y-auto border-l border-border px-5 py-4">
+                  {renderConfigurable(false)}
+                </div>
               )}
             </div>
           </div>
         )
       ) : (
         /* Standard layout (unchanged): 2-column chart + controls card. */
-        <div className="flex w-full max-w-7xl mx-auto flex-col max-lg:px-0 max-lg:py-0 px-3 py-2 sm:px-4 sm:py-4 gap-2 sm:gap-3 max-lg:flex-1 max-lg:min-h-0 max-lg:overflow-hidden lg:flex-none lg:overflow-visible">
-          <div className="max-lg:flex max-lg:flex-col max-lg:flex-1 max-lg:min-h-0 lg:grid lg:grid-cols-[1fr_400px] lg:gap-4">
-            <div className="max-lg:shrink-0 flex flex-col gap-2 max-lg:px-3 max-lg:pb-2 pt-2 lg:py-0">
+        <div className="w-full flex-1 min-h-0 overflow-y-auto overscroll-contain lg:overflow-hidden">
+          <div className="rf-workspace-grid min-h-full lg:h-full lg:min-h-0">
+            <div className="min-w-0 min-h-0">
               {chartBlock}
             </div>
-            <div className="max-lg:flex-1 max-lg:min-h-0 max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:px-3 max-lg:border-t max-lg:border-border max-lg:pt-3 max-lg:pb-28 lg:pt-0 flex flex-col gap-3">
+            <div className="min-h-0 overflow-y-auto border-t border-border p-4 lg:border-l lg:border-t-0">
               {isLoading ? (
-                <Skeleton className="lg:h-[min(33.6rem,66vh)] lg:min-h-[384px] max-lg:h-48 w-full rounded-xl" />
+                <Skeleton className="h-full w-full" />
               ) : (
-                <Card className="lg:h-[min(33.6rem,66vh)] lg:min-h-[384px] lg:overflow-y-auto">
-                  <CardContent className="pt-4">
-                    <TradeControls
-                      direction={direction}
-                      onDirectionChange={setDirection}
-                      allowEquals={allowEquals}
-                      onAllowEqualsChange={setAllowEquals}
-                      isConnected={isConnected}
-                      stake={stake}
-                      onStakeChange={setStake}
-                      duration={duration}
-                      onDurationChange={setDuration}
-                      durationOptions={durationOptions}
-                      durationUnit={durationUnit}
-                      onDurationUnitChange={setDurationUnit}
-                      endDate={endDate}
-                      onEndDateChange={setEndDate}
-                      endTime={endTime}
-                      onEndTimeChange={setEndTime}
-                      ws={ws}
-                      activeSymbol={activeSymbol}
-                      proposal={proposal}
-                      onBuy={handleBuy}
-                      isBuying={isBuying}
-                      buyResult={buyResult}
-                      buyError={buyError}
-                      onClearBuyResult={clearBuyResult}
-                      isAuthenticated={authState === 'authenticated'}
-                    />
-                  </CardContent>
-                </Card>
+                <TradeControls
+                  direction={direction}
+                  onDirectionChange={setDirection}
+                  allowEquals={allowEquals}
+                  onAllowEqualsChange={setAllowEquals}
+                  isConnected={isConnected}
+                  stake={stake}
+                  onStakeChange={setStake}
+                  duration={duration}
+                  onDurationChange={setDuration}
+                  durationOptions={durationOptions}
+                  durationUnit={durationUnit}
+                  onDurationUnitChange={setDurationUnit}
+                  endDate={endDate}
+                  onEndDateChange={setEndDate}
+                  endTime={endTime}
+                  onEndTimeChange={setEndTime}
+                  ws={ws}
+                  activeSymbol={activeSymbol}
+                  proposal={proposal}
+                  onBuy={handleBuy}
+                  isBuying={tradeIsPending}
+                  buyResult={buyResult}
+                  buyError={buyError}
+                  onClearBuyResult={clearBuyResult}
+                  isAuthenticated={authState === 'authenticated'}
+                />
               )}
             </div>
           </div>
@@ -559,7 +616,7 @@ export function RiseFallView({
             isConnected={isConnected}
             proposal={proposal}
             onBuy={handleBuy}
-            isBuying={isBuying}
+            isBuying={tradeIsPending}
           />
         </PinnedBuyBar>
       ) : inFlowFooter ? (
@@ -571,17 +628,11 @@ export function RiseFallView({
       ) : (
         /* Fixed footer — desktop and the standard layout, which scroll the
            document rather than an inner column. */
-        <div className="fixed bottom-0 left-0 right-0 py-2 text-center bg-background/80 backdrop-blur-sm">
+        <div className="w-full shrink-0 border-t border-border py-2 text-center bg-background">
           <Footer />
         </div>
       )}
 
-      <LoginPromptDialog
-        open={showLoginPrompt}
-        onOpenChange={setShowLoginPrompt}
-        onLogin={editMode ? noopAsyncAuth : onLogin}
-        onSignUp={editMode ? noopAsyncAuth : onSignUp}
-      />
     </main>
   );
 }

@@ -11,6 +11,7 @@
     "prebuild": "node scripts/copy-smartcharts-assets.js"
   },
   "dependencies": {
+    "@deriv-com/smartcharts-champion": "1.10.8",
     "@deriv-com/translations": "^1.4.7",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -40,12 +41,15 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "crc-32": "^1.2.2",
     "date-fns": "^3.0.0",
     "i18next": "^26.3.6",
+    "libphonenumber-js": "^1.13.14",
     "lucide-react": "^0.400.0",
     "next": "16.3.5",
     "next-themes": "^0.2.1",
@@ -60,8 +64,7 @@
     "tailwindcss-animate": "^1.0.7",
     "undici": "7.29.0",
     "uuid": "11.1.1",
-    "vaul": "^1.1.1",
-    "@deriv-com/smartcharts-champion": "1.10.8"
+    "vaul": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

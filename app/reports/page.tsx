@@ -1,88 +1,151 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Link from 'next/link';
 import { Localize } from '@deriv-com/translations';
-import { useRiseFallTrading } from '../../hooks/use-rise-fall-trading';
-import { useDerivWSContext } from '@/components/custom/deriv-ws-provider';
-import { useLogoSrc } from '@/components/custom/logo-src-provider';
-import { useAppTranslations } from '@/components/custom/i18n-provider';
+import { Button } from '@/components/ui/button';
 import { Header } from '@/components/custom/header';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { Footer } from '@/components/custom/footer';
-import Link from 'next/link';
-import { PositionsTable } from '@/components/custom/positions-table';
+import { useLogoSrc } from '@/components/custom/logo-src-provider';
+import { useSiteAuth, type SitePaperTrade } from '@/components/custom/site-auth-provider';
+import { useDerivWSContext } from '@/components/custom/deriv-ws-provider';
+import { useDemoTradeSettlement } from '@/hooks/use-demo-trade-settlement';
 
-function getRiseFallContractLabels(
-  localize: (text: string, values?: Record<string, unknown>) => string
-): Record<string, string> {
-  return {
-    CALL: localize('Rise'),
-    PUT: localize('Fall'),
-    CALLE: localize('Rise (Equal)'),
-    PUTE: localize('Fall (Equal)'),
-  };
+type TradeFilter = 'all' | 'open' | 'settled';
+
+const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+function formatTradeDate(value: string) {
+  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
+}
+
+function TradeRow({ trade }: { trade: SitePaperTrade }) {
+  const stake = Number(trade.stake);
+  const payout = Number(trade.payout);
+  const profit = trade.status === 'open' ? null : payout - stake;
+  const contract = trade.contract_type === 'CALL' ? 'Rise'
+    : trade.contract_type === 'PUT' ? 'Fall'
+      : trade.contract_type === 'CALLE' ? 'Rise (Equal)' : 'Fall (Equal)';
+
+  return (
+    <tr className="border-t border-border">
+      <td className="px-4 py-3 font-medium">{contract}</td>
+      <td className="px-4 py-3">{trade.symbol}</td>
+      <td className="px-4 py-3 text-right tabular-nums">{money.format(stake)}</td>
+      <td className="px-4 py-3 text-right tabular-nums">{money.format(Number(trade.entry_quote))}</td>
+      <td className="px-4 py-3 text-right capitalize">{trade.status}</td>
+      <td className={`px-4 py-3 text-right tabular-nums ${profit === null ? 'text-muted-foreground' : profit >= 0 ? 'text-emerald-600' : 'text-destructive'}`}>
+        {profit === null ? '—' : money.format(profit)}
+      </td>
+      <td className="px-4 py-3 text-right text-muted-foreground">{formatTradeDate(trade.created_at)}</td>
+    </tr>
+  );
 }
 
 export default function ReportsPage() {
   const logoSrc = useLogoSrc();
-  const router = useRouter();
-  const { localize } = useAppTranslations();
-  const contractTypeLabels = getRiseFallContractLabels(localize);
-  const { ws, isConnected, isExhausted, auth } = useDerivWSContext();
-  const { authState, accounts, activeAccount, login, signUp, logout, switchAccount } = auth;
-  const trading = useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticated: !!auth.wsUrl, onAuthWSFailed: logout });
-
-  useEffect(() => {
-    if (authState === 'unauthenticated' || authState === 'error') {
-      router.replace('/');
-    }
-  }, [authState, router]);
-
-  if (authState !== 'authenticated') {
-    return (
-      <main className="flex flex-col bg-background items-center justify-center min-h-dvh">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </main>
-    );
-  }
-
+  const auth = useSiteAuth();
+  const { ws, isConnected } = useDerivWSContext();
+  useDemoTradeSettlement({
+    ws,
+    isConnected,
+    authState: auth.authState,
+    paperTrades: auth.paperTrades,
+    refresh: auth.refresh,
+  });
+  const [filter, setFilter] = useState<TradeFilter>('all');
+  const visibleTrades = auth.paperTrades.filter(trade =>
+    filter === 'all' || (filter === 'open' ? trade.status === 'open' : trade.status !== 'open')
+  );
+  const header = (
+    <Header
+      authState={auth.authState}
+      accounts={auth.accounts}
+      activeAccount={auth.activeAccount}
+      onLogin={async () => auth.openAuth('login')}
+      onSignUp={async () => auth.openAuth('signup')}
+      onLogout={() => { void auth.logout(); }}
+      onSwitchAccount={async accountId => auth.switchAccount(accountId)}
+      logoSrc={logoSrc}
+      actions={<ThemeToggle />}
+    />
+  );
 
   return (
-    <main className="flex flex-col bg-background max-lg:h-dvh max-lg:overflow-y-auto lg:min-h-dvh">
-      <Header
-        authState={authState}
-        accounts={accounts}
-        activeAccount={activeAccount}
-        onLogin={login}
-        onSignUp={signUp}
-        onLogout={logout}
-        onSwitchAccount={switchAccount}
-        logoSrc={logoSrc}
-        actions={<ThemeToggle />}
-      />
+    <main className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
+      {header}
+      <div className="w-full flex-1 min-h-0 overflow-y-auto px-4 py-4 pb-10 sm:px-6">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs text-muted-foreground">Demo account</p>
+            <h1 className="text-lg font-semibold">Paper trade history</h1>
+          </div>
+          <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
+            <Localize i18n_default_text="Back to trading" />
+          </Link>
+        </div>
 
-      <div className="flex-1 w-full max-w-7xl mx-auto px-3 py-4 sm:px-4 sm:py-6 pb-14">
-        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4">
-          <span className="text-base leading-none">←</span>
-          <span><Localize i18n_default_text="Back" /></span>
-        </Link>
-        <PositionsTable
-          openPositions={trading.openPositions.filter(p => Object.keys(contractTypeLabels).includes(p.contract_type))}
-          closedPositions={trading.closedPositions.filter(p => Object.keys(contractTypeLabels).includes(p.contract_type))}
-          onSell={trading.sellContract}
-          sellingId={trading.sellingId}
-          sellError={trading.sellError}
-          onClearSellError={trading.clearSellError}
-          contractTypeLabels={contractTypeLabels}
-          className="mt-0"
-        />
-      </div>
+        {auth.authState !== 'authenticated' ? (
+          <div className="border-y border-border py-10 text-center">
+            <p className="mb-4 text-sm text-muted-foreground">
+              {auth.authState === 'unconfigured'
+                ? 'Configure Supabase to view your private demo trade history.'
+                : auth.authState === 'loading'
+                  ? 'Loading account…'
+                  : 'Sign in to view your demo trade history.'}
+            </p>
+            {auth.authState === 'unauthenticated' && (
+              <Button onClick={() => auth.openAuth('login')}>Log in</Button>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="mb-4 flex items-center gap-1 border-b border-border" role="tablist" aria-label="Trade filter">
+              {(['all', 'open', 'settled'] as const).map(value => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={filter === value}
+                  onClick={() => setFilter(value)}
+                  className={`border-b-2 px-3 py-2 text-sm capitalize ${filter === value ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground'}`}
+                >
+                  {value}
+                </button>
+              ))}
+              <span className="ml-auto text-xs text-muted-foreground">{visibleTrades.length} trades</span>
+            </div>
 
-      {/* Fixed footer */}
-      <div className="fixed bottom-0 left-0 right-0 py-2 text-center bg-background/80 backdrop-blur-sm">
-        <Footer />
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[52rem] text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-muted-foreground">
+                    <th className="px-4 py-2 font-medium">Contract</th>
+                    <th className="px-4 py-2 font-medium">Market</th>
+                    <th className="px-4 py-2 text-right font-medium">Stake</th>
+                    <th className="px-4 py-2 text-right font-medium">Entry</th>
+                    <th className="px-4 py-2 text-right font-medium">Status</th>
+                    <th className="px-4 py-2 text-right font-medium">P&amp;L</th>
+                    <th className="px-4 py-2 text-right font-medium">Placed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visibleTrades.map(trade => <TradeRow key={trade.id} trade={trade} />)}
+                  {visibleTrades.length === 0 && (
+                    <tr className="border-t border-border">
+                      <td colSpan={7} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                        No paper trades to show.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </div>
+      <div className="shrink-0 border-t border-border py-2 text-center"><Footer /></div>
     </main>
   );
 }

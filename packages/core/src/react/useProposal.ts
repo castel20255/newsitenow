@@ -58,6 +58,7 @@ export function useProposal(
           askPrice: resp.proposal.ask_price,
           payout: resp.proposal.payout,
           longcode: resp.proposal.longcode,
+          dateExpiry: resp.proposal.date_expiry,
           minStake: parseFloat(resp.proposal.validation_params?.stake?.min ?? '0'),
           maxPayout: parseFloat(resp.proposal.validation_params?.payout?.max ?? '0'),
         });

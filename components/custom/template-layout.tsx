@@ -1,8 +1,9 @@
 import { Providers } from './providers';
 import { DerivWSProvider } from './deriv-ws-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { SiteAuthDialog } from './site-auth-dialog';
+import { SiteAuthProvider } from './site-auth-provider';
 import ViewportScaler from './ViewportScaler';
-import { EnvCheck } from './env-check';
 
 /**
  * Shared layout wrapper for all template apps.
@@ -28,11 +29,13 @@ import { EnvCheck } from './env-check';
 export function TemplateLayout({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
-      <DerivWSProvider>
-        <ViewportScaler>{children}</ViewportScaler>
-      </DerivWSProvider>
+      <SiteAuthProvider>
+        <DerivWSProvider>
+          <ViewportScaler>{children}</ViewportScaler>
+        </DerivWSProvider>
+        <SiteAuthDialog />
+      </SiteAuthProvider>
       <Toaster />
-      <EnvCheck />
     </Providers>
   );
 }

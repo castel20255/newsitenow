@@ -83,6 +83,7 @@ export interface ProposalInfo {
   askPrice: number;
   payout: number;
   longcode: string;
+  dateExpiry?: number;
   minStake: number;
   maxPayout: number;
 }

@@ -12,15 +12,15 @@ import { cn } from '@/lib/utils';
 import { LANGUAGE_LOCALES } from '@/lib/i18n';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { LanguageSwitcher } from '@/components/custom/language-switcher';
-import type { AuthState, DerivAccount } from '@deriv/core';
+import type { SiteAuthState, SiteTradingAccount } from './site-auth-provider';
 
 interface HeaderProps {
-  authState: AuthState;
-  accounts: DerivAccount[];
-  activeAccount: DerivAccount | null;
+  authState: SiteAuthState;
+  accounts: SiteTradingAccount[];
+  activeAccount: SiteTradingAccount | null;
   onLogin: () => Promise<void>;
   onLogout: () => void;
-  onSwitchAccount: (accountId: string) => Promise<void>;
+  onSwitchAccount: (accountId: string) => void | Promise<void>;
   /** When provided, a Sign up button is rendered to the right of the Log in button. */
   onSignUp?: () => Promise<void>;
   /** Logo source URL or data URL. When omitted, a placeholder badge is shown until
@@ -39,7 +39,7 @@ interface HeaderProps {
   actions?: React.ReactNode;
 }
 
-function formatBalance(balance: string, locale: string): string {
+function formatBalance(balance: string | number, locale: string): string {
   return Number(balance).toLocaleString(locale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -272,7 +272,7 @@ export function Header({
   const headerRef = useRef<HTMLElement>(null);
   const [menuTop, setMenuTop] = useState(0);
   const isAuthenticated = authState === 'authenticated';
-  const isAuthenticating = authState === 'authenticating';
+  const isAuthenticating = authState === 'loading';
 
   useLayoutEffect(() => {
     if (!mobileMenuOpen) return;
@@ -348,14 +348,14 @@ export function Header({
               <div className="space-y-1">
                 {accounts.map((account) => (
                   <button
-                    key={account.account_id}
+                    key={account.id}
                     onClick={() => {
-                      onSwitchAccount(account.account_id);
+                      onSwitchAccount(account.id);
                       setAccountSwitcherOpen(false);
                     }}
                     className={cn(
                       'w-full text-left rounded-lg px-3 py-2.5 transition-colors',
-                      account.account_id === activeAccount.account_id
+                      account.id === activeAccount.id
                         ? 'bg-muted'
                         : 'hover:bg-muted/50'
                     )}
@@ -364,6 +364,9 @@ export function Header({
                     <p className="text-base font-bold text-foreground">
                       {formatBalance(account.balance, numberLocale)} {account.currency}
                     </p>
+                    {account.status === 'provider_required' && (
+                      <p className="text-xs text-muted-foreground">Real trading is not available yet</p>
+                    )}
                   </button>
                 ))}
               </div>

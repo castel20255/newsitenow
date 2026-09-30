@@ -11,6 +11,8 @@ import { useSmartChartsApi } from '@/hooks/use-smartcharts-api';
 import { useSmartChartChartData } from '@/hooks/use-smartchart-chart-data';
 import { useRiseFallTrading } from '../hooks/use-rise-fall-trading';
 import { useDerivWSContext } from '@/components/custom/deriv-ws-provider';
+import { useSiteAuth } from '@/components/custom/site-auth-provider';
+import { useDemoTradeSettlement } from '@/hooks/use-demo-trade-settlement';
 import { useLogoSrc } from '@/components/custom/logo-src-provider';
 import { RiseFallView } from './rise-fall-view';
 import type { RiseFallAppConfig } from '../lib/app-config';
@@ -39,15 +41,21 @@ export function LiveRiseFall({
 }) {
   const providerLogo = useLogoSrc();
   const logoSrc = logoSrcOverride ?? providerLogo;
-  const { ws, isConnected, isExhausted, auth } = useDerivWSContext();
-  const { authState, accounts, activeAccount, login, signUp, logout, switchAccount } = auth;
+  const { ws, isConnected, isExhausted } = useDerivWSContext();
+  const siteAuth = useSiteAuth();
+  useDemoTradeSettlement({
+    ws,
+    isConnected,
+    authState: siteAuth.authState,
+    paperTrades: siteAuth.paperTrades,
+    refresh: siteAuth.refresh,
+  });
 
   const trading = useRiseFallTrading({
     ws,
     isConnected,
     isExhausted,
-    isAuthenticated: !!auth.wsUrl,
-    onAuthWSFailed: logout,
+    isAuthenticated: false,
   });
 
   const { chartData } = useSmartChartChartData(trading.ws, trading.isConnected, trading.symbols);
@@ -55,13 +63,13 @@ export function LiveRiseFall({
 
   return (
     <RiseFallView
-      authState={authState}
-      accounts={accounts}
-      activeAccount={activeAccount}
-      onLogin={login}
-      onSignUp={signUp}
-      onLogout={logout}
-      onSwitchAccount={switchAccount}
+      authState={siteAuth.authState}
+      accounts={siteAuth.accounts}
+      activeAccount={siteAuth.activeAccount}
+      onLogin={async () => siteAuth.openAuth('login')}
+      onSignUp={async () => siteAuth.openAuth('signup')}
+      onLogout={() => { void siteAuth.logout(); }}
+      onSwitchAccount={async accountId => siteAuth.switchAccount(accountId)}
       logoSrc={logoSrc}
       appName={appName}
       showAppName={showAppName}

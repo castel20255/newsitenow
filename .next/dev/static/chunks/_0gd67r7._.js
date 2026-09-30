@@ -1,0 +1,7869 @@
+(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push([typeof document === "object" ? document.currentScript : undefined,
+"[project]/app/page.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>RiseFallPage
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$live$2d$rise$2d$fall$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/live-rise-fall.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$app$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/app-config.ts [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+function RiseFallPage() {
+    _s();
+    const [config, setConfig] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(undefined);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "RiseFallPage.useEffect": ()=>{
+            let cancelled = false;
+            const base = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_BASE_PATH ?? '';
+            fetch(`${base}/app-config.json`).then({
+                "RiseFallPage.useEffect": (response)=>response.ok ? response.json() : null
+            }["RiseFallPage.useEffect"]).then({
+                "RiseFallPage.useEffect": (data)=>{
+                    if (!cancelled) setConfig(data ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$app$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeAppConfig"])(data) : null);
+                }
+            }["RiseFallPage.useEffect"]).catch({
+                "RiseFallPage.useEffect": ()=>{
+                    if (!cancelled) setConfig(null);
+                }
+            }["RiseFallPage.useEffect"]);
+            return ({
+                "RiseFallPage.useEffect": ()=>{
+                    cancelled = true;
+                }
+            })["RiseFallPage.useEffect"];
+        }
+    }["RiseFallPage.useEffect"], []);
+    if (config === undefined) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "min-h-dvh bg-background"
+    }, void 0, false, {
+        fileName: "[project]/app/page.tsx",
+        lineNumber: 32,
+        columnNumber: 36
+    }, this);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$live$2d$rise$2d$fall$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LiveRiseFall"], {
+        appConfig: config ?? undefined
+    }, void 0, false, {
+        fileName: "[project]/app/page.tsx",
+        lineNumber: 33,
+        columnNumber: 10
+    }, this);
+}
+_s(RiseFallPage, "0CZYlEQiEontFHQCAsAQurOdlIs=");
+_c = RiseFallPage;
+var _c;
+__turbopack_context__.k.register(_c, "RiseFallPage");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/configurable-trade-controls.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "ConfigurableBuyButton",
+    ()=>ConfigurableBuyButton,
+    "ConfigurableTradeControls",
+    ()=>ConfigurableTradeControls
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+/**
+ * Config-driven Rise/Fall trade controls.
+ *
+ * Renders the SAME functional controls as TradeControls, but the Rise/Fall,
+ * Duration and Stake controls each have 3 style variants, and the rows render
+ * in a configurable order. Fully functional (uses the real trading handlers).
+ * Theme colour comes from the app's --primary (existing branding pipeline), so
+ * `bg-primary` / `text-primary` pick it up automatically.
+ *
+ * Used by the editor (/edit), preview (/preview) and the deployed app when a
+ * RiseFallAppConfig is present. The original TradeControls is untouched.
+ */ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$grip$2d$vertical$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__GripVertical$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/grip-vertical.js [app-client] (ecmascript) <export default as GripVertical>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/trending-up.js [app-client] (ecmascript) <export default as TrendingUp>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/sonner/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/components/localize.js [app-client] (ecmascript) <export default as Localize>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$rearrange$2d$drag$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-rearrange-drag.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$checkbox$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/checkbox.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/input.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/label.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/select.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/switch.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/toggle-group.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$end$2d$time$2d$picker$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/end-time-picker.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+/** Human labels shown on each draggable block in rearrange mode. */ function getBlockLabels(localize) {
+    return {
+        chart: localize('Chart + symbol'),
+        riseFall: localize('Rise / Fall'),
+        allowEquals: localize('Allow equals'),
+        stake: localize('Stake'),
+        duration: localize('Duration'),
+        buy: localize('Buy button')
+    };
+}
+function ConfigurableBuyButton({ variant, isConnected, proposal, onBuy, isBuying }) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const disabled = !isConnected || !proposal || isBuying;
+    const payout = proposal ? proposal.payout.toFixed(2) : null;
+    const variants = {
+        // a — pill (default)
+        a: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                className: "w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground",
+                size: "lg",
+                disabled: disabled,
+                onClick: onBuy,
+                children: isBuying ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Purchasing..."
+                }, void 0, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 88,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "flex flex-col items-center leading-tight gap-0.5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Buy"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 91,
+                                columnNumber: 19
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 91,
+                            columnNumber: 13
+                        }, this),
+                        payout && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-xs font-normal opacity-90",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Payout {{payout}} USD",
+                                values: {
+                                    payout
+                                }
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 94,
+                                columnNumber: 17
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 93,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 90,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/configurable-trade-controls.tsx",
+                lineNumber: 81,
+                columnNumber: 7
+            }, this),
+        // Block — squared, bold, payout shown as a badge on the right.
+        b: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                className: "w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground text-base font-bold",
+                disabled: disabled,
+                onClick: onBuy,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "flex w-full items-center justify-between px-1",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            children: isBuying ? localize('Purchasing...') : localize('Buy')
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 109,
+                            columnNumber: 11
+                        }, this),
+                        payout && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium",
+                            children: [
+                                payout,
+                                " USD"
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 111,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 108,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/configurable-trade-controls.tsx",
+                lineNumber: 103,
+                columnNumber: 7
+            }, this),
+        // Gradient with an upward-trend icon + payout below.
+        c: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                className: "w-full h-14 rounded-xl bg-gradient-to-r from-primary to-primary/70 hover:opacity-90 text-primary-foreground shadow-lg shadow-primary/20",
+                disabled: disabled,
+                onClick: onBuy,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "flex flex-col items-center leading-tight gap-0.5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "flex items-center gap-1.5 font-semibold",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"], {
+                                    className: "h-4 w-4"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 127,
+                                    columnNumber: 13
+                                }, this),
+                                isBuying ? localize('Purchasing...') : localize('Buy')
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 126,
+                            columnNumber: 11
+                        }, this),
+                        payout && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-xs font-normal opacity-90",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Payout {{payout}} USD",
+                                values: {
+                                    payout
+                                }
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 132,
+                                columnNumber: 15
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 131,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 125,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/configurable-trade-controls.tsx",
+                lineNumber: 120,
+                columnNumber: 7
+            }, this)
+    };
+    return (variants[variant] ?? variants.a)();
+}
+_s(ConfigurableBuyButton, "GKlYp1n2D1rKJ1qyS3m4eCzxgIM=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = ConfigurableBuyButton;
+function ConfigurableTradeControls(props) {
+    _s1();
+    const { config, direction, onDirectionChange, allowEquals, onAllowEqualsChange, isConnected, stake, onStakeChange, duration, onDurationChange, durationOptions, durationUnit, onDurationUnitChange, endDate, onEndDateChange, endTime, onEndTimeChange, ws, activeSymbol, proposal, onBuy, isBuying, buyResult, buyError, onClearBuyResult, isAuthenticated, editMode, onSelect, selectedKey, rearrangeMode, onReorder, pinBuy, chartSlot } = props;
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const blockLabels = getBlockLabels(localize);
+    const rearrange = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$rearrange$2d$drag$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRearrangeDrag"])(config.order, {
+        "ConfigurableTradeControls.useRearrangeDrag[rearrange]": (next)=>onReorder?.(next)
+    }["ConfigurableTradeControls.useRearrangeDrag[rearrange]"]);
+    // Flash the draggable blocks once — the first time the layout is unlocked in
+    // this session — so the user notices the components can be dragged.
+    const [hasFlashed, setHasFlashed] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ConfigurableTradeControls.useEffect": ()=>{
+            if (!rearrangeMode || hasFlashed) return;
+            const timer = window.setTimeout({
+                "ConfigurableTradeControls.useEffect.timer": ()=>setHasFlashed(true)
+            }["ConfigurableTradeControls.useEffect.timer"], 2000);
+            return ({
+                "ConfigurableTradeControls.useEffect": ()=>window.clearTimeout(timer)
+            })["ConfigurableTradeControls.useEffect"];
+        }
+    }["ConfigurableTradeControls.useEffect"], [
+        rearrangeMode,
+        hasFlashed
+    ]);
+    // Scroll the selected control into view in edit mode, so opening a component's
+    // accordion always reveals it in the phone (lower rows aren't left off-screen).
+    const rowRefs = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])({});
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ConfigurableTradeControls.useEffect": ()=>{
+            if (!editMode || !selectedKey) return;
+            const el = rowRefs.current[selectedKey];
+            if (el) el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }["ConfigurableTradeControls.useEffect"], [
+        editMode,
+        selectedKey
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ConfigurableTradeControls.useEffect": ()=>{
+            if (buyError) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error(localize('Purchase Failed'), {
+                    description: buyError
+                });
+                onClearBuyResult();
+            }
+        }
+    }["ConfigurableTradeControls.useEffect"], [
+        buyError,
+        onClearBuyResult,
+        localize
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "ConfigurableTradeControls.useEffect": ()=>{
+            if (buyResult) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].success(localize('Contract Purchased'), {
+                    description: localize('Buy price: {{buy_price}} USD | Payout: {{payout}} USD | Balance: {{balance}} USD', {
+                        buy_price: buyResult.buyPrice.toFixed(2),
+                        payout: buyResult.payout.toFixed(2),
+                        balance: buyResult.balanceAfter.toFixed(2)
+                    })
+                });
+                onClearBuyResult();
+            }
+        }
+    }["ConfigurableTradeControls.useEffect"], [
+        buyResult,
+        onClearBuyResult,
+        localize
+    ]);
+    const activeOption = durationOptions.find((option)=>option.unit === durationUnit);
+    const endTimeOption = durationOptions.find((option)=>option.unit === 'end-time');
+    const { endTimeMinDate, endTimeMaxDate } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "ConfigurableTradeControls.useMemo": ()=>{
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return {
+                endTimeMinDate: today,
+                endTimeMaxDate: endTimeOption ? new Date(today.getTime() + endTimeOption.max * 86400000) : new Date(today.getTime() + 365 * 86400000)
+            };
+        }
+    }["ConfigurableTradeControls.useMemo"], [
+        endTimeOption
+    ]);
+    // ── Rise / Fall (3 styles) ──────────────────────────────────────────────
+    const renderRiseFall = ()=>{
+        const isRise = direction === 'CALL';
+        const isFall = direction === 'PUT';
+        const variants = {
+            // a — segmented toggle (default)
+            a: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroup"], {
+                    type: "single",
+                    value: direction,
+                    onValueChange: (value)=>{
+                        if (value === 'CALL' || value === 'PUT') onDirectionChange(value);
+                    },
+                    className: "w-full gap-0 rounded-full bg-muted p-1",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                            value: "CALL",
+                            className: "flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-emerald-600 data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Rise"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 307,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 306,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                            value: "PUT",
+                            className: "flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-rose-600 data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Fall"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 310,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 309,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 300,
+                    columnNumber: 9
+                }, this),
+            // Side-by-side solid buttons — the active direction is filled (Rise green,
+            // Fall red), the other stays muted.
+            b: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex gap-2",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                            size: "lg",
+                            variant: "secondary",
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex-1 rounded-xl font-semibold', isRise && 'bg-emerald-500 text-white hover:bg-emerald-600'),
+                            onClick: ()=>onDirectionChange('CALL'),
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Rise ↑"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 324,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 318,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                            size: "lg",
+                            variant: "secondary",
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex-1 rounded-xl font-semibold', isFall && 'bg-rose-500 text-white hover:bg-rose-600'),
+                            onClick: ()=>onDirectionChange('PUT'),
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Fall ↓"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 332,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 326,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 317,
+                    columnNumber: 9
+                }, this),
+            // Isolated chips — outline when unselected, filled colour when selected.
+            c: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex gap-3",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                            size: "lg",
+                            variant: "outline",
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex-1 rounded-full font-semibold', isRise && 'border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-600 hover:text-white'),
+                            onClick: ()=>onDirectionChange('CALL'),
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Rise ↑"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 348,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 339,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                            size: "lg",
+                            variant: "outline",
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex-1 rounded-full font-semibold', isFall && 'border-rose-500 bg-rose-500 text-white hover:bg-rose-600 hover:text-white'),
+                            onClick: ()=>onDirectionChange('PUT'),
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Fall ↓"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 359,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 350,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 338,
+                    columnNumber: 9
+                }, this)
+        };
+        return (variants[config.styles.riseFall] ?? variants.a)();
+    };
+    // ── Allow equals (3 styles) ─────────────────────────────────────────────
+    const renderAllowEquals = ()=>{
+        const variants = {
+            // a — switch (default)
+            a: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex items-center justify-between",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                            htmlFor: "allow-equals",
+                            className: "text-sm cursor-pointer",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Allow equals"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 374,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 373,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Switch"], {
+                            id: "allow-equals",
+                            checked: allowEquals,
+                            onCheckedChange: onAllowEqualsChange
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 376,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 372,
+                    columnNumber: 9
+                }, this),
+            // Checkbox + label
+            b: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex items-center gap-2.5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$checkbox$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Checkbox"], {
+                            id: "allow-equals",
+                            checked: allowEquals,
+                            onCheckedChange: (checked)=>onAllowEqualsChange(checked === true)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 382,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                            htmlFor: "allow-equals",
+                            className: "text-sm cursor-pointer",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Allow equals"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 388,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 387,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 381,
+                    columnNumber: 9
+                }, this),
+            // Segmented Off / On
+            c: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex items-center justify-between gap-3",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                            className: "text-sm",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Allow equals"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 396,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 395,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroup"], {
+                            type: "single",
+                            value: allowEquals ? 'on' : 'off',
+                            onValueChange: (val)=>{
+                                if (val) onAllowEqualsChange(val === 'on');
+                            },
+                            className: "gap-0 rounded-full bg-muted p-1",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                                    value: "off",
+                                    className: "rounded-full px-4 text-xs text-muted-foreground data-[state=on]:bg-background data-[state=on]:font-semibold data-[state=on]:shadow-sm",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                        i18n_default_text: "Off"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                                        lineNumber: 405,
+                                        columnNumber: 15
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 404,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                                    value: "on",
+                                    className: "rounded-full px-4 text-xs text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-primary data-[state=on]:font-semibold data-[state=on]:shadow-sm",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                        i18n_default_text: "On"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                                        lineNumber: 408,
+                                        columnNumber: 15
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 407,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 398,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 394,
+                    columnNumber: 9
+                }, this)
+        };
+        return (variants[config.styles.allowEquals] ?? variants.a)();
+    };
+    // ── Stake (3 styles) ────────────────────────────────────────────────────
+    const renderStake = ()=>{
+        const setStakeNum = (amount)=>onStakeChange(String(Math.max(0, amount)));
+        const current = parseFloat(stake) || 0;
+        const variants = {
+            // a — plain input (original)
+            a: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "space-y-1.5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                            htmlFor: "stake",
+                            className: "text-xs text-muted-foreground",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Stake"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 426,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 425,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                            id: "stake",
+                            type: "number",
+                            value: stake,
+                            onChange: (event)=>onStakeChange(event.target.value),
+                            onKeyDown: (event)=>{
+                                if ([
+                                    'e',
+                                    'E',
+                                    '+',
+                                    '-'
+                                ].includes(event.key)) event.preventDefault();
+                            },
+                            min: 0,
+                            step: "0.01",
+                            labelRight: "USD"
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 428,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 424,
+                    columnNumber: 9
+                }, this),
+            // input with −/+ steppers
+            b: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "space-y-1.5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                            className: "text-xs text-muted-foreground",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Stake"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 444,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 443,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex items-center gap-2",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                    variant: "outline",
+                                    size: "icon",
+                                    onClick: ()=>setStakeNum(current - 1),
+                                    children: "−"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 447,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                    type: "number",
+                                    value: stake,
+                                    onChange: (event)=>onStakeChange(event.target.value),
+                                    min: 0,
+                                    step: "0.01",
+                                    labelRight: "USD",
+                                    className: "text-center"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 448,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                    variant: "outline",
+                                    size: "icon",
+                                    onClick: ()=>setStakeNum(current + 1),
+                                    children: "+"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 449,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 446,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 442,
+                    columnNumber: 9
+                }, this),
+            // preset chips + input
+            c: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "space-y-1.5",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                            className: "text-xs text-muted-foreground",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Stake"
+                            }, void 0, false, {
+                                fileName: "[project]/components/configurable-trade-controls.tsx",
+                                lineNumber: 457,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 456,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex gap-2",
+                            children: [
+                                '5',
+                                '10',
+                                '25',
+                                '50'
+                            ].map((preset)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                    variant: stake === preset ? 'default' : 'outline',
+                                    size: "sm",
+                                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex-1', stake === preset && 'bg-primary text-primary-foreground'),
+                                    onClick: ()=>onStakeChange(preset),
+                                    children: preset
+                                }, preset, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 461,
+                                    columnNumber: 15
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 459,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                            type: "number",
+                            value: stake,
+                            onChange: (event)=>onStakeChange(event.target.value),
+                            min: 0,
+                            step: "0.01",
+                            labelRight: "USD"
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 466,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 455,
+                    columnNumber: 9
+                }, this)
+        };
+        return (variants[config.styles.stake] ?? variants.a)();
+    };
+    // ── Duration (3 styles) ─────────────────────────────────────────────────
+    const renderDurationValue = (variant)=>{
+        if (durationUnit === 'end-time') {
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$end$2d$time$2d$picker$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["EndTimePicker"], {
+                ws: ws,
+                isConnected: isConnected,
+                activeSymbol: activeSymbol,
+                endDate: endDate,
+                onEndDateChange: onEndDateChange,
+                endTime: endTime,
+                onEndTimeChange: onEndTimeChange,
+                minDate: endTimeMinDate,
+                maxDate: endTimeMaxDate
+            }, void 0, false, {
+                fileName: "[project]/components/configurable-trade-controls.tsx",
+                lineNumber: 477,
+                columnNumber: 9
+            }, this);
+        }
+        if (variant === 'b') {
+            // stepper
+            const clamp = (amount)=>Math.min(activeOption?.max ?? amount, Math.max(activeOption?.min ?? 1, amount));
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-between rounded-lg border border-border p-1",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                        variant: "ghost",
+                        size: "icon",
+                        onClick: ()=>onDurationChange(clamp(duration - 1)),
+                        children: "−"
+                    }, void 0, false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 495,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "font-semibold",
+                        children: duration
+                    }, void 0, false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 496,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                        variant: "ghost",
+                        size: "icon",
+                        onClick: ()=>onDurationChange(clamp(duration + 1)),
+                        children: "+"
+                    }, void 0, false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 497,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/configurable-trade-controls.tsx",
+                lineNumber: 494,
+                columnNumber: 9
+            }, this);
+        }
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+            type: "number",
+            value: duration,
+            onChange: (event)=>{
+                const val = parseInt(event.target.value, 10);
+                if (!isNaN(val)) onDurationChange(val);
+            },
+            min: activeOption?.min,
+            max: activeOption?.max,
+            step: 1
+        }, void 0, false, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 502,
+            columnNumber: 7
+        }, this);
+    };
+    const renderDuration = ()=>{
+        const variant = config.styles.duration;
+        const unitControl = variant === 'c' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroup"], {
+            type: "single",
+            value: durationUnit,
+            onValueChange: (value)=>{
+                const opt = durationOptions.find((option)=>option.unit === value);
+                if (opt) onDurationUnitChange(opt.unit);
+            },
+            className: "w-full gap-1 rounded-lg bg-muted p-1",
+            children: durationOptions.map((opt)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                    value: opt.unit,
+                    className: "flex-1 rounded-md text-xs data-[state=on]:bg-background data-[state=on]:text-primary data-[state=on]:font-semibold",
+                    children: opt.label
+                }, opt.unit, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 526,
+                    columnNumber: 13
+                }, this))
+        }, void 0, false, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 516,
+            columnNumber: 9
+        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
+            value: durationUnit,
+            onValueChange: (value)=>{
+                const opt = durationOptions.find((option)=>option.unit === value);
+                if (opt) onDurationUnitChange(opt.unit);
+            },
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 539,
+                        columnNumber: 26
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 539,
+                    columnNumber: 11
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
+                    children: durationOptions.map((opt)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
+                            value: opt.unit,
+                            children: opt.label
+                        }, opt.unit, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 542,
+                            columnNumber: 15
+                        }, this))
+                }, void 0, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 540,
+                    columnNumber: 11
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 532,
+            columnNumber: 9
+        }, this);
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "space-y-1.5",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                    className: "text-xs text-muted-foreground",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                        i18n_default_text: "Duration"
+                    }, void 0, false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 550,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 549,
+                    columnNumber: 9
+                }, this),
+                unitControl,
+                renderDurationValue(variant)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 548,
+            columnNumber: 7
+        }, this);
+    };
+    // ── Buy (3 styles, themed) ──────────────────────────────────────────────
+    const renderBuy = ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ConfigurableBuyButton, {
+            variant: config.styles.buy,
+            isConnected: isConnected,
+            proposal: proposal,
+            onBuy: onBuy,
+            isBuying: isBuying
+        }, void 0, false, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 560,
+            columnNumber: 5
+        }, this);
+    const renderers = {
+        riseFall: renderRiseFall,
+        allowEquals: renderAllowEquals,
+        stake: renderStake,
+        duration: renderDuration,
+        buy: renderBuy
+    };
+    if (editMode && rearrangeMode) {
+        // Rearrange mode: every block (incl. the chart + symbol, which move as one)
+        // is draggable to reorder the layout directly in the phone. Inner content is
+        // `inert` AND pointer-events-none — the two are not the same thing, which is
+        // what this comment used to conflate. pointer-events-none keeps a drag from
+        // triggering a control; it leaves the real Buy <button> in the tab order with
+        // Enter/Space live, and /edit trades on a real account. `inert` goes on the
+        // content INSIDE each block, never on the block itself — the block has to stay
+        // draggable.
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "w-full space-y-2",
+            children: config.order.map((key)=>{
+                const isChart = key === 'chart';
+                // Desktop layout: the chart lives in its own fixed left column (no
+                // chartSlot here), so it isn't a reorderable block — skip it.
+                if (isChart && !chartSlot) return null;
+                if (key === 'buy' && pinBuy) return null;
+                const dragging = rearrange.draggingKey === key;
+                const over = rearrange.overKey === key;
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    ...rearrange.getItemProps(key),
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('group relative cursor-grab rounded-xl border-2 border-dashed bg-card/40 transition-all active:cursor-grabbing', !hasFlashed && 'nocode-drag-hint', 'border-border', // Hover affordance (only when not mid-drag) — tint border + fill.
+                    !rearrange.isDragging && 'hover:border-primary/60 hover:bg-primary/5 hover:shadow-sm', // Drop target while dragging — stronger colour fill.
+                    over && 'border-primary bg-primary/10 ring-2 ring-primary/40', dragging && 'opacity-40'),
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('absolute left-2 top-2 z-[70] flex items-center gap-1 rounded-md bg-background/90 px-1.5 py-1 text-[11px] font-medium text-muted-foreground shadow-sm ring-1 ring-border transition-colors', !rearrange.isDragging && 'group-hover:text-primary group-hover:ring-primary/40', over && 'text-primary ring-primary/40'),
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$grip$2d$vertical$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__GripVertical$3e$__["GripVertical"], {
+                                    className: "h-3.5 w-3.5"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                                    lineNumber: 619,
+                                    columnNumber: 17
+                                }, this),
+                                blockLabels[key]
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 612,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "absolute inset-0 z-[60]"
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 624,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            inert: editMode || undefined,
+                            className: "pointer-events-none select-none px-2 pb-2 pt-9",
+                            children: isChart ? chartSlot : renderers[key]()
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 625,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, key, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 597,
+                    columnNumber: 13
+                }, this);
+            })
+        }, void 0, false, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 587,
+            columnNumber: 7
+        }, this);
+    }
+    if (editMode) {
+        // Each block is selectable: clicking opens its accordion in the dashboard.
+        // The chart block manages its own selection, so it's placed as-is.
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "w-full space-y-3",
+            children: config.order.map((key)=>{
+                if (key === 'buy' && pinBuy) return null;
+                if (key === 'chart') {
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        ref: (el)=>{
+                            rowRefs.current.chart = el;
+                        },
+                        className: "overflow-hidden rounded-xl border border-border bg-background shadow-sm",
+                        children: chartSlot
+                    }, "chart", false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 647,
+                        columnNumber: 15
+                    }, this);
+                }
+                const selected = selectedKey === key;
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                    type: "button",
+                    ref: (el)=>{
+                        rowRefs.current[key] = el;
+                    },
+                    onClick: ()=>onSelect?.(key),
+                    className: [
+                        'group relative block w-full rounded-xl border-2 bg-background p-3 text-left shadow-sm transition-colors',
+                        selected ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/60'
+                    ].join(' '),
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: [
+                                'pointer-events-none absolute inset-0 z-10 rounded-xl bg-primary/10 transition-opacity',
+                                selected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                            ].join(' ')
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 672,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            inert: editMode || undefined,
+                            className: "pointer-events-none",
+                            children: renderers[key]()
+                        }, void 0, false, {
+                            fileName: "[project]/components/configurable-trade-controls.tsx",
+                            lineNumber: 685,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, key, true, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 660,
+                    columnNumber: 13
+                }, this);
+            })
+        }, void 0, false, {
+            fileName: "[project]/components/configurable-trade-controls.tsx",
+            lineNumber: 642,
+            columnNumber: 7
+        }, this);
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "w-full space-y-3 lg:space-y-4",
+        children: [
+            config.order.map((key)=>{
+                // Chart only renders where a chartSlot is provided (the no-code mobile
+                // column). On desktop the chart lives in its own column, so it's omitted
+                // here to avoid rendering a second chart.
+                if (key === 'chart') return chartSlot ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    children: chartSlot
+                }, "chart", false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 701,
+                    columnNumber: 49
+                }, this) : null;
+                if (key === 'buy' && pinBuy) return null;
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    children: renderers[key]()
+                }, key, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 703,
+                    columnNumber: 16
+                }, this);
+            }),
+            isAuthenticated && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                asChild: true,
+                variant: "ghost",
+                className: "w-full text-sm text-muted-foreground hover:text-foreground",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                    href: "/reports",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                        i18n_default_text: "View your positions →"
+                    }, void 0, false, {
+                        fileName: "[project]/components/configurable-trade-controls.tsx",
+                        lineNumber: 708,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/configurable-trade-controls.tsx",
+                    lineNumber: 707,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/configurable-trade-controls.tsx",
+                lineNumber: 706,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/configurable-trade-controls.tsx",
+        lineNumber: 696,
+        columnNumber: 5
+    }, this);
+}
+_s1(ConfigurableTradeControls, "Y932qmu2S0hH5TG0njE/6NccdNA=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$rearrange$2d$drag$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRearrangeDrag"]
+    ];
+});
+_c1 = ConfigurableTradeControls;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "ConfigurableBuyButton");
+__turbopack_context__.k.register(_c1, "ConfigurableTradeControls");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/end-time-picker.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "EndTimePicker",
+    ()=>EndTimePicker
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/date-fns/format.mjs [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CalendarIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/calendar.js [app-client] (ecmascript) <export default as CalendarIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$calendar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/calendar.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/input.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/label.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/popover.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/duration-utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/i18n.ts [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+function isSameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+function formatTimeGMT(timeStr, localize) {
+    const [hStr, mStr] = timeStr.split(':');
+    const h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
+    if (isNaN(h) || isNaN(m)) return timeStr;
+    const period = h < 12 ? localize('AM') : localize('PM');
+    const h12 = h % 12 || 12;
+    return `${h12}:${String(m).padStart(2, '0')} ${period} ${localize('GMT')}`;
+}
+function roundUpToNext5MinGMT() {
+    const now = new Date();
+    const totalMins = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const rounded = Math.min(Math.floor(totalMins / 5) * 5 + 5, 23 * 60 + 55);
+    return `${String(Math.floor(rounded / 60)).padStart(2, '0')}:${String(rounded % 60).padStart(2, '0')}`;
+}
+// Module-level cache: date string → symbol data map
+const tradingTimesCache = new Map();
+function formatDateKey(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+function EndTimePicker({ ws, isConnected, activeSymbol, endDate, onEndDateChange, endTime, onEndTimeChange, minDate, maxDate }) {
+    _s();
+    const { currentLang, localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const dateLocale = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DATE_FNS_LOCALES"][currentLang];
+    const [open, setOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [displayMonth, setDisplayMonth] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        "EndTimePicker.useState": ()=>new Date()
+    }["EndTimePicker.useState"]);
+    const [symbolData, setSymbolData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const fetchingRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(new Set());
+    const fetchTradingTimes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "EndTimePicker.useCallback[fetchTradingTimes]": async (date)=>{
+            if (!ws || !isConnected || !activeSymbol) return null;
+            const dateKey = formatDateKey(date);
+            const symbolKey = activeSymbol.underlying_symbol;
+            const cached = tradingTimesCache.get(dateKey);
+            if (cached) return cached.get(symbolKey) ?? null;
+            const fetchKey = `${dateKey}-${symbolKey}`;
+            if (fetchingRef.current.has(fetchKey)) return null;
+            fetchingRef.current.add(fetchKey);
+            try {
+                const response = await ws.send({
+                    trading_times: dateKey
+                });
+                fetchingRef.current.delete(fetchKey);
+                const symbolMap = new Map();
+                for (const market of response.trading_times?.markets ?? []){
+                    for (const submarket of market.submarkets ?? []){
+                        for (const sym of submarket.symbols ?? []){
+                            symbolMap.set(sym.underlying_symbol, sym);
+                        }
+                    }
+                }
+                tradingTimesCache.set(dateKey, symbolMap);
+                return symbolMap.get(symbolKey) ?? null;
+            } catch  {
+                fetchingRef.current.delete(fetchKey);
+                return null;
+            }
+        }
+    }["EndTimePicker.useCallback[fetchTradingTimes]"], [
+        ws,
+        isConnected,
+        activeSymbol
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "EndTimePicker.useEffect": ()=>{
+            if (!open) return;
+            let cancelled = false;
+            const firstOfMonth = new Date(displayMonth.getFullYear(), displayMonth.getMonth(), 1);
+            void fetchTradingTimes(firstOfMonth).then({
+                "EndTimePicker.useEffect": (data)=>{
+                    if (!cancelled && data) setSymbolData(data);
+                }
+            }["EndTimePicker.useEffect"]);
+            return ({
+                "EndTimePicker.useEffect": ()=>{
+                    cancelled = true;
+                }
+            })["EndTimePicker.useEffect"];
+        }
+    }["EndTimePicker.useEffect"], [
+        open,
+        displayMonth,
+        fetchTradingTimes
+    ]);
+    const handleDateSelect = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "EndTimePicker.useCallback[handleDateSelect]": (date)=>{
+            onEndDateChange(date);
+            if (!date || !activeSymbol) return;
+            if (isSameDay(date, new Date())) {
+                onEndTimeChange(roundUpToNext5MinGMT());
+                void fetchTradingTimes(date).then({
+                    "EndTimePicker.useCallback[handleDateSelect]": (data)=>{
+                        if (data) setSymbolData(data);
+                    }
+                }["EndTimePicker.useCallback[handleDateSelect]"]);
+            } else {
+                onEndTimeChange('');
+                void fetchTradingTimes(date).then({
+                    "EndTimePicker.useCallback[handleDateSelect]": (data)=>{
+                        if (!data) return;
+                        setSymbolData(data);
+                        const closeTime = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getCloseTimeForDate"])(data, date);
+                        if (closeTime) onEndTimeChange(closeTime);
+                    }
+                }["EndTimePicker.useCallback[handleDateSelect]"]);
+            }
+        }
+    }["EndTimePicker.useCallback[handleDateSelect]"], [
+        onEndDateChange,
+        fetchTradingTimes,
+        activeSymbol,
+        onEndTimeChange
+    ]);
+    const disabledWeekdays = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "EndTimePicker.useMemo[disabledWeekdays]": ()=>symbolData ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["parseTradingDays"])(symbolData.trading_days) : []
+    }["EndTimePicker.useMemo[disabledWeekdays]"], [
+        symbolData
+    ]);
+    const earlyCloseDates = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "EndTimePicker.useMemo[earlyCloseDates]": ()=>symbolData ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getEarlyCloseDates"])(symbolData.events, displayMonth) : []
+    }["EndTimePicker.useMemo[earlyCloseDates]"], [
+        symbolData,
+        displayMonth
+    ]);
+    const nowGMT = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "EndTimePicker.useMemo[nowGMT]": ()=>{
+            const now = new Date();
+            return `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}`;
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- endDate in deps intentionally refreshes when selection changes
+        }
+    }["EndTimePicker.useMemo[nowGMT]"], [
+        endDate
+    ]);
+    const isFutureDate = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "EndTimePicker.useMemo[isFutureDate]": ()=>endDate !== undefined && !isSameDay(endDate, new Date())
+    }["EndTimePicker.useMemo[isFutureDate]"], [
+        endDate
+    ]);
+    const isDisabled = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "EndTimePicker.useCallback[isDisabled]": (date)=>{
+            if (date < minDate || date > maxDate) return true;
+            if (disabledWeekdays.includes(date.getDay())) return true;
+            return false;
+        }
+    }["EndTimePicker.useCallback[isDisabled]"], [
+        minDate,
+        maxDate,
+        disabledWeekdays
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Popover"], {
+        open: open,
+        onOpenChange: setOpen,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverTrigger"], {
+                asChild: true,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                    variant: "outline",
+                    className: "w-full justify-start text-left font-normal",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CalendarIcon$3e$__["CalendarIcon"], {
+                            className: "mr-2 h-4 w-4"
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/end-time-picker.tsx",
+                            lineNumber: 198,
+                            columnNumber: 11
+                        }, this),
+                        endDate && endTime ? `${(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(endDate, 'MMM d, yyyy', {
+                            locale: dateLocale
+                        })} ${formatTimeGMT(endTime, localize)}` : endDate ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(endDate, 'MMM d, yyyy', {
+                            locale: dateLocale
+                        }) : localize('Select date & time')
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/custom/end-time-picker.tsx",
+                    lineNumber: 197,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/end-time-picker.tsx",
+                lineNumber: 196,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
+                className: "w-auto p-0",
+                align: "start",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$calendar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Calendar"], {
+                        locale: dateLocale,
+                        mode: "single",
+                        selected: endDate,
+                        onSelect: handleDateSelect,
+                        disabled: isDisabled,
+                        month: displayMonth,
+                        onMonthChange: setDisplayMonth,
+                        modifiers: {
+                            earlyClose: earlyCloseDates
+                        },
+                        modifiersClassNames: {
+                            earlyClose: 'after:content-[""] after:block after:mx-auto after:mt-0.5 after:h-1 after:w-1 after:rounded-full after:bg-orange-400'
+                        }
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/end-time-picker.tsx",
+                        lineNumber: 207,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "border-t border-border p-3 space-y-1.5",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                                htmlFor: "end-time",
+                                className: "text-xs text-muted-foreground",
+                                children: localize('Time')
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/end-time-picker.tsx",
+                                lineNumber: 222,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                id: "end-time",
+                                type: "time",
+                                value: endTime,
+                                onChange: (e)=>{
+                                    const newTime = e.target.value;
+                                    if (!isFutureDate && endDate && newTime < nowGMT) {
+                                        onEndTimeChange(roundUpToNext5MinGMT());
+                                    } else {
+                                        onEndTimeChange(newTime);
+                                    }
+                                },
+                                readOnly: isFutureDate,
+                                disabled: isFutureDate,
+                                className: isFutureDate ? 'bg-muted text-muted-foreground cursor-default' : ''
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/end-time-picker.tsx",
+                                lineNumber: 225,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/custom/end-time-picker.tsx",
+                        lineNumber: 221,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/custom/end-time-picker.tsx",
+                lineNumber: 206,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/end-time-picker.tsx",
+        lineNumber: 195,
+        columnNumber: 5
+    }, this);
+}
+_s(EndTimePicker, "t29zTvJ/8XQmX2HCZSVN3gOB1Hk=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = EndTimePicker;
+var _c;
+__turbopack_context__.k.register(_c, "EndTimePicker");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/footer.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Footer",
+    ()=>Footer,
+    "FooterBar",
+    ()=>FooterBar
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/components/localize.js [app-client] (ecmascript) <export default as Localize>");
+'use client';
+;
+;
+function Footer() {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
+        className: "w-full py-1 text-center",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+            className: "text-xs tracking-wide text-muted-foreground",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Powered by"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/footer.tsx",
+                    lineNumber: 9,
+                    columnNumber: 9
+                }, this),
+                ' ',
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                    className: "font-semibold text-foreground",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                        i18n_default_text: "Deriv"
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/footer.tsx",
+                        lineNumber: 11,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/footer.tsx",
+                    lineNumber: 10,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/custom/footer.tsx",
+            lineNumber: 8,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/components/custom/footer.tsx",
+        lineNumber: 7,
+        columnNumber: 5
+    }, this);
+}
+_c = Footer;
+function FooterBar({ children }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "shrink-0 border-t border-border bg-background",
+        children: [
+            children,
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "py-2 text-center",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Footer, {}, void 0, false, {
+                    fileName: "[project]/components/custom/footer.tsx",
+                    lineNumber: 42,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/footer.tsx",
+                lineNumber: 41,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/footer.tsx",
+        lineNumber: 39,
+        columnNumber: 5
+    }, this);
+}
+_c1 = FooterBar;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Footer");
+__turbopack_context__.k.register(_c1, "FooterBar");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/header.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Header",
+    ()=>Header
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-dialog/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$focus$2d$scope$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-focus-scope/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/log-out.js [app-client] (ecmascript) <export default as LogOut>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/menu.js [app-client] (ecmascript) <export default as Menu>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-client] (ecmascript) <export default as X>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$module$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-themes/dist/index.module.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/components/localize.js [app-client] (ecmascript) <export default as Localize>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/popover.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/i18n.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$language$2d$switcher$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/language-switcher.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+function formatBalance(balance, locale) {
+    return Number(balance).toLocaleString(locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+function AccountLabel({ type }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('text-sm font-medium whitespace-nowrap truncate', type === 'demo' ? 'text-orange-500' : 'text-emerald-600'),
+        children: type === 'demo' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+            i18n_default_text: "Demo account"
+        }, void 0, false, {
+            fileName: "[project]/components/custom/header.tsx",
+            lineNumber: 58,
+            columnNumber: 9
+        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+            i18n_default_text: "Real account"
+        }, void 0, false, {
+            fileName: "[project]/components/custom/header.tsx",
+            lineNumber: 60,
+            columnNumber: 9
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 51,
+        columnNumber: 5
+    }, this);
+}
+_c = AccountLabel;
+function resolveHeaderAppName(appName) {
+    const fromEnv = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_DERIV_APP_NAME?.trim();
+    return appName?.trim() || fromEnv || 'Deriv Trading';
+}
+function resolveShowAppName(showAppName) {
+    if (typeof showAppName === 'boolean') return showAppName;
+    return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_DERIV_SHOW_APP_NAME !== 'false';
+}
+function AuthButtons({ isAuthenticated, isAuthenticating, onLogin, onLogout, onSignUp }) {
+    if (isAuthenticated) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+            variant: "outline",
+            size: "sm",
+            className: "shrink-0",
+            onClick: onLogout,
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                i18n_default_text: "Log out"
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 92,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/components/custom/header.tsx",
+            lineNumber: 91,
+            columnNumber: 7
+        }, this);
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "flex items-center gap-2",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                variant: "outline",
+                size: "sm",
+                onClick: onLogin,
+                disabled: isAuthenticating,
+                children: isAuthenticating ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Logging in..."
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 101,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Log in"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 103,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 99,
+                columnNumber: 7
+            }, this),
+            onSignUp && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                size: "sm",
+                onClick: onSignUp,
+                disabled: isAuthenticating,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Sign up"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 108,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 107,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 98,
+        columnNumber: 5
+    }, this);
+}
+_c1 = AuthButtons;
+function preventDismissFromPopoverOrHeader(event) {
+    const node = event.detail?.originalEvent?.target ?? event.target;
+    if (node instanceof Element && node.closest('[data-radix-popper-content-wrapper], [data-radix-popover-content], header')) {
+        event.preventDefault();
+    }
+}
+const APPEARANCE_OPTIONS = [
+    'light',
+    'dark',
+    'system'
+];
+function AppearanceLabel({ value }) {
+    if (value === 'light') return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+        i18n_default_text: "Light"
+    }, void 0, false, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 132,
+        columnNumber: 33
+    }, this);
+    if (value === 'dark') return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+        i18n_default_text: "Dark"
+    }, void 0, false, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 133,
+        columnNumber: 32
+    }, this);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+        i18n_default_text: "System"
+    }, void 0, false, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 134,
+        columnNumber: 10
+    }, this);
+}
+_c2 = AppearanceLabel;
+function AppearancePicker() {
+    _s();
+    const { theme, setTheme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$module$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const [open, setOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const selected = theme === 'light' || theme === 'dark' ? theme : 'system';
+    const handleSelect = (value)=>{
+        setTheme(value);
+        setOpen(false);
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "space-y-3",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-sm font-semibold text-foreground",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Appearance"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 150,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 149,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Popover"], {
+                open: open,
+                onOpenChange: setOpen,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverTrigger"], {
+                        asChild: true,
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                            variant: "outline",
+                            size: "sm",
+                            className: "relative w-full h-11 font-semibold justify-start text-left gap-1.5 px-3",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "text-xs font-semibold tracking-wide",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AppearanceLabel, {
+                                        value: selected
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/custom/header.tsx",
+                                        lineNumber: 160,
+                                        columnNumber: 15
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/header.tsx",
+                                    lineNumber: 159,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('h-3.5 w-3.5 text-muted-foreground transition-transform absolute right-3', open && 'rotate-180'),
+                                    fill: "none",
+                                    viewBox: "0 0 24 24",
+                                    stroke: "currentColor",
+                                    strokeWidth: 2,
+                                    "aria-hidden": "true",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                        strokeLinecap: "round",
+                                        strokeLinejoin: "round",
+                                        d: "M19 9l-7 7-7-7"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/custom/header.tsx",
+                                        lineNumber: 173,
+                                        columnNumber: 15
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/header.tsx",
+                                    lineNumber: 162,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/custom/header.tsx",
+                            lineNumber: 154,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 153,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
+                        align: "end",
+                        className: "z-[100] w-[var(--radix-popover-trigger-width)] min-w-0 p-1",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                            className: "space-y-0.5",
+                            children: APPEARANCE_OPTIONS.map((option)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        onClick: ()=>handleSelect(option),
+                                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex w-full items-center rounded-md px-3 py-2 text-sm transition-colors', option === selected ? 'bg-muted font-medium' : 'hover:bg-muted/50'),
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AppearanceLabel, {
+                                            value: option
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/custom/header.tsx",
+                                            lineNumber: 193,
+                                            columnNumber: 19
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/custom/header.tsx",
+                                        lineNumber: 185,
+                                        columnNumber: 17
+                                    }, this)
+                                }, option, false, {
+                                    fileName: "[project]/components/custom/header.tsx",
+                                    lineNumber: 184,
+                                    columnNumber: 15
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/header.tsx",
+                            lineNumber: 182,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 178,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 152,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 148,
+        columnNumber: 5
+    }, this);
+}
+_s(AppearancePicker, "NSkGxIqsSjVLN/G+HkyyETkOHAU=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$module$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
+    ];
+});
+_c3 = AppearancePicker;
+function MobileAuthButtons({ isAuthenticated, isAuthenticating, onLogin, onLogout, onSignUp }) {
+    const className = 'w-full h-11 font-semibold';
+    if (isAuthenticated) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+            variant: "outline",
+            className: className,
+            onClick: onLogout,
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__["LogOut"], {
+                    className: "h-4 w-4 mr-2"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 222,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Log out"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 223,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/custom/header.tsx",
+            lineNumber: 221,
+            columnNumber: 7
+        }, this);
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                variant: "outline",
+                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(className, 'bg-transparent hover:bg-transparent'),
+                onClick: onLogin,
+                disabled: isAuthenticating,
+                children: isAuthenticating ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Logging in..."
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 237,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Log in"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 239,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 230,
+                columnNumber: 7
+            }, this),
+            onSignUp && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                className: className,
+                onClick: onSignUp,
+                disabled: isAuthenticating,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Sign up"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 244,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 243,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 229,
+        columnNumber: 5
+    }, this);
+}
+_c4 = MobileAuthButtons;
+function Header({ authState, accounts, activeAccount, onLogin, onLogout, onSwitchAccount, onSignUp, logoSrc, appName, showAppName, actions }) {
+    _s1();
+    const { currentLang, localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const numberLocale = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LANGUAGE_LOCALES"][currentLang];
+    const [logoError, setLogoError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const resolvedName = resolveHeaderAppName(appName);
+    const shouldShowName = resolveShowAppName(showAppName);
+    const logoLetter = resolvedName.charAt(0).toUpperCase() || 'D';
+    const [accountSwitcherOpen, setAccountSwitcherOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const headerRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const [menuTop, setMenuTop] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
+    const isAuthenticated = authState === 'authenticated';
+    const isAuthenticating = authState === 'authenticating';
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLayoutEffect"])({
+        "Header.useLayoutEffect": ()=>{
+            if (!mobileMenuOpen) return;
+            const el = headerRef.current;
+            const sync = {
+                "Header.useLayoutEffect.sync": ()=>{
+                    if (el) setMenuTop(el.getBoundingClientRect().bottom);
+                }
+            }["Header.useLayoutEffect.sync"];
+            sync();
+            window.addEventListener('resize', sync);
+            const mq = typeof window.matchMedia === 'function' ? window.matchMedia('(min-width: 1024px)') : null;
+            const closeIfLg = {
+                "Header.useLayoutEffect.closeIfLg": ()=>{
+                    if (mq?.matches) setMobileMenuOpen(false);
+                }
+            }["Header.useLayoutEffect.closeIfLg"];
+            mq?.addEventListener('change', closeIfLg);
+            return ({
+                "Header.useLayoutEffect": ()=>{
+                    window.removeEventListener('resize', sync);
+                    mq?.removeEventListener('change', closeIfLg);
+                }
+            })["Header.useLayoutEffect"];
+        }
+    }["Header.useLayoutEffect"], [
+        mobileMenuOpen
+    ]);
+    const headerBar = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
+        ref: headerRef,
+        className: "sticky top-0 z-50 flex items-center justify-between px-4 py-3 border-b bg-background/80 backdrop-blur-sm",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center gap-3 shrink-0",
+                children: [
+                    !logoSrc || logoError ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-sm",
+                        children: logoLetter
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 300,
+                        columnNumber: 11
+                    }, this) : // eslint-disable-next-line @next/next/no-img-element -- next/image is avoided here intentionally: it errors in the optimizer when /logo.png is absent locally; a plain img with onError gives the same silent fallback behaviour
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                        src: logoSrc,
+                        alt: localize('App Logo'),
+                        className: "h-8 w-auto object-contain",
+                        onError: ()=>setLogoError(true)
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 305,
+                        columnNumber: 11
+                    }, this),
+                    shouldShowName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: "text-lg font-semibold text-foreground hidden sm:block",
+                        children: resolvedName
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 313,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 298,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex min-w-0 items-center gap-3",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "hidden lg:flex items-center gap-3 shrink-0",
+                        children: [
+                            actions,
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$language$2d$switcher$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LanguageSwitcher"], {}, void 0, false, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 321,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 319,
+                        columnNumber: 9
+                    }, this),
+                    isAuthenticated && activeAccount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Popover"], {
+                        open: accountSwitcherOpen,
+                        onOpenChange: setAccountSwitcherOpen,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverTrigger"], {
+                                asChild: true,
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "flex min-w-0 items-center gap-2 rounded-lg border border-border px-3 hover:bg-muted/50 transition-colors",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "min-w-0 text-left",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AccountLabel, {
+                                                    type: activeAccount.account_type
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 328,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-base font-bold text-foreground whitespace-nowrap truncate",
+                                                    children: [
+                                                        formatBalance(activeAccount.balance, numberLocale),
+                                                        " ",
+                                                        activeAccount.currency
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 329,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/components/custom/header.tsx",
+                                            lineNumber: 327,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('w-4 h-4 text-muted-foreground transition-transform', accountSwitcherOpen && 'rotate-180'),
+                                            fill: "none",
+                                            viewBox: "0 0 24 24",
+                                            stroke: "currentColor",
+                                            strokeWidth: 2,
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                strokeLinecap: "round",
+                                                strokeLinejoin: "round",
+                                                d: "M19 9l-7 7-7-7"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/custom/header.tsx",
+                                                lineNumber: 343,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/custom/header.tsx",
+                                            lineNumber: 333,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/components/custom/header.tsx",
+                                    lineNumber: 326,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 325,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
+                                align: "end",
+                                className: "z-[100] w-64 p-2",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-1",
+                                    children: accounts.map((account)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>{
+                                                onSwitchAccount(account.account_id);
+                                                setAccountSwitcherOpen(false);
+                                            },
+                                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('w-full text-left rounded-lg px-3 py-2.5 transition-colors', account.account_id === activeAccount.account_id ? 'bg-muted' : 'hover:bg-muted/50'),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AccountLabel, {
+                                                    type: account.account_type
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 363,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-base font-bold text-foreground",
+                                                    children: [
+                                                        formatBalance(account.balance, numberLocale),
+                                                        " ",
+                                                        account.currency
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 364,
+                                                    columnNumber: 21
+                                                }, this)
+                                            ]
+                                        }, account.account_id, true, {
+                                            fileName: "[project]/components/custom/header.tsx",
+                                            lineNumber: 350,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/header.tsx",
+                                    lineNumber: 348,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 347,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 324,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "hidden lg:flex items-center gap-3 shrink-0",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AuthButtons, {
+                            isAuthenticated: isAuthenticated,
+                            isAuthenticating: isAuthenticating,
+                            onLogin: onLogin,
+                            onLogout: onLogout,
+                            onSignUp: onSignUp
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/header.tsx",
+                            lineNumber: 374,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 373,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Trigger"], {
+                        asChild: true,
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                            variant: "ghost",
+                            size: "icon",
+                            className: "lg:hidden shrink-0",
+                            "aria-label": localize('Your preferences'),
+                            children: mobileMenuOpen ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 389,
+                                columnNumber: 31
+                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__["Menu"], {
+                                className: "h-5 w-5"
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 389,
+                                columnNumber: 59
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/header.tsx",
+                            lineNumber: 383,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 382,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 318,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 297,
+        columnNumber: 7
+    }, this);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
+        modal: false,
+        open: mobileMenuOpen,
+        onOpenChange: setMobileMenuOpen,
+        children: [
+            headerBar,
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Portal"], {
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$focus$2d$scope$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FocusScope"], {
+                    loop: true,
+                    trapped: mobileMenuOpen,
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"], {
+                        "aria-modal": "true",
+                        className: "fixed inset-x-0 bottom-0 z-[100] flex flex-col bg-background lg:hidden outline-none",
+                        style: {
+                            top: menuTop
+                        },
+                        onPointerDownOutside: preventDismissFromPopoverOrHeader,
+                        onInteractOutside: preventDismissFromPopoverOrHeader,
+                        onFocusOutside: preventDismissFromPopoverOrHeader,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex-1 overflow-y-auto px-6 pt-4 space-y-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-2 text-left",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Title"], {
+                                                className: "text-lg font-semibold leading-none tracking-tight",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                                    i18n_default_text: "Your preferences"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 416,
+                                                    columnNumber: 15
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/custom/header.tsx",
+                                                lineNumber: 415,
+                                                columnNumber: 13
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Description"], {
+                                                className: "text-sm text-muted-foreground",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                                    i18n_default_text: "A space that feels like you."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 419,
+                                                    columnNumber: 15
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/custom/header.tsx",
+                                                lineNumber: 418,
+                                                columnNumber: 13
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/custom/header.tsx",
+                                        lineNumber: 414,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AppearancePicker, {}, void 0, false, {
+                                        fileName: "[project]/components/custom/header.tsx",
+                                        lineNumber: 422,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "space-y-3",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-sm font-semibold text-foreground",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                                    i18n_default_text: "Language"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/custom/header.tsx",
+                                                    lineNumber: 425,
+                                                    columnNumber: 15
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/custom/header.tsx",
+                                                lineNumber: 424,
+                                                columnNumber: 13
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$language$2d$switcher$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LanguageSwitcher"], {
+                                                className: "w-full h-11 font-semibold"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/custom/header.tsx",
+                                                lineNumber: 427,
+                                                columnNumber: 13
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/components/custom/header.tsx",
+                                        lineNumber: 423,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 413,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "mt-auto px-6 pb-8 pt-4 flex flex-col gap-3 border-t border-border",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(MobileAuthButtons, {
+                                    isAuthenticated: isAuthenticated,
+                                    isAuthenticating: isAuthenticating,
+                                    onLogin: onLogin,
+                                    onLogout: ()=>{
+                                        setMobileMenuOpen(false);
+                                        onLogout();
+                                    },
+                                    onSignUp: onSignUp
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/header.tsx",
+                                    lineNumber: 431,
+                                    columnNumber: 11
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/header.tsx",
+                                lineNumber: 430,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/custom/header.tsx",
+                        lineNumber: 405,
+                        columnNumber: 7
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/header.tsx",
+                    lineNumber: 404,
+                    columnNumber: 7
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/header.tsx",
+                lineNumber: 403,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/header.tsx",
+        lineNumber: 397,
+        columnNumber: 5
+    }, this);
+}
+_s1(Header, "hA8pt5QVzIjTAa1+nf3qM39PioY=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c5 = Header;
+var _c, _c1, _c2, _c3, _c4, _c5;
+__turbopack_context__.k.register(_c, "AccountLabel");
+__turbopack_context__.k.register(_c1, "AuthButtons");
+__turbopack_context__.k.register(_c2, "AppearanceLabel");
+__turbopack_context__.k.register(_c3, "AppearancePicker");
+__turbopack_context__.k.register(_c4, "MobileAuthButtons");
+__turbopack_context__.k.register(_c5, "Header");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/language-switcher.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "LanguageSwitcher",
+    ()=>LanguageSwitcher
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/popover.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/i18n.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+function LanguageSwitcher({ className }) {
+    _s();
+    const { currentLang, switchLanguage } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const [open, setOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const isFullWidth = /\bw-full\b/.test(className ?? '') && /\bh-11\b/.test(className ?? '');
+    const handleSelect = (lang)=>{
+        switchLanguage(lang);
+        setOpen(false);
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Popover"], {
+        open: open,
+        onOpenChange: setOpen,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverTrigger"], {
+                asChild: true,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                    variant: "outline",
+                    size: "sm",
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(isFullWidth ? 'relative justify-start text-left gap-1.5 px-3' : 'min-w-[4.5rem] justify-between gap-1.5 px-2.5', className),
+                    "aria-label": __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LANGUAGE_LABELS"][currentLang],
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "text-xs font-semibold tracking-wide",
+                            children: currentLang
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/language-switcher.tsx",
+                            lineNumber: 39,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('h-3.5 w-3.5 text-muted-foreground transition-transform', isFullWidth && 'absolute right-3', open && 'rotate-180'),
+                            fill: "none",
+                            viewBox: "0 0 24 24",
+                            stroke: "currentColor",
+                            strokeWidth: 2,
+                            "aria-hidden": "true",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                strokeLinecap: "round",
+                                strokeLinejoin: "round",
+                                d: "M19 9l-7 7-7-7"
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/language-switcher.tsx",
+                                lineNumber: 54,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/language-switcher.tsx",
+                            lineNumber: 42,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/custom/language-switcher.tsx",
+                    lineNumber: 28,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/language-switcher.tsx",
+                lineNumber: 27,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
+                align: "end",
+                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('z-[100] p-1', isFullWidth ? 'w-[var(--radix-popover-trigger-width)] min-w-0' : 'w-44'),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                    className: "space-y-0.5",
+                    children: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SUPPORTED_LANGUAGES"].map((lang)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                type: "button",
+                                onClick: ()=>handleSelect(lang),
+                                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors', lang === currentLang ? 'bg-muted font-medium' : 'hover:bg-muted/50'),
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LANGUAGE_LABELS"][lang]
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/custom/language-switcher.tsx",
+                                        lineNumber: 77,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "text-xs text-muted-foreground",
+                                        children: lang
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/custom/language-switcher.tsx",
+                                        lineNumber: 78,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/components/custom/language-switcher.tsx",
+                                lineNumber: 69,
+                                columnNumber: 15
+                            }, this)
+                        }, lang, false, {
+                            fileName: "[project]/components/custom/language-switcher.tsx",
+                            lineNumber: 68,
+                            columnNumber: 13
+                        }, this))
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/language-switcher.tsx",
+                    lineNumber: 66,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/language-switcher.tsx",
+                lineNumber: 59,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/language-switcher.tsx",
+        lineNumber: 26,
+        columnNumber: 5
+    }, this);
+}
+_s(LanguageSwitcher, "E51Wx9mr7X7Q3OaWcYUXqEoXXSg=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = LanguageSwitcher;
+var _c;
+__turbopack_context__.k.register(_c, "LanguageSwitcher");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/login-prompt-dialog.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "LoginPromptDialog",
+    ()=>LoginPromptDialog
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/components/localize.js [app-client] (ecmascript) <export default as Localize>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-auth.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$is$2d$mobile$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-is-mobile.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/dialog.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/drawer.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+function LoginPromptActions({ onClose, onLogin, onSignUp }) {
+    _s();
+    // One handoff per mount: Radix/vaul keep the closing CTAs clickable through
+    // animate-out, and a second activation would rebuild the PKCE verifier/state
+    // the first OAuth URL was minted with. The ref resets when the prompt
+    // reopens (the content unmounts on close), so a failed handoff is retryable
+    // by reopening — no module state, no listeners.
+    const startedRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(false);
+    const start = (action)=>{
+        onClose();
+        if (startedRef.current) return;
+        startedRef.current = true;
+        action();
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                className: "w-full",
+                onClick: ()=>start(onSignUp),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Create free account"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                    lineNumber: 52,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                lineNumber: 51,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                variant: "outline",
+                className: "w-full",
+                onClick: ()=>start(onLogin),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                    i18n_default_text: "Log in"
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                    lineNumber: 55,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                lineNumber: 54,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+        lineNumber: 50,
+        columnNumber: 5
+    }, this);
+}
+_s(LoginPromptActions, "X4MTW+Z6iaac/kSdMnumEXKXhqI=");
+_c = LoginPromptActions;
+function LoginPromptDialog({ open, onOpenChange, onLogin, onSignUp }) {
+    _s1();
+    const isMobile = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$is$2d$mobile$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useIsMobile"])();
+    const close = ()=>onOpenChange(false);
+    // Resolve affiliate attribution while the user reads the prompt: the Scaleo
+    // lookup is what made login()/signUp() await a network round-trip inside
+    // the CTA click, and prefetching it here restores Trader's synchronous
+    // click-path shape (its getAuthConfig has no network step at all).
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "LoginPromptDialog.useEffect": ()=>{
+            if (open) (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["prefetchAuthReferral"])();
+        }
+    }["LoginPromptDialog.useEffect"], [
+        open
+    ]);
+    if (isMobile) {
+        return(// No background scaling: the sheet overlays a live chart canvas, which
+        // should not shrink behind the overlay.
+        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"], {
+            open: open,
+            onOpenChange: onOpenChange,
+            shouldScaleBackground: false,
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DrawerContent"], {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DrawerHeader"], {
+                        className: "text-left",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DrawerTitle"], {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                    i18n_default_text: "Start trading with us"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                                    lineNumber: 92,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                                lineNumber: 91,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DrawerDescription"], {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                    i18n_default_text: "Log in or create a free account to place a trade."
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                                    lineNumber: 95,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                                lineNumber: 94,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                        lineNumber: 90,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$drawer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DrawerFooter"], {
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(LoginPromptActions, {
+                            onClose: close,
+                            onLogin: onLogin,
+                            onSignUp: onSignUp
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                            lineNumber: 99,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                        lineNumber: 98,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                lineNumber: 89,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+            lineNumber: 88,
+            columnNumber: 7
+        }, this));
+    }
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
+        open: open,
+        onOpenChange: onOpenChange,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogContent"], {
+            className: "max-w-sm",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogHeader"], {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogTitle"], {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Start trading with us"
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                                lineNumber: 111,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                            lineNumber: 110,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Log in or create a free account to place a trade."
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                                lineNumber: 114,
+                                columnNumber: 13
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                            lineNumber: 113,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                    lineNumber: 109,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex flex-col gap-2",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(LoginPromptActions, {
+                        onClose: close,
+                        onLogin: onLogin,
+                        onSignUp: onSignUp
+                    }, void 0, false, {
+                        fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                        lineNumber: 118,
+                        columnNumber: 11
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+                    lineNumber: 117,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+            lineNumber: 108,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/components/custom/login-prompt-dialog.tsx",
+        lineNumber: 107,
+        columnNumber: 5
+    }, this);
+}
+_s1(LoginPromptDialog, "Cl6y/BbPdUpienV0Kb+jkviE5NE=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$is$2d$mobile$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useIsMobile"]
+    ];
+});
+_c1 = LoginPromptDialog;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "LoginPromptActions");
+__turbopack_context__.k.register(_c1, "LoginPromptDialog");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/pinned-buy-bar.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "PinnedBuyBar",
+    ()=>PinnedBuyBar
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/footer.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+'use client';
+;
+;
+;
+function PinnedBuyBar({ children, editMode, rearrangeMode, selected, onSelect, label }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FooterBar"], {
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "relative",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    inert: editMode || undefined,
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(// Symmetric vertical padding: `pt-2` alone left the selection ring
+                    // flush against the button's bottom edge (8px above, 0 below), and
+                    // gave the deployed button no breathing room over the footer.
+                    'w-full px-3 py-2', editMode && 'pointer-events-none select-none'),
+                    children: children
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/pinned-buy-bar.tsx",
+                    lineNumber: 79,
+                    columnNumber: 9
+                }, this),
+                editMode && !rearrangeMode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    role: "button",
+                    tabIndex: 0,
+                    "aria-label": label,
+                    "aria-pressed": selected,
+                    onClick: onSelect,
+                    onKeyDown: (event)=>{
+                        // A div with role="button" gets none of a real <button>'s keyboard
+                        // behaviour for free, and it cannot BE a button — that would nest
+                        // one inside the Buy button.
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            onSelect?.();
+                        }
+                    },
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(// inset-x-1 against the wrapper's px-3 gives the same 8px gap the
+                    // py-2 gives vertically, so the ring sits evenly around the button.
+                    'absolute inset-x-1 inset-y-0 z-10 cursor-pointer rounded-xl border-2 transition-colors', // Border is always visible, like the selectable rows inside the
+                    // column — on touch there is no hover to reveal an affordance.
+                    selected ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/60 hover:bg-primary/5')
+                }, void 0, false, {
+                    fileName: "[project]/components/custom/pinned-buy-bar.tsx",
+                    lineNumber: 95,
+                    columnNumber: 11
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/custom/pinned-buy-bar.tsx",
+            lineNumber: 71,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/components/custom/pinned-buy-bar.tsx",
+        lineNumber: 70,
+        columnNumber: 5
+    }, this);
+}
+_c = PinnedBuyBar;
+var _c;
+__turbopack_context__.k.register(_c, "PinnedBuyBar");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/symbol-selector.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "SymbolSelector",
+    ()=>SymbolSelector
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/select.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$active$2d$symbols$2d$display$2d$names$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/active-symbols-display-names.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+/** Tick-to-tick movement of the active symbol, or null if there isn't enough data. */ function computeMovement(prices, pipSize) {
+    if (!prices || prices.length < 2) return null;
+    const spot = prices[prices.length - 1];
+    const prev = prices[prices.length - 2];
+    if (!Number.isFinite(spot) || !Number.isFinite(prev) || prev === 0) return null;
+    const decimals = pipSize ?? 2;
+    const delta = spot - prev;
+    const pct = delta / prev * 100;
+    const isUp = delta >= 0;
+    const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
+    return {
+        spot: spot.toFixed(decimals),
+        change: `${sign}${Math.abs(delta).toFixed(decimals)}`,
+        changePercent: `${Math.abs(pct).toFixed(2)}%`,
+        isUp
+    };
+}
+function groupBySubmarket(symbols) {
+    const groups = new Map();
+    for (const symbol of symbols){
+        const key = symbol.submarket;
+        const existing = groups.get(key);
+        if (existing) {
+            existing.symbols.push(symbol);
+        } else {
+            const displayName = symbol.submarket_display_name ?? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$active$2d$symbols$2d$display$2d$names$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getSubmarketDisplayName"])(symbol.submarket);
+            groups.set(key, {
+                displayName,
+                symbols: [
+                    symbol
+                ]
+            });
+        }
+    }
+    return groups;
+}
+function SymbolSelector({ symbols, activeSymbol, onSymbolChange, prices, pipSize }) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const grouped = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "SymbolSelector.useMemo[grouped]": ()=>groupBySubmarket(symbols)
+    }["SymbolSelector.useMemo[grouped]"], [
+        symbols
+    ]);
+    const movement = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "SymbolSelector.useMemo[movement]": ()=>computeMovement(prices, pipSize)
+    }["SymbolSelector.useMemo[movement]"], [
+        prices,
+        pipSize
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
+        value: activeSymbol?.underlying_symbol ?? '',
+        onValueChange: onSymbolChange,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('w-full', movement ? 'h-auto py-1.5' : undefined),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex min-w-0 flex-col items-start gap-0.5 text-left",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {
+                            placeholder: localize('Select a symbol')
+                        }, void 0, false, {
+                            fileName: "[project]/components/custom/symbol-selector.tsx",
+                            lineNumber: 103,
+                            columnNumber: 11
+                        }, this),
+                        movement && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('flex items-center gap-1 text-xs font-medium tabular-nums', movement.isUp ? 'text-emerald-600' : 'text-rose-600'),
+                            children: [
+                                movement.spot,
+                                " ",
+                                movement.change,
+                                " (",
+                                movement.changePercent,
+                                ")",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    "aria-hidden": true,
+                                    children: movement.isUp ? '▲' : '▼'
+                                }, void 0, false, {
+                                    fileName: "[project]/components/custom/symbol-selector.tsx",
+                                    lineNumber: 112,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/custom/symbol-selector.tsx",
+                            lineNumber: 105,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/custom/symbol-selector.tsx",
+                    lineNumber: 102,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/custom/symbol-selector.tsx",
+                lineNumber: 101,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
+                children: Array.from(grouped.entries()).map(([submarket, { displayName, symbols: group }])=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectGroup"], {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectLabel"], {
+                                children: displayName
+                            }, void 0, false, {
+                                fileName: "[project]/components/custom/symbol-selector.tsx",
+                                lineNumber: 120,
+                                columnNumber: 13
+                            }, this),
+                            group.map((symbol)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                    value: symbol.underlying_symbol,
+                                    children: symbol.underlying_symbol_name
+                                }, symbol.underlying_symbol, false, {
+                                    fileName: "[project]/components/custom/symbol-selector.tsx",
+                                    lineNumber: 122,
+                                    columnNumber: 15
+                                }, this))
+                        ]
+                    }, submarket, true, {
+                        fileName: "[project]/components/custom/symbol-selector.tsx",
+                        lineNumber: 119,
+                        columnNumber: 11
+                    }, this))
+            }, void 0, false, {
+                fileName: "[project]/components/custom/symbol-selector.tsx",
+                lineNumber: 117,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/symbol-selector.tsx",
+        lineNumber: 95,
+        columnNumber: 5
+    }, this);
+}
+_s(SymbolSelector, "2Lr2LuJjxmebjdiwoB7tIe+ZhzQ=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = SymbolSelector;
+var _c;
+__turbopack_context__.k.register(_c, "SymbolSelector");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/custom/theme-toggle.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "ThemeToggle",
+    ()=>ThemeToggle
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$moon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Moon$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/moon.js [app-client] (ecmascript) <export default as Moon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sun$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sun$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/sun.js [app-client] (ecmascript) <export default as Sun>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$module$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-themes/dist/index.module.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+function ThemeToggle() {
+    _s();
+    const { theme, setTheme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$module$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+        variant: "ghost",
+        size: "icon",
+        "aria-label": localize('Toggle theme'),
+        onClick: ()=>setTheme(theme === 'dark' ? 'light' : 'dark'),
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sun$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sun$3e$__["Sun"], {
+                className: "h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+            }, void 0, false, {
+                fileName: "[project]/components/custom/theme-toggle.tsx",
+                lineNumber: 19,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$moon$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Moon$3e$__["Moon"], {
+                className: "absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+            }, void 0, false, {
+                fileName: "[project]/components/custom/theme-toggle.tsx",
+                lineNumber: 20,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/custom/theme-toggle.tsx",
+        lineNumber: 13,
+        columnNumber: 5
+    }, this);
+}
+_s(ThemeToggle, "QqrH0NJENU1c1ow9PXKiuhSGX0c=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$themes$2f$dist$2f$index$2e$module$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = ThemeToggle;
+var _c;
+__turbopack_context__.k.register(_c, "ThemeToggle");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/live-rise-fall.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "LiveRiseFall",
+    ()=>LiveRiseFall
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+/**
+ * The real, functional Rise/Fall app (live WebSocket, real auth/trading),
+ * rendered via RiseFallView. Optionally takes a no-code `appConfig` to render
+ * the configurable control styles/order. Shared by the deployed page and the
+ * editor (/edit) so the editor preview is fully live.
+ */ var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$smartcharts$2d$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-smartcharts-api.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$smartchart$2d$chart$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-smartchart-chart-data.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$rise$2d$fall$2d$trading$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-rise-fall-trading.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$deriv$2d$ws$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/deriv-ws-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$logo$2d$src$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/logo-src-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$rise$2d$fall$2d$view$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/rise-fall-view.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+function LiveRiseFall({ appConfig, editMode, onSelect, selectedKey, rearrangeMode, onReorder, logoSrc: logoSrcOverride, appName, showAppName }) {
+    _s();
+    const providerLogo = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$logo$2d$src$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLogoSrc"])();
+    const logoSrc = logoSrcOverride ?? providerLogo;
+    const { ws, isConnected, isExhausted, auth } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$deriv$2d$ws$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDerivWSContext"])();
+    const { authState, accounts, activeAccount, login, signUp, logout, switchAccount } = auth;
+    const trading = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$rise$2d$fall$2d$trading$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRiseFallTrading"])({
+        ws,
+        isConnected,
+        isExhausted,
+        isAuthenticated: !!auth.wsUrl,
+        onAuthWSFailed: logout
+    });
+    const { chartData } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$smartchart$2d$chart$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSmartChartChartData"])(trading.ws, trading.isConnected, trading.symbols);
+    const { getQuotes, subscribeQuotes, unsubscribeQuotes } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$smartcharts$2d$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSmartChartsApi"])(trading.ws);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$rise$2d$fall$2d$view$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["RiseFallView"], {
+        authState: authState,
+        accounts: accounts,
+        activeAccount: activeAccount,
+        onLogin: login,
+        onSignUp: signUp,
+        onLogout: logout,
+        onSwitchAccount: switchAccount,
+        logoSrc: logoSrc,
+        appName: appName,
+        showAppName: showAppName,
+        ws: trading.ws,
+        isConnected: trading.isConnected,
+        isLoading: trading.isLoading,
+        error: trading.error,
+        symbols: trading.symbols,
+        activeSymbol: trading.activeSymbol,
+        selectSymbol: trading.selectSymbol,
+        prices: trading.prices,
+        pipSize: trading.pipSize,
+        direction: trading.direction,
+        setDirection: trading.setDirection,
+        allowEquals: trading.allowEquals,
+        setAllowEquals: trading.setAllowEquals,
+        stake: trading.stake,
+        setStake: trading.setStake,
+        duration: trading.duration,
+        setDuration: trading.setDuration,
+        durationOptions: trading.durationOptions,
+        durationUnit: trading.durationUnit,
+        setDurationUnit: trading.setDurationUnit,
+        endDate: trading.endDate,
+        setEndDate: trading.setEndDate,
+        endTime: trading.endTime,
+        setEndTime: trading.setEndTime,
+        proposal: trading.proposal,
+        buyContract: trading.buyContract,
+        isBuying: trading.isBuying,
+        buyResult: trading.buyResult,
+        buyError: trading.buyError,
+        clearBuyResult: trading.clearBuyResult,
+        openPositions: trading.openPositions,
+        sellContract: trading.sellContract,
+        sellingId: trading.sellingId,
+        chartData: chartData,
+        getQuotes: getQuotes,
+        subscribeQuotes: subscribeQuotes,
+        unsubscribeQuotes: unsubscribeQuotes,
+        appConfig: appConfig,
+        editMode: editMode,
+        onSelect: onSelect,
+        selectedKey: selectedKey,
+        rearrangeMode: rearrangeMode,
+        onReorder: onReorder
+    }, void 0, false, {
+        fileName: "[project]/components/live-rise-fall.tsx",
+        lineNumber: 57,
+        columnNumber: 5
+    }, this);
+}
+_s(LiveRiseFall, "255yYD3ERwdPKMinpSZfBVr/59Y=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$logo$2d$src$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLogoSrc"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$deriv$2d$ws$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDerivWSContext"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$rise$2d$fall$2d$trading$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRiseFallTrading"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$smartchart$2d$chart$2d$data$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSmartChartChartData"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$smartcharts$2d$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSmartChartsApi"]
+    ];
+});
+_c = LiveRiseFall;
+var _c;
+__turbopack_context__.k.register(_c, "LiveRiseFall");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/rise-fall-view.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "RiseFallView",
+    ()=>RiseFallView
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$shared$2f$lib$2f$app$2d$dynamic$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/shared/lib/app-dynamic.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/components/localize.js [app-client] (ecmascript) <export default as Localize>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/card.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/footer.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/header.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$login$2d$prompt$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/login-prompt-dialog.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$pinned$2d$buy$2d$bar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/pinned-buy-bar.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$symbol$2d$selector$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/symbol-selector.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$theme$2d$toggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/theme-toggle.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/skeleton.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$is$2d$mobile$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-is-mobile.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$contract$2d$markers$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-contract-markers.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$ban$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Ban$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/ban.js [app-client] (ecmascript) <export default as Ban>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$trade$2d$controls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/trade-controls.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$configurable$2d$trade$2d$controls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/configurable-trade-controls.tsx [app-client] (ecmascript)");
+;
+;
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+/**
+ * A zone overlaid on the chart region. Two modes:
+ *  - not-editable (no onClick): ⛔ "… · not editable" hint on hover.
+ *  - selectable (onClick): clickable to select; ring highlights when selected.
+ * Either way it blocks direct chart interaction in edit mode.
+ */ function FixedZone({ label, style, onClick, selected }) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const selectable = !!onClick;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: `group/zone absolute left-0 right-0 z-[60] ${selectable ? 'cursor-pointer' : ''}`,
+        style: style,
+        onClick: onClick,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: [
+                'pointer-events-none absolute inset-0 rounded-md ring-2 ring-inset transition-opacity',
+                selected ? 'opacity-100 ring-primary' : 'opacity-0 ring-muted-foreground/30 group-hover/zone:opacity-100'
+            ].join(' '),
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                className: "absolute left-3 top-2 flex items-center gap-1.5 rounded-md bg-background/90 px-2 py-1 text-[11px] font-medium text-muted-foreground shadow-sm ring-1 ring-border",
+                children: [
+                    !selectable && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$ban$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Ban$3e$__["Ban"], {
+                        className: "h-3.5 w-3.5"
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 56,
+                        columnNumber: 27
+                    }, this),
+                    selectable ? label : localize('{{label}} · not editable', {
+                        label
+                    })
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 55,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/components/rise-fall-view.tsx",
+            lineNumber: 47,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/components/rise-fall-view.tsx",
+        lineNumber: 42,
+        columnNumber: 5
+    }, this);
+}
+_s(FixedZone, "GKlYp1n2D1rKJ1qyS3m4eCzxgIM=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = FixedZone;
+const RiseFallChart = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$shared$2f$lib$2f$app$2d$dynamic$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"])(()=>__turbopack_context__.A("[project]/components/rise-fall-chart.tsx [app-client] (ecmascript, next/dynamic entry, async loader)").then((module)=>module.RiseFallChart), {
+    loadableGenerated: {
+        modules: [
+            "[project]/components/rise-fall-chart.tsx [app-client] (ecmascript, next/dynamic entry)"
+        ]
+    },
+    ssr: false,
+    loading: ()=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "h-full w-full animate-pulse rounded-md border border-border/50 dark:border-white/[0.08] bg-muted/30"
+        }, void 0, false, {
+            fileName: "[project]/components/rise-fall-view.tsx",
+            lineNumber: 79,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+});
+_c1 = RiseFallChart;
+// Edit-mode stand-in for the login prompt's auth handlers — same rule as the
+// header: no OAuth navigation out of the editor.
+const noopAsyncAuth = async ()=>{};
+function RiseFallView({ authState, accounts, activeAccount, onLogin, onSignUp, onLogout, onSwitchAccount, ws, isConnected, isLoading, error, symbols, activeSymbol, selectSymbol, prices, pipSize, direction, setDirection, allowEquals, setAllowEquals, stake, setStake, duration, setDuration, durationOptions, durationUnit, setDurationUnit, endDate, setEndDate, endTime, setEndTime, proposal, buyContract, isBuying, buyResult, buyError, clearBuyResult, openPositions, chartData, getQuotes, subscribeQuotes, unsubscribeQuotes, isLive, endEpoch, logoSrc, appName, showAppName, appConfig, editMode, onSelect, selectedKey, rearrangeMode, onReorder }) {
+    _s1();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const isMobile = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$is$2d$mobile$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useIsMobile"])();
+    const chartHidden = appConfig?.chart?.hidden ?? false;
+    // Pinning is a mobile affordance: on desktop the controls card grows to fit,
+    // so the Buy button is never scroll-clipped and a viewport-wide bar under a
+    // 400px column would look detached.
+    const pinBuy = !!appConfig?.buy?.pinned && isMobile;
+    // With Buy unpinned the footer still has to sit at the end of the mobile
+    // column — and a `fixed` footer makes that column reserve clearance for it.
+    // That reservation was a guess (`pb-28`, 112px) for a footer that measures
+    // 40px, leaving 72px of dead space under the Buy button at the bottom of the
+    // scroll. Rendering it in flow, exactly as PinnedBuyBar does, ends the column
+    // where the footer begins and removes the number to guess.
+    //
+    // Note what this does NOT depend on: `buy.pinned`. Every no-code mobile
+    // render gets the in-flow band, so an existing unpinned project also moves
+    // off the translucent `fixed` footer on its next redeploy. That is deliberate
+    // — it is the dead-space fix — but it means the backward-compatibility rule
+    // covers Buy's PLACEMENT, not the footer treatment: a pre-existing project
+    // keeps Buy scrolling in the column, while its footer becomes the opaque
+    // bordered band. A footer that moved after a redeploy is expected here, not a
+    // regression.
+    const inFlowFooter = !!appConfig && isMobile;
+    const contractMarkers = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$contract$2d$markers$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useContractMarkers"])(openPositions, activeSymbol?.underlying_symbol, isMobile);
+    const [showLoginPrompt, setShowLoginPrompt] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
+    // would fail with a "Purchase Failed" toast. One gate covers every Buy
+    // surface (standard, configurable, pinned). Edit mode stays inert — the
+    // editor owns Buy clicks there, and its auth actions are already no-ops.
+    const handleBuy = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "RiseFallView.useCallback[handleBuy]": async ()=>{
+            if (editMode) return;
+            // Mid-OAuth (the ?code= callback) the header already shows a login in
+            // progress — don't stack a "please log in" prompt on top of it.
+            if (authState === 'authenticating') return;
+            if (authState !== 'authenticated') {
+                setShowLoginPrompt(true);
+                return;
+            }
+            await buyContract();
+        }
+    }["RiseFallView.useCallback[handleBuy]"], [
+        editMode,
+        authState,
+        buyContract
+    ]);
+    // In edit mode, login/sign-up/account actions are inert (no OAuth navigation
+    // out of the editor) — only the theme toggle stays interactive.
+    const headerEl = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "RiseFallView.useMemo[headerEl]": ()=>{
+            const noop = {
+                "RiseFallView.useMemo[headerEl].noop": ()=>{}
+            }["RiseFallView.useMemo[headerEl].noop"];
+            const noopAsync = {
+                "RiseFallView.useMemo[headerEl].noopAsync": async ()=>{}
+            }["RiseFallView.useMemo[headerEl].noopAsync"];
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Header"], {
+                authState: authState,
+                accounts: accounts,
+                activeAccount: activeAccount,
+                onLogin: editMode ? noopAsync : onLogin,
+                onSignUp: editMode ? noopAsync : onSignUp,
+                onLogout: editMode ? noop : onLogout,
+                onSwitchAccount: editMode ? noopAsync : onSwitchAccount,
+                logoSrc: logoSrc,
+                appName: appName,
+                showAppName: showAppName,
+                actions: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$theme$2d$toggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ThemeToggle"], {}, void 0, false, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 290,
+                    columnNumber: 18
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 279,
+                columnNumber: 7
+            }, this);
+        }
+    }["RiseFallView.useMemo[headerEl]"], [
+        authState,
+        accounts,
+        activeAccount,
+        editMode,
+        onLogin,
+        onSignUp,
+        onLogout,
+        onSwitchAccount,
+        logoSrc,
+        appName,
+        showAppName
+    ]);
+    // The chart + symbol block. Used in the standard 2-column layout (left column)
+    // and as a reorderable block in the no-code layout. When the chart is hidden,
+    // the SmartChart is NOT mounted at all (so nothing bleeds through) and a
+    // standalone Symbol Selector takes its place so users can still switch markets.
+    const chartBlock = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "RiseFallView.useMemo[chartBlock]": ()=>chartHidden ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "rf-chart-hidden relative",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: editMode ? 'pointer-events-none select-none' : '',
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$symbol$2d$selector$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SymbolSelector"], {
+                            symbols: symbols,
+                            activeSymbol: activeSymbol,
+                            onSymbolChange: selectSymbol,
+                            prices: prices,
+                            pipSize: pipSize
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 316,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 315,
+                        columnNumber: 11
+                    }, this),
+                    editMode && !rearrangeMode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FixedZone, {
+                        label: localize('Symbol picker'),
+                        style: {
+                            top: 0,
+                            bottom: 0
+                        }
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 325,
+                        columnNumber: 13
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 314,
+                columnNumber: 9
+            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "rf-chart-frame relative",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: `h-full ${editMode ? 'pointer-events-none select-none' : ''}`,
+                        children: chartData ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(RiseFallChart, {
+                            symbolKey: activeSymbol?.underlying_symbol ?? 'rise-fall-chart',
+                            symbol: activeSymbol?.underlying_symbol,
+                            isConnectionOpened: isConnected,
+                            isMobile: isMobile,
+                            chartData: chartData,
+                            getQuotes: getQuotes,
+                            subscribeQuotes: subscribeQuotes,
+                            unsubscribeQuotes: unsubscribeQuotes,
+                            onSymbolChange: selectSymbol,
+                            isLive: isLive,
+                            endEpoch: endEpoch,
+                            contractsArray: contractMarkers
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 332,
+                            columnNumber: 15
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
+                            className: "h-full w-full"
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 347,
+                            columnNumber: 15
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 330,
+                        columnNumber: 11
+                    }, this),
+                    editMode && !rearrangeMode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FixedZone, {
+                                label: localize('Symbol picker'),
+                                style: {
+                                    top: 0,
+                                    height: 54
+                                }
+                            }, void 0, false, {
+                                fileName: "[project]/components/rise-fall-view.tsx",
+                                lineNumber: 353,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(FixedZone, {
+                                label: localize('Chart'),
+                                style: {
+                                    top: 54,
+                                    bottom: 0
+                                }
+                            }, void 0, false, {
+                                fileName: "[project]/components/rise-fall-view.tsx",
+                                lineNumber: 354,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 352,
+                        columnNumber: 13
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 329,
+                columnNumber: 9
+            }, this)
+    }["RiseFallView.useMemo[chartBlock]"], [
+        chartHidden,
+        symbols,
+        prices,
+        pipSize,
+        editMode,
+        chartData,
+        activeSymbol,
+        isConnected,
+        isMobile,
+        getQuotes,
+        subscribeQuotes,
+        unsubscribeQuotes,
+        selectSymbol,
+        isLive,
+        endEpoch,
+        contractMarkers,
+        rearrangeMode,
+        localize
+    ]);
+    if (error) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+            className: "flex flex-col bg-background items-center justify-center px-4 min-h-dvh",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
+                className: "max-w-md w-full",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardHeader"], {
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardTitle"], {
+                            className: "text-destructive",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                i18n_default_text: "Connection Error"
+                            }, void 0, false, {
+                                fileName: "[project]/components/rise-fall-view.tsx",
+                                lineNumber: 387,
+                                columnNumber: 15
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 386,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 385,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-sm text-muted-foreground",
+                            children: error
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 391,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 390,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 384,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/components/rise-fall-view.tsx",
+            lineNumber: 383,
+            columnNumber: 7
+        }, this);
+    }
+    // The configurable controls. `withChart` includes the chart as a reorderable
+    // block in the single column (mobile); on desktop the chart is its own column,
+    // so it's omitted here.
+    const renderConfigurable = (withChart)=>appConfig ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$configurable$2d$trade$2d$controls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ConfigurableTradeControls"], {
+            config: appConfig,
+            chartSlot: withChart ? chartBlock : undefined,
+            direction: direction,
+            onDirectionChange: setDirection,
+            allowEquals: allowEquals,
+            onAllowEqualsChange: setAllowEquals,
+            isConnected: isConnected,
+            stake: stake,
+            onStakeChange: setStake,
+            duration: duration,
+            onDurationChange: setDuration,
+            durationOptions: durationOptions,
+            durationUnit: durationUnit,
+            onDurationUnitChange: setDurationUnit,
+            endDate: endDate,
+            onEndDateChange: setEndDate,
+            endTime: endTime,
+            onEndTimeChange: setEndTime,
+            ws: ws,
+            activeSymbol: activeSymbol,
+            proposal: proposal,
+            onBuy: handleBuy,
+            isBuying: isBuying,
+            buyResult: buyResult,
+            buyError: buyError,
+            onClearBuyResult: clearBuyResult,
+            isAuthenticated: authState === 'authenticated',
+            editMode: editMode,
+            onSelect: onSelect,
+            selectedKey: selectedKey,
+            rearrangeMode: rearrangeMode,
+            onReorder: onReorder,
+            pinBuy: pinBuy
+        }, void 0, false, {
+            fileName: "[project]/components/rise-fall-view.tsx",
+            lineNumber: 403,
+            columnNumber: 7
+        }, this) : null;
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+        className: `flex h-dvh min-h-0 w-full flex-col overflow-hidden ${editMode ? 'bg-muted/50' : 'bg-background'}`,
+        children: [
+            editMode ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "group/hdr sticky top-0 z-50",
+                children: [
+                    headerEl,
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "pointer-events-none absolute inset-0 z-[60] opacity-0 ring-2 ring-inset ring-muted-foreground/25 transition-opacity group-hover/hdr:opacity-100",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "absolute left-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5 rounded-md bg-background/90 px-2 py-1 text-[11px] font-medium text-muted-foreground shadow-sm ring-1 ring-border",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$ban$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Ban$3e$__["Ban"], {
+                                    className: "h-3.5 w-3.5"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/rise-fall-view.tsx",
+                                    lineNumber: 454,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                    i18n_default_text: "Not editable"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/rise-fall-view.tsx",
+                                    lineNumber: 455,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 453,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/rise-fall-view.tsx",
+                        lineNumber: 452,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 447,
+                columnNumber: 9
+            }, this) : headerEl,
+            appConfig ? isMobile ? /* No-code mobile layout: a single, reorderable column of blocks. The
+             chart + symbol dropdown is one block (chartSlot); controls follow
+             the configured order. */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-full flex-1 min-h-0 overflow-y-auto overscroll-contain",
+                children: isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
+                    className: "h-[42dvh] w-full"
+                }, void 0, false, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 469,
+                    columnNumber: 26
+                }, this) : renderConfigurable(true)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 468,
+                columnNumber: 11
+            }, this) : chartHidden ? /* No-code desktop, chart OFF: a single centered column (symbol picker
+             + controls stacked) at the controls' width — no wide empty chart
+             column, and the height grows to fit its content (no inner scroll). */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-full flex-1 min-h-0 overflow-y-auto p-4",
+                children: isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
+                    className: "h-full w-full"
+                }, void 0, false, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 477,
+                    columnNumber: 15
+                }, this) : renderConfigurable(true)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 475,
+                columnNumber: 11
+            }, this) : /* No-code desktop, chart ON: 2-column (chart left, controls card
+             right). The card grows to its content height (no fixed height /
+             inner scrollbar) — desktop has the vertical space. */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-full flex-1 min-h-0 overflow-hidden",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "rf-workspace-grid h-full min-h-0",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "min-w-0 min-h-0",
+                            children: chartBlock
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 488,
+                            columnNumber: 15
+                        }, this),
+                        isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
+                            className: "h-full w-full"
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 490,
+                            columnNumber: 17
+                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "min-h-0 overflow-y-auto border-l border-border px-5 py-4",
+                            children: renderConfigurable(false)
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 492,
+                            columnNumber: 17
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 487,
+                    columnNumber: 13
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 486,
+                columnNumber: 11
+            }, this) : /* Standard layout (unchanged): 2-column chart + controls card. */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-full flex-1 min-h-0 overflow-y-auto overscroll-contain lg:overflow-hidden",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "rf-workspace-grid min-h-full lg:h-full lg:min-h-0",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "min-w-0 min-h-0",
+                            children: chartBlock
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 503,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "min-h-0 overflow-y-auto border-t border-border p-4 lg:border-l lg:border-t-0",
+                            children: isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$skeleton$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Skeleton"], {
+                                className: "h-full w-full"
+                            }, void 0, false, {
+                                fileName: "[project]/components/rise-fall-view.tsx",
+                                lineNumber: 508,
+                                columnNumber: 17
+                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$trade$2d$controls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TradeControls"], {
+                                direction: direction,
+                                onDirectionChange: setDirection,
+                                allowEquals: allowEquals,
+                                onAllowEqualsChange: setAllowEquals,
+                                isConnected: isConnected,
+                                stake: stake,
+                                onStakeChange: setStake,
+                                duration: duration,
+                                onDurationChange: setDuration,
+                                durationOptions: durationOptions,
+                                durationUnit: durationUnit,
+                                onDurationUnitChange: setDurationUnit,
+                                endDate: endDate,
+                                onEndDateChange: setEndDate,
+                                endTime: endTime,
+                                onEndTimeChange: setEndTime,
+                                ws: ws,
+                                activeSymbol: activeSymbol,
+                                proposal: proposal,
+                                onBuy: handleBuy,
+                                isBuying: isBuying,
+                                buyResult: buyResult,
+                                buyError: buyError,
+                                onClearBuyResult: clearBuyResult,
+                                isAuthenticated: authState === 'authenticated'
+                            }, void 0, false, {
+                                fileName: "[project]/components/rise-fall-view.tsx",
+                                lineNumber: 510,
+                                columnNumber: 17
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/components/rise-fall-view.tsx",
+                            lineNumber: 506,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 502,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 501,
+                columnNumber: 9
+            }, this),
+            pinBuy ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$pinned$2d$buy$2d$bar$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PinnedBuyBar"], {
+                editMode: editMode,
+                rearrangeMode: rearrangeMode,
+                selected: selectedKey === 'buy',
+                onSelect: ()=>onSelect?.('buy'),
+                label: localize('Buy button'),
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$configurable$2d$trade$2d$controls$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ConfigurableBuyButton"], {
+                    variant: appConfig.styles.buy,
+                    isConnected: isConnected,
+                    proposal: proposal,
+                    onBuy: handleBuy,
+                    isBuying: isBuying
+                }, void 0, false, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 551,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 544,
+                columnNumber: 9
+            }, this) : inFlowFooter ? /* Unpinned mobile: the same band the pinned bar ends in, minus the Buy
+           button — in flow at the end of the h-dvh column, so the scroll area
+           ends where it begins and nothing reserves clearance for it. Sharing
+           the band is what keeps the footer from moving when the pin toggles. */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FooterBar"], {}, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 564,
+                columnNumber: 9
+            }, this) : /* Fixed footer — desktop and the standard layout, which scroll the
+           document rather than an inner column. */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "w-full shrink-0 border-t border-border py-2 text-center bg-background",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Footer"], {}, void 0, false, {
+                    fileName: "[project]/components/rise-fall-view.tsx",
+                    lineNumber: 569,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 568,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$login$2d$prompt$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["LoginPromptDialog"], {
+                open: showLoginPrompt,
+                onOpenChange: setShowLoginPrompt,
+                onLogin: editMode ? noopAsyncAuth : onLogin,
+                onSignUp: editMode ? noopAsyncAuth : onSignUp
+            }, void 0, false, {
+                fileName: "[project]/components/rise-fall-view.tsx",
+                lineNumber: 573,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/rise-fall-view.tsx",
+        lineNumber: 441,
+        columnNumber: 5
+    }, this);
+}
+_s1(RiseFallView, "nphwWnTfo+LBKIVuNvxgn7P6/vQ=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$is$2d$mobile$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useIsMobile"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$contract$2d$markers$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useContractMarkers"]
+    ];
+});
+_c2 = RiseFallView;
+var _c, _c1, _c2;
+__turbopack_context__.k.register(_c, "FixedZone");
+__turbopack_context__.k.register(_c1, "RiseFallChart");
+__turbopack_context__.k.register(_c2, "RiseFallView");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/trade-controls.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "TradeControls",
+    ()=>TradeControls
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/sonner/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__ = __turbopack_context__.i("[project]/node_modules/@deriv-com/translations/dist/components/localize.js [app-client] (ecmascript) <export default as Localize>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/input.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/label.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/select.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/switch.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/toggle-group.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$end$2d$time$2d$picker$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/end-time-picker.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+function TradeControls({ direction, onDirectionChange, allowEquals, onAllowEqualsChange, isConnected, stake, onStakeChange, duration, onDurationChange, durationOptions, durationUnit, onDurationUnitChange, endDate, onEndDateChange, endTime, onEndTimeChange, ws, activeSymbol, proposal, onBuy, isBuying, buyResult, buyError, onClearBuyResult, isAuthenticated }) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "TradeControls.useEffect": ()=>{
+            if (buyError) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error(localize('Purchase Failed'), {
+                    description: buyError
+                });
+                onClearBuyResult();
+            }
+        }
+    }["TradeControls.useEffect"], [
+        buyError,
+        onClearBuyResult,
+        localize
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "TradeControls.useEffect": ()=>{
+            if (buyResult) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].success(localize('Contract Purchased'), {
+                    description: localize('Buy price: {{buy_price}} USD | Payout: {{payout}} USD | Balance: {{balance}} USD', {
+                        buy_price: buyResult.buyPrice.toFixed(2),
+                        payout: buyResult.payout.toFixed(2),
+                        balance: buyResult.balanceAfter.toFixed(2)
+                    })
+                });
+                onClearBuyResult();
+            }
+        }
+    }["TradeControls.useEffect"], [
+        buyResult,
+        onClearBuyResult,
+        localize
+    ]);
+    const activeOption = durationOptions.find((o)=>o.unit === durationUnit);
+    const endTimeOption = durationOptions.find((o)=>o.unit === 'end-time');
+    const { endTimeMinDate, endTimeMaxDate } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "TradeControls.useMemo": ()=>{
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return {
+                endTimeMinDate: today,
+                endTimeMaxDate: endTimeOption ? new Date(today.getTime() + endTimeOption.max * 86400000) : new Date(today.getTime() + 365 * 86400000)
+            };
+        }
+    }["TradeControls.useMemo"], [
+        endTimeOption
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "w-full space-y-2 lg:space-y-4",
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroup"], {
+                type: "single",
+                value: direction,
+                onValueChange: (value)=>{
+                    if (value === 'CALL' || value === 'PUT') onDirectionChange(value);
+                },
+                className: "w-full gap-0 rounded-full bg-muted p-1",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                        value: "CALL",
+                        className: "flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-green-600 data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                            i18n_default_text: "Rise"
+                        }, void 0, false, {
+                            fileName: "[project]/components/trade-controls.tsx",
+                            lineNumber: 129,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 125,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2d$group$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ToggleGroupItem"], {
+                        value: "PUT",
+                        className: "flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-destructive data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                            i18n_default_text: "Fall"
+                        }, void 0, false, {
+                            fileName: "[project]/components/trade-controls.tsx",
+                            lineNumber: 135,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 131,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/trade-controls.tsx",
+                lineNumber: 117,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "flex items-center justify-between",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                        htmlFor: "allow-equals",
+                        className: "text-sm cursor-pointer",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                            i18n_default_text: "Allow equals"
+                        }, void 0, false, {
+                            fileName: "[project]/components/trade-controls.tsx",
+                            lineNumber: 142,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 141,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Switch"], {
+                        id: "allow-equals",
+                        checked: allowEquals,
+                        onCheckedChange: onAllowEqualsChange
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 144,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/trade-controls.tsx",
+                lineNumber: 140,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "space-y-1.5",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                        htmlFor: "stake",
+                        className: "text-xs text-muted-foreground",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                            i18n_default_text: "Stake"
+                        }, void 0, false, {
+                            fileName: "[project]/components/trade-controls.tsx",
+                            lineNumber: 154,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 153,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                        id: "stake",
+                        type: "number",
+                        value: stake,
+                        onChange: (e)=>onStakeChange(e.target.value),
+                        onKeyDown: (e)=>{
+                            if ([
+                                'e',
+                                'E',
+                                '+',
+                                '-'
+                            ].includes(e.key)) e.preventDefault();
+                        },
+                        min: 0,
+                        step: "0.01",
+                        labelRight: "USD"
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 156,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/trade-controls.tsx",
+                lineNumber: 152,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "space-y-1.5",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+                        className: "text-xs text-muted-foreground",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                            i18n_default_text: "Duration"
+                        }, void 0, false, {
+                            fileName: "[project]/components/trade-controls.tsx",
+                            lineNumber: 173,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 172,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
+                        value: durationUnit,
+                        onValueChange: (v)=>{
+                            const opt = durationOptions.find((o)=>o.unit === v);
+                            if (opt) onDurationUnitChange(opt.unit);
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
+                                    fileName: "[project]/components/trade-controls.tsx",
+                                    lineNumber: 183,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/trade-controls.tsx",
+                                lineNumber: 182,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
+                                children: durationOptions.map((opt)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                        value: opt.unit,
+                                        children: opt.label
+                                    }, opt.unit, false, {
+                                        fileName: "[project]/components/trade-controls.tsx",
+                                        lineNumber: 187,
+                                        columnNumber: 15
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "[project]/components/trade-controls.tsx",
+                                lineNumber: 185,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 175,
+                        columnNumber: 9
+                    }, this),
+                    durationUnit !== 'end-time' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                        type: "number",
+                        value: duration,
+                        onChange: (e)=>{
+                            const val = parseInt(e.target.value, 10);
+                            if (!isNaN(val)) onDurationChange(val);
+                        },
+                        min: activeOption?.min,
+                        max: activeOption?.max,
+                        step: 1
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 193,
+                        columnNumber: 11
+                    }, this),
+                    durationUnit === 'end-time' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$end$2d$time$2d$picker$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["EndTimePicker"], {
+                        ws: ws,
+                        isConnected: isConnected,
+                        activeSymbol: activeSymbol,
+                        endDate: endDate,
+                        onEndDateChange: onEndDateChange,
+                        endTime: endTime,
+                        onEndTimeChange: onEndTimeChange,
+                        minDate: endTimeMinDate,
+                        maxDate: endTimeMaxDate
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 207,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/trade-controls.tsx",
+                lineNumber: 171,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+2.5rem)] max-lg:left-3 max-lg:right-3 lg:static",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                    className: "w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground",
+                    size: "lg",
+                    disabled: !isConnected || !proposal || isBuying,
+                    onClick: onBuy,
+                    children: isBuying ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                        i18n_default_text: "Purchasing..."
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 230,
+                        columnNumber: 13
+                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                        className: "flex flex-col items-center leading-tight gap-0.5",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                    i18n_default_text: "Buy"
+                                }, void 0, false, {
+                                    fileName: "[project]/components/trade-controls.tsx",
+                                    lineNumber: 233,
+                                    columnNumber: 21
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/trade-controls.tsx",
+                                lineNumber: 233,
+                                columnNumber: 15
+                            }, this),
+                            proposal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "text-xs font-normal opacity-90",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                                    i18n_default_text: "Payout {{payout}} USD",
+                                    values: {
+                                        payout: proposal.payout.toFixed(2)
+                                    }
+                                }, void 0, false, {
+                                    fileName: "[project]/components/trade-controls.tsx",
+                                    lineNumber: 236,
+                                    columnNumber: 19
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/components/trade-controls.tsx",
+                                lineNumber: 235,
+                                columnNumber: 17
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 232,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/trade-controls.tsx",
+                    lineNumber: 223,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/trade-controls.tsx",
+                lineNumber: 222,
+                columnNumber: 7
+            }, this),
+            isAuthenticated && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                asChild: true,
+                variant: "ghost",
+                className: "w-full text-sm text-muted-foreground hover:text-foreground",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                    href: "/reports",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$deriv$2d$com$2f$translations$2f$dist$2f$components$2f$localize$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Localize$3e$__["Localize"], {
+                        i18n_default_text: "View your positions →"
+                    }, void 0, false, {
+                        fileName: "[project]/components/trade-controls.tsx",
+                        lineNumber: 255,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/trade-controls.tsx",
+                    lineNumber: 254,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/components/trade-controls.tsx",
+                lineNumber: 249,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/trade-controls.tsx",
+        lineNumber: 115,
+        columnNumber: 5
+    }, this);
+}
+_s(TradeControls, "dyk96yZauZ9xyFwwwqTjSffZm6o=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+_c = TradeControls;
+var _c;
+__turbopack_context__.k.register(_c, "TradeControls");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/button.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Button",
+    ()=>Button,
+    "buttonVariants",
+    ()=>buttonVariants
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$slot$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-slot/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/class-variance-authority/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+;
+const buttonVariants = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cva"])("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", {
+    variants: {
+        variant: {
+            default: "bg-primary text-primary-foreground hover:bg-primary/90",
+            destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+            outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+            ghost: "hover:bg-accent hover:text-accent-foreground",
+            link: "text-primary underline-offset-4 hover:underline",
+            buy: "bg-buy-background text-buy-foreground hover:bg-buy-background/90",
+            sell: "bg-sell-background text-sell-foreground hover:bg-sell-background/90",
+            black: "bg-button-blackwhite text-button-blackwhite-foreground hover:bg-button-blackwhite/90"
+        },
+        size: {
+            default: "h-10 px-4 py-2",
+            sm: "h-9 rounded-full px-3",
+            lg: "h-11 rounded-full px-8",
+            icon: "h-10 w-10"
+        }
+    },
+    defaultVariants: {
+        variant: "default",
+        size: "default"
+    }
+});
+const Button = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, variant, size, asChild = false, ...props }, ref)=>{
+    const Comp = asChild ? __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$slot$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Slot"] : "button";
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Comp, {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(buttonVariants({
+            variant,
+            size,
+            className
+        })),
+        ref: ref,
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/button.tsx",
+        lineNumber: 49,
+        columnNumber: 7
+    }, ("TURBOPACK compile-time value", void 0));
+});
+_c1 = Button;
+Button.displayName = "Button";
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Button$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Button");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/calendar.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Calendar",
+    ()=>Calendar,
+    "CalendarDayButton",
+    ()=>CalendarDayButton
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDownIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-down.js [app-client] (ecmascript) <export default as ChevronDownIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeftIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-left.js [app-client] (ecmascript) <export default as ChevronLeftIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRightIcon$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-right.js [app-client] (ecmascript) <export default as ChevronRightIcon>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$day$2d$picker$2f$dist$2f$esm$2f$DayPicker$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-day-picker/dist/esm/DayPicker.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$day$2d$picker$2f$dist$2f$esm$2f$helpers$2f$getDefaultClassNames$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-day-picker/dist/esm/helpers/getDefaultClassNames.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+"use client";
+;
+;
+;
+;
+;
+function Calendar({ className, classNames, showOutsideDays = true, captionLayout = "label", buttonVariant = "ghost", formatters, components, ...props }) {
+    const defaultClassNames = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$day$2d$picker$2f$dist$2f$esm$2f$helpers$2f$getDefaultClassNames$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getDefaultClassNames"])();
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$day$2d$picker$2f$dist$2f$esm$2f$DayPicker$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DayPicker"], {
+        showOutsideDays: showOutsideDays,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent", String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`, String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`, className),
+        captionLayout: captionLayout,
+        formatters: {
+            formatMonthDropdown: (date)=>date.toLocaleString("default", {
+                    month: "short"
+                }),
+            ...formatters
+        },
+        classNames: {
+            root: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("w-fit", defaultClassNames.root),
+            months: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("relative flex flex-col gap-4 md:flex-row", defaultClassNames.months),
+            month: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex w-full flex-col gap-4", defaultClassNames.month),
+            nav: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1", defaultClassNames.nav),
+            button_previous: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["buttonVariants"])({
+                variant: buttonVariant
+            }), "h-[--cell-size] w-[--cell-size] select-none p-0 aria-disabled:opacity-50", defaultClassNames.button_previous),
+            button_next: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["buttonVariants"])({
+                variant: buttonVariant
+            }), "h-[--cell-size] w-[--cell-size] select-none p-0 aria-disabled:opacity-50", defaultClassNames.button_next),
+            month_caption: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex h-[--cell-size] w-full items-center justify-center px-[--cell-size]", defaultClassNames.month_caption),
+            dropdowns: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex h-[--cell-size] w-full items-center justify-center gap-1.5 text-sm font-medium", defaultClassNames.dropdowns),
+            dropdown_root: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("has-focus:border-ring border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] relative rounded-md border", defaultClassNames.dropdown_root),
+            dropdown: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("bg-popover absolute inset-0 opacity-0", defaultClassNames.dropdown),
+            caption_label: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("select-none font-medium", captionLayout === "label" ? "text-sm" : "[&>svg]:text-muted-foreground flex h-8 items-center gap-1 rounded-md pl-2 pr-1 text-sm [&>svg]:size-3.5", defaultClassNames.caption_label),
+            table: "w-full border-collapse",
+            weekdays: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex", defaultClassNames.weekdays),
+            weekday: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-muted-foreground flex-1 select-none rounded-md text-[0.8rem] font-normal", defaultClassNames.weekday),
+            week: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("mt-2 flex w-full", defaultClassNames.week),
+            week_number_header: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("w-[--cell-size] select-none", defaultClassNames.week_number_header),
+            week_number: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-muted-foreground select-none text-[0.8rem]", defaultClassNames.week_number),
+            day: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md", defaultClassNames.day),
+            range_start: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("bg-accent rounded-l-md", defaultClassNames.range_start),
+            range_middle: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("rounded-none", defaultClassNames.range_middle),
+            range_end: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("bg-accent rounded-r-md", defaultClassNames.range_end),
+            today: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none", defaultClassNames.today),
+            outside: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
+            disabled: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-muted-foreground opacity-50", defaultClassNames.disabled),
+            hidden: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("invisible", defaultClassNames.hidden),
+            ...classNames
+        },
+        components: {
+            Root: ({ className, rootRef, ...props })=>{
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    "data-slot": "calendar",
+                    ref: rootRef,
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(className),
+                    ...props
+                }, void 0, false, {
+                    fileName: "[project]/components/ui/calendar.tsx",
+                    lineNumber: 130,
+                    columnNumber: 13
+                }, this);
+            },
+            Chevron: ({ className, orientation, ...props })=>{
+                if (orientation === "left") {
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeftIcon$3e$__["ChevronLeftIcon"], {
+                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("size-4", className),
+                        ...props
+                    }, void 0, false, {
+                        fileName: "[project]/components/ui/calendar.tsx",
+                        lineNumber: 141,
+                        columnNumber: 15
+                    }, this);
+                }
+                if (orientation === "right") {
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronRightIcon$3e$__["ChevronRightIcon"], {
+                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("size-4", className),
+                        ...props
+                    }, void 0, false, {
+                        fileName: "[project]/components/ui/calendar.tsx",
+                        lineNumber: 147,
+                        columnNumber: 15
+                    }, this);
+                }
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDownIcon$3e$__["ChevronDownIcon"], {
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("size-4", className),
+                    ...props
+                }, void 0, false, {
+                    fileName: "[project]/components/ui/calendar.tsx",
+                    lineNumber: 155,
+                    columnNumber: 13
+                }, this);
+            },
+            DayButton: CalendarDayButton,
+            WeekNumber: ({ children, ...props })=>{
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
+                    ...props,
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex size-[--cell-size] items-center justify-center text-center",
+                        children: children
+                    }, void 0, false, {
+                        fileName: "[project]/components/ui/calendar.tsx",
+                        lineNumber: 162,
+                        columnNumber: 15
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/components/ui/calendar.tsx",
+                    lineNumber: 161,
+                    columnNumber: 13
+                }, this);
+            },
+            ...components
+        },
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/calendar.tsx",
+        lineNumber: 29,
+        columnNumber: 5
+    }, this);
+}
+_c = Calendar;
+function CalendarDayButton({ className, day, modifiers, ...props }) {
+    _s();
+    const defaultClassNames = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$day$2d$picker$2f$dist$2f$esm$2f$helpers$2f$getDefaultClassNames$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getDefaultClassNames"])();
+    const ref = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"](null);
+    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"]({
+        "CalendarDayButton.useEffect": ()=>{
+            if (modifiers.focused) ref.current?.focus();
+        }
+    }["CalendarDayButton.useEffect"], [
+        modifiers.focused
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+        ref: ref,
+        variant: "ghost",
+        size: "icon",
+        "data-day": day.date.toLocaleDateString(),
+        "data-selected-single": modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle,
+        "data-range-start": modifiers.range_start,
+        "data-range-end": modifiers.range_end,
+        "data-range-middle": modifiers.range_middle,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 flex aspect-square h-auto w-full min-w-[--cell-size] flex-col gap-1 font-normal leading-none data-[range-end=true]:rounded-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] [&>span]:text-xs [&>span]:opacity-70", defaultClassNames.day, className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/calendar.tsx",
+        lineNumber: 189,
+        columnNumber: 5
+    }, this);
+}
+_s(CalendarDayButton, "8uVE59eA/r6b92xF80p7sH8rXLk=");
+_c1 = CalendarDayButton;
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Calendar");
+__turbopack_context__.k.register(_c1, "CalendarDayButton");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/card.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Card",
+    ()=>Card,
+    "CardContent",
+    ()=>CardContent,
+    "CardDescription",
+    ()=>CardDescription,
+    "CardFooter",
+    ()=>CardFooter,
+    "CardHeader",
+    ()=>CardHeader,
+    "CardTitle",
+    ()=>CardTitle
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+const Card = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("rounded-lg border bg-card text-card-foreground shadow-sm", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/card.tsx",
+        lineNumber: 9,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = Card;
+Card.displayName = "Card";
+const CardHeader = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c2 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex flex-col space-y-1.5 p-6", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/card.tsx",
+        lineNumber: 24,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c3 = CardHeader;
+CardHeader.displayName = "CardHeader";
+const CardTitle = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c4 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-2xl font-semibold leading-none tracking-tight", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/card.tsx",
+        lineNumber: 36,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c5 = CardTitle;
+CardTitle.displayName = "CardTitle";
+const CardDescription = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c6 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-sm text-muted-foreground", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/card.tsx",
+        lineNumber: 51,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c7 = CardDescription;
+CardDescription.displayName = "CardDescription";
+const CardContent = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c8 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("p-6 pt-0", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/card.tsx",
+        lineNumber: 63,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c9 = CardContent;
+CardContent.displayName = "CardContent";
+const CardFooter = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c10 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center p-6 pt-0", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/card.tsx",
+        lineNumber: 71,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c11 = CardFooter;
+CardFooter.displayName = "CardFooter";
+;
+var _c, _c1, _c2, _c3, _c4, _c5, _c6, _c7, _c8, _c9, _c10, _c11;
+__turbopack_context__.k.register(_c, "Card$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Card");
+__turbopack_context__.k.register(_c2, "CardHeader$React.forwardRef");
+__turbopack_context__.k.register(_c3, "CardHeader");
+__turbopack_context__.k.register(_c4, "CardTitle$React.forwardRef");
+__turbopack_context__.k.register(_c5, "CardTitle");
+__turbopack_context__.k.register(_c6, "CardDescription$React.forwardRef");
+__turbopack_context__.k.register(_c7, "CardDescription");
+__turbopack_context__.k.register(_c8, "CardContent$React.forwardRef");
+__turbopack_context__.k.register(_c9, "CardContent");
+__turbopack_context__.k.register(_c10, "CardFooter$React.forwardRef");
+__turbopack_context__.k.register(_c11, "CardFooter");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/checkbox.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Checkbox",
+    ()=>Checkbox
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$checkbox$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-checkbox/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/check.js [app-client] (ecmascript) <export default as Check>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+;
+const Checkbox = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$checkbox$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("peer h-4 w-4 shrink-0 rounded-sm border border-checkmark ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-checkmark data-[state=checked]:text-checkmark-foreground", className),
+        ...props,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$checkbox$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Indicator"], {
+            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center justify-center text-current"),
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
+                className: "h-4 w-4"
+            }, void 0, false, {
+                fileName: "[project]/components/ui/checkbox.tsx",
+                lineNumber: 22,
+                columnNumber: 7
+            }, ("TURBOPACK compile-time value", void 0))
+        }, void 0, false, {
+            fileName: "[project]/components/ui/checkbox.tsx",
+            lineNumber: 19,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/checkbox.tsx",
+        lineNumber: 11,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = Checkbox;
+Checkbox.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$checkbox$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"].displayName;
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Checkbox$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Checkbox");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/dialog.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Dialog",
+    ()=>Dialog,
+    "DialogClose",
+    ()=>DialogClose,
+    "DialogContent",
+    ()=>DialogContent,
+    "DialogDescription",
+    ()=>DialogDescription,
+    "DialogFooter",
+    ()=>DialogFooter,
+    "DialogHeader",
+    ()=>DialogHeader,
+    "DialogOverlay",
+    ()=>DialogOverlay,
+    "DialogPortal",
+    ()=>DialogPortal,
+    "DialogTitle",
+    ()=>DialogTitle,
+    "DialogTrigger",
+    ()=>DialogTrigger
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-dialog/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-client] (ecmascript) <export default as X>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+"use client";
+;
+;
+;
+;
+;
+const Dialog = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"];
+const DialogTrigger = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Trigger"];
+const DialogPortal = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Portal"];
+const DialogClose = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Close"];
+const DialogOverlay = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Overlay"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/dialog.tsx",
+        lineNumber: 21,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c = DialogOverlay;
+DialogOverlay.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Overlay"].displayName;
+const DialogContent = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c1 = ({ className, children, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DialogPortal, {
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DialogOverlay, {}, void 0, false, {
+                fileName: "[project]/components/ui/dialog.tsx",
+                lineNumber: 37,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0)),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"], {
+                ref: ref,
+                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg", className),
+                ...props,
+                children: [
+                    children,
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Close"], {
+                        className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
+                                className: "h-4 w-4"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ui/dialog.tsx",
+                                lineNumber: 48,
+                                columnNumber: 9
+                            }, ("TURBOPACK compile-time value", void 0)),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                className: "sr-only",
+                                children: "Close"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ui/dialog.tsx",
+                                lineNumber: 49,
+                                columnNumber: 9
+                            }, ("TURBOPACK compile-time value", void 0))
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/ui/dialog.tsx",
+                        lineNumber: 47,
+                        columnNumber: 7
+                    }, ("TURBOPACK compile-time value", void 0))
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/ui/dialog.tsx",
+                lineNumber: 38,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/ui/dialog.tsx",
+        lineNumber: 36,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c2 = DialogContent;
+DialogContent.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"].displayName;
+const DialogHeader = ({ className, ...props })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex flex-col space-y-1.5 text-center sm:text-left", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/dialog.tsx",
+        lineNumber: 60,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c3 = DialogHeader;
+DialogHeader.displayName = "DialogHeader";
+const DialogFooter = ({ className, ...props })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/dialog.tsx",
+        lineNumber: 74,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c4 = DialogFooter;
+DialogFooter.displayName = "DialogFooter";
+const DialogTitle = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c5 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Title"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-lg font-semibold leading-none tracking-tight", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/dialog.tsx",
+        lineNumber: 88,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c6 = DialogTitle;
+DialogTitle.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Title"].displayName;
+const DialogDescription = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c7 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Description"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-sm text-muted-foreground", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/dialog.tsx",
+        lineNumber: 103,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c8 = DialogDescription;
+DialogDescription.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$dialog$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Description"].displayName;
+;
+var _c, _c1, _c2, _c3, _c4, _c5, _c6, _c7, _c8;
+__turbopack_context__.k.register(_c, "DialogOverlay");
+__turbopack_context__.k.register(_c1, "DialogContent$React.forwardRef");
+__turbopack_context__.k.register(_c2, "DialogContent");
+__turbopack_context__.k.register(_c3, "DialogHeader");
+__turbopack_context__.k.register(_c4, "DialogFooter");
+__turbopack_context__.k.register(_c5, "DialogTitle$React.forwardRef");
+__turbopack_context__.k.register(_c6, "DialogTitle");
+__turbopack_context__.k.register(_c7, "DialogDescription$React.forwardRef");
+__turbopack_context__.k.register(_c8, "DialogDescription");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/drawer.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Drawer",
+    ()=>Drawer,
+    "DrawerClose",
+    ()=>DrawerClose,
+    "DrawerContent",
+    ()=>DrawerContent,
+    "DrawerDescription",
+    ()=>DrawerDescription,
+    "DrawerFooter",
+    ()=>DrawerFooter,
+    "DrawerHeader",
+    ()=>DrawerHeader,
+    "DrawerOverlay",
+    ()=>DrawerOverlay,
+    "DrawerPortal",
+    ()=>DrawerPortal,
+    "DrawerTitle",
+    ()=>DrawerTitle,
+    "DrawerTrigger",
+    ()=>DrawerTrigger
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/vaul/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+const Drawer = ({ shouldScaleBackground = true, ...props })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Root, {
+        shouldScaleBackground: shouldScaleBackground,
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 10,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c = Drawer;
+Drawer.displayName = "Drawer";
+const DrawerTrigger = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Trigger;
+const DrawerPortal = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Portal;
+const DrawerClose = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Close;
+const DrawerOverlay = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Overlay, {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("fixed inset-0 z-50 bg-black/80", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 27,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = DrawerOverlay;
+DrawerOverlay.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Overlay.displayName;
+const DrawerContent = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c2 = ({ className, children, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DrawerPortal, {
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(DrawerOverlay, {}, void 0, false, {
+                fileName: "[project]/components/ui/drawer.tsx",
+                lineNumber: 40,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0)),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Content, {
+                ref: ref,
+                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background", className),
+                ...props,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted"
+                    }, void 0, false, {
+                        fileName: "[project]/components/ui/drawer.tsx",
+                        lineNumber: 49,
+                        columnNumber: 7
+                    }, ("TURBOPACK compile-time value", void 0)),
+                    children
+                ]
+            }, void 0, true, {
+                fileName: "[project]/components/ui/drawer.tsx",
+                lineNumber: 41,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 39,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c3 = DrawerContent;
+DrawerContent.displayName = "DrawerContent";
+const DrawerHeader = ({ className, ...props })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("grid gap-1.5 p-4 text-center sm:text-left", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 60,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c4 = DrawerHeader;
+DrawerHeader.displayName = "DrawerHeader";
+const DrawerFooter = ({ className, ...props })=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("mt-auto flex flex-col gap-2 p-4", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 71,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0));
+_c5 = DrawerFooter;
+DrawerFooter.displayName = "DrawerFooter";
+const DrawerTitle = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c6 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Title, {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-lg font-semibold leading-none tracking-tight", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 82,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c7 = DrawerTitle;
+DrawerTitle.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Title.displayName;
+const DrawerDescription = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c8 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Description, {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("text-sm text-muted-foreground", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/drawer.tsx",
+        lineNumber: 97,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c9 = DrawerDescription;
+DrawerDescription.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$vaul$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Drawer"].Description.displayName;
+;
+var _c, _c1, _c2, _c3, _c4, _c5, _c6, _c7, _c8, _c9;
+__turbopack_context__.k.register(_c, "Drawer");
+__turbopack_context__.k.register(_c1, "DrawerOverlay");
+__turbopack_context__.k.register(_c2, "DrawerContent$React.forwardRef");
+__turbopack_context__.k.register(_c3, "DrawerContent");
+__turbopack_context__.k.register(_c4, "DrawerHeader");
+__turbopack_context__.k.register(_c5, "DrawerFooter");
+__turbopack_context__.k.register(_c6, "DrawerTitle$React.forwardRef");
+__turbopack_context__.k.register(_c7, "DrawerTitle");
+__turbopack_context__.k.register(_c8, "DrawerDescription$React.forwardRef");
+__turbopack_context__.k.register(_c9, "DrawerDescription");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/input.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Input",
+    ()=>Input
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$tailwind$2d$merge$2f$dist$2f$bundle$2d$mjs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/tailwind-merge/dist/bundle-mjs.mjs [app-client] (ecmascript)");
+;
+;
+;
+;
+const Input = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, type, labelRight, fullWidth, ...props }, ref)=>{
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$tailwind$2d$merge$2f$dist$2f$bundle$2d$mjs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["twMerge"])("relative", fullWidth ? "w-full" : ""),
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                type: type,
+                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex h-10 w-full rounded-md border border-input/08 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", labelRight && "pr-12", className),
+                ref: ref,
+                ...props
+            }, void 0, false, {
+                fileName: "[project]/components/ui/input.tsx",
+                lineNumber: 24,
+                columnNumber: 9
+            }, ("TURBOPACK compile-time value", void 0)),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                className: "absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-[14px]",
+                children: labelRight && labelRight
+            }, void 0, false, {
+                fileName: "[project]/components/ui/input.tsx",
+                lineNumber: 34,
+                columnNumber: 9
+            }, ("TURBOPACK compile-time value", void 0))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/ui/input.tsx",
+        lineNumber: 23,
+        columnNumber: 7
+    }, ("TURBOPACK compile-time value", void 0));
+});
+_c1 = Input;
+Input.displayName = "Input";
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Input$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Input");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/label.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Label",
+    ()=>Label
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$label$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-label/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/class-variance-authority/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+;
+const labelVariants = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cva"])("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
+const Label = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$label$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(labelVariants(), className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/label.tsx",
+        lineNumber: 16,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = Label;
+Label.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$label$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"].displayName;
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Label$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Label");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/popover.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Popover",
+    ()=>Popover,
+    "PopoverContent",
+    ()=>PopoverContent,
+    "PopoverTrigger",
+    ()=>PopoverTrigger
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$popover$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-popover/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+const Popover = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$popover$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"];
+const PopoverTrigger = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$popover$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Trigger"];
+const PopoverContent = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, align = "center", sideOffset = 4, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$popover$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Portal"], {
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$popover$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"], {
+            ref: ref,
+            align: align,
+            sideOffset: sideOffset,
+            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-popover-content-transform-origin]", className),
+            ...props
+        }, void 0, false, {
+            fileName: "[project]/components/ui/popover.tsx",
+            lineNumber: 15,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/popover.tsx",
+        lineNumber: 14,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = PopoverContent;
+PopoverContent.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$popover$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"].displayName;
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "PopoverContent$React.forwardRef");
+__turbopack_context__.k.register(_c1, "PopoverContent");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/select.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Select",
+    ()=>Select,
+    "SelectContent",
+    ()=>SelectContent,
+    "SelectGroup",
+    ()=>SelectGroup,
+    "SelectItem",
+    ()=>SelectItem,
+    "SelectLabel",
+    ()=>SelectLabel,
+    "SelectScrollDownButton",
+    ()=>SelectScrollDownButton,
+    "SelectScrollUpButton",
+    ()=>SelectScrollUpButton,
+    "SelectSeparator",
+    ()=>SelectSeparator,
+    "SelectTrigger",
+    ()=>SelectTrigger,
+    "SelectValue",
+    ()=>SelectValue
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-select/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/check.js [app-client] (ecmascript) <export default as Check>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-down.js [app-client] (ecmascript) <export default as ChevronDown>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronUp$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-up.js [app-client] (ecmascript) <export default as ChevronUp>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+;
+const Select = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"];
+const SelectGroup = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Group"];
+const SelectValue = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Value"];
+const SelectTrigger = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, children, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Trigger"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1", className),
+        ...props,
+        children: [
+            children,
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Icon"], {
+                asChild: true,
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
+                    className: "h-4 w-4 opacity-50"
+                }, void 0, false, {
+                    fileName: "[project]/components/ui/select.tsx",
+                    lineNumber: 27,
+                    columnNumber: 7
+                }, ("TURBOPACK compile-time value", void 0))
+            }, void 0, false, {
+                fileName: "[project]/components/ui/select.tsx",
+                lineNumber: 26,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 17,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = SelectTrigger;
+SelectTrigger.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Trigger"].displayName;
+const SelectScrollUpButton = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ScrollUpButton"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex cursor-default items-center justify-center py-1", className),
+        ...props,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$up$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronUp$3e$__["ChevronUp"], {
+            className: "h-4 w-4"
+        }, void 0, false, {
+            fileName: "[project]/components/ui/select.tsx",
+            lineNumber: 45,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 37,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c2 = SelectScrollUpButton;
+SelectScrollUpButton.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ScrollUpButton"].displayName;
+const SelectScrollDownButton = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ScrollDownButton"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex cursor-default items-center justify-center py-1", className),
+        ...props,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
+            className: "h-4 w-4"
+        }, void 0, false, {
+            fileName: "[project]/components/ui/select.tsx",
+            lineNumber: 62,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 54,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c3 = SelectScrollDownButton;
+SelectScrollDownButton.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ScrollDownButton"].displayName;
+const SelectContent = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c4 = ({ className, children, position = "popper", ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Portal"], {
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"], {
+            ref: ref,
+            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("relative z-50 max-h-[--radix-select-content-available-height] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-select-content-transform-origin]", position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className),
+            position: position,
+            ...props,
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectScrollUpButton, {}, void 0, false, {
+                    fileName: "[project]/components/ui/select.tsx",
+                    lineNumber: 84,
+                    columnNumber: 7
+                }, ("TURBOPACK compile-time value", void 0)),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Viewport"], {
+                    className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"),
+                    children: children
+                }, void 0, false, {
+                    fileName: "[project]/components/ui/select.tsx",
+                    lineNumber: 85,
+                    columnNumber: 7
+                }, ("TURBOPACK compile-time value", void 0)),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectScrollDownButton, {}, void 0, false, {
+                    fileName: "[project]/components/ui/select.tsx",
+                    lineNumber: 94,
+                    columnNumber: 7
+                }, ("TURBOPACK compile-time value", void 0))
+            ]
+        }, void 0, true, {
+            fileName: "[project]/components/ui/select.tsx",
+            lineNumber: 73,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 72,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c5 = SelectContent;
+SelectContent.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Content"].displayName;
+const SelectLabel = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c6 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("py-1.5 pl-8 pr-2 text-sm font-semibold", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 104,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c7 = SelectLabel;
+SelectLabel.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"].displayName;
+const SelectItem = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c8 = ({ className, children, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Item"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className),
+        ...props,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ItemIndicator"], {
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
+                        className: "h-4 w-4"
+                    }, void 0, false, {
+                        fileName: "[project]/components/ui/select.tsx",
+                        lineNumber: 126,
+                        columnNumber: 9
+                    }, ("TURBOPACK compile-time value", void 0))
+                }, void 0, false, {
+                    fileName: "[project]/components/ui/select.tsx",
+                    lineNumber: 125,
+                    columnNumber: 7
+                }, ("TURBOPACK compile-time value", void 0))
+            }, void 0, false, {
+                fileName: "[project]/components/ui/select.tsx",
+                lineNumber: 124,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0)),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ItemText"], {
+                children: children
+            }, void 0, false, {
+                fileName: "[project]/components/ui/select.tsx",
+                lineNumber: 130,
+                columnNumber: 5
+            }, ("TURBOPACK compile-time value", void 0))
+        ]
+    }, void 0, true, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 116,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c9 = SelectItem;
+SelectItem.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Item"].displayName;
+const SelectSeparator = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c10 = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("-mx-1 my-1 h-px bg-muted", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/select.tsx",
+        lineNumber: 139,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c11 = SelectSeparator;
+SelectSeparator.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$select$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"].displayName;
+;
+var _c, _c1, _c2, _c3, _c4, _c5, _c6, _c7, _c8, _c9, _c10, _c11;
+__turbopack_context__.k.register(_c, "SelectTrigger$React.forwardRef");
+__turbopack_context__.k.register(_c1, "SelectTrigger");
+__turbopack_context__.k.register(_c2, "SelectScrollUpButton");
+__turbopack_context__.k.register(_c3, "SelectScrollDownButton");
+__turbopack_context__.k.register(_c4, "SelectContent$React.forwardRef");
+__turbopack_context__.k.register(_c5, "SelectContent");
+__turbopack_context__.k.register(_c6, "SelectLabel$React.forwardRef");
+__turbopack_context__.k.register(_c7, "SelectLabel");
+__turbopack_context__.k.register(_c8, "SelectItem$React.forwardRef");
+__turbopack_context__.k.register(_c9, "SelectItem");
+__turbopack_context__.k.register(_c10, "SelectSeparator$React.forwardRef");
+__turbopack_context__.k.register(_c11, "SelectSeparator");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/skeleton.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Skeleton",
+    ()=>Skeleton
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+function Skeleton({ className, ...props }) {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("animate-pulse rounded-md bg-muted", className),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/skeleton.tsx",
+        lineNumber: 8,
+        columnNumber: 5
+    }, this);
+}
+_c = Skeleton;
+;
+var _c;
+__turbopack_context__.k.register(_c, "Skeleton");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/switch.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Switch",
+    ()=>Switch
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$switch$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-switch/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+const Switch = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$switch$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input", className),
+        ...props,
+        ref: ref,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$switch$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Thumb"], {
+            className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0")
+        }, void 0, false, {
+            fileName: "[project]/components/ui/switch.tsx",
+            lineNumber: 18,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/switch.tsx",
+        lineNumber: 10,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = Switch;
+Switch.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$switch$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"].displayName;
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Switch$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Switch");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/toggle-group.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "ToggleGroup",
+    ()=>ToggleGroup,
+    "ToggleGroupItem",
+    ()=>ToggleGroupItem
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2d$group$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-toggle-group/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/toggle.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+"use client";
+;
+;
+;
+;
+const ToggleGroupContext = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"]({
+    size: "default",
+    variant: "default"
+});
+const ToggleGroup = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, variant, size, children, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2d$group$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center justify-center gap-1", className),
+        ...props,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ToggleGroupContext.Provider, {
+            value: {
+                variant,
+                size
+            },
+            children: children
+        }, void 0, false, {
+            fileName: "[project]/components/ui/toggle-group.tsx",
+            lineNumber: 27,
+            columnNumber: 5
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
+        fileName: "[project]/components/ui/toggle-group.tsx",
+        lineNumber: 22,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = ToggleGroup;
+ToggleGroup.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2d$group$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"].displayName;
+const ToggleGroupItem = /*#__PURE__*/ _s(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c2 = _s(({ className, children, variant, size, ...props }, ref)=>{
+    _s();
+    const context = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useContext"](ToggleGroupContext);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2d$group$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Item"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toggleVariants"])({
+            variant: context.variant || variant,
+            size: context.size || size
+        }), className),
+        ...props,
+        children: children
+    }, void 0, false, {
+        fileName: "[project]/components/ui/toggle-group.tsx",
+        lineNumber: 43,
+        columnNumber: 5
+    }, ("TURBOPACK compile-time value", void 0));
+}, "b9L3QQ+jgeyIrH0NfHrJ8nn7VMU=")), "b9L3QQ+jgeyIrH0NfHrJ8nn7VMU=");
+_c3 = ToggleGroupItem;
+ToggleGroupItem.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2d$group$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Item"].displayName;
+;
+var _c, _c1, _c2, _c3;
+__turbopack_context__.k.register(_c, "ToggleGroup$React.forwardRef");
+__turbopack_context__.k.register(_c1, "ToggleGroup");
+__turbopack_context__.k.register(_c2, "ToggleGroupItem$React.forwardRef");
+__turbopack_context__.k.register(_c3, "ToggleGroupItem");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/components/ui/toggle.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Toggle",
+    ()=>Toggle,
+    "toggleVariants",
+    ()=>toggleVariants
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-toggle/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/class-variance-authority/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
+;
+;
+;
+;
+;
+const toggleVariants = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$class$2d$variance$2d$authority$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cva"])("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 gap-2", {
+    variants: {
+        variant: {
+            default: "bg-transparent",
+            outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground"
+        },
+        size: {
+            default: "h-10 px-3 min-w-10",
+            sm: "h-9 px-2.5 min-w-9",
+            lg: "h-11 px-5 min-w-11"
+        }
+    },
+    defaultVariants: {
+        variant: "default",
+        size: "default"
+    }
+});
+const Toggle = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["forwardRef"](_c = ({ className, variant, size, ...props }, ref)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
+        ref: ref,
+        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])(toggleVariants({
+            variant,
+            size,
+            className
+        })),
+        ...props
+    }, void 0, false, {
+        fileName: "[project]/components/ui/toggle.tsx",
+        lineNumber: 34,
+        columnNumber: 3
+    }, ("TURBOPACK compile-time value", void 0)));
+_c1 = Toggle;
+Toggle.displayName = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$toggle$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"].displayName;
+;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "Toggle$React.forwardRef");
+__turbopack_context__.k.register(_c1, "Toggle");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-base-trading.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useBaseTrading",
+    ()=>useBaseTrading
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/sonner/dist/index.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$index$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/core/src/index.ts [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useActiveSymbols$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/core/src/react/useActiveSymbols.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useTicks$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/core/src/react/useTicks.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$open$2d$positions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-open-positions.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$closed$2d$positions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-closed-positions.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$sell$2d$contract$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-sell-contract.ts [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+;
+;
+function useBaseTrading({ ws, isConnected, isExhausted, isAuthenticated, onAuthWSFailed, contractTypes }) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    // When the authenticated WS exhausts all reconnect attempts, fall back to
+    // the public WS by triggering logout.
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useBaseTrading.useEffect": ()=>{
+            if (isExhausted && ws) {
+                onAuthWSFailed?.();
+            }
+        }
+    }["useBaseTrading.useEffect"], [
+        isExhausted,
+        ws,
+        onAuthWSFailed
+    ]);
+    const { symbols, activeSymbol, selectSymbol, contracts, contractsAvailable, durationLimits, defaultStake, isLoading: symbolsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useActiveSymbols$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useActiveSymbols"])(ws, isConnected, contractTypes);
+    const { currentTick, prices, pipSize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useTicks$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTicks"])(ws, isConnected, activeSymbol);
+    // Surface WS-level errors as toasts. Buy and sell errors are handled by
+    // their own hooks and are excluded here to avoid double-reporting.
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useBaseTrading.useEffect": ()=>{
+            if (!ws || !isConnected) return;
+            return ws.onMessage({
+                "useBaseTrading.useEffect": (data)=>{
+                    if (!data.error) return;
+                    const msgType = data.msg_type;
+                    if (msgType === 'buy' || msgType === 'sell') return;
+                    const err = data.error;
+                    // A duplicate subscription is an internal stream-lifecycle event that the
+                    // subscription layer recovers from on its own, so it is a developer
+                    // signal rather than an app error. Matched on the code only — the message
+                    // is server-localized and interpolates the symbol.
+                    if (err.code === 'AlreadySubscribed') {
+                        console.warn('[useBaseTrading] duplicate subscription reported by the API', {
+                            code: err.code,
+                            msgType,
+                            message: err.message
+                        });
+                        return;
+                    }
+                    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error(localize('Error'), {
+                        // API message when present; app-authored fallback otherwise.
+                        description: err.message ?? localize('Unexpected error occurred. Please try again.')
+                    });
+                }
+            }["useBaseTrading.useEffect"]);
+        }
+    }["useBaseTrading.useEffect"], [
+        ws,
+        isConnected,
+        localize
+    ]);
+    const { positions: openPositions } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$open$2d$positions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useOpenPositions"])(ws, isConnected, isAuthenticated);
+    const { positions: closedPositions, refresh: refreshClosedPositions } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$closed$2d$positions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useClosedPositions"])(ws, isConnected, isAuthenticated);
+    const { sellContract: sellContractRaw, sellingId, sellError, clearSellError } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$sell$2d$contract$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSellContract"])(ws, isConnected);
+    // Refresh the closed-positions table after each successful sell.
+    const sellContract = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useBaseTrading.useCallback[sellContract]": async (contractId, bidPrice)=>{
+            await sellContractRaw(contractId, bidPrice);
+            await refreshClosedPositions();
+        }
+    }["useBaseTrading.useCallback[sellContract]"], [
+        sellContractRaw,
+        refreshClosedPositions
+    ]);
+    return {
+        ws,
+        isConnected,
+        isLoading: !isConnected || symbolsLoading,
+        error: null,
+        symbols,
+        activeSymbol,
+        selectSymbol,
+        currentTick,
+        prices,
+        pipSize,
+        contracts,
+        contractsAvailable,
+        durationLimits,
+        defaultStake,
+        openPositions,
+        closedPositions,
+        refreshClosedPositions,
+        sellContract,
+        sellingId,
+        sellError,
+        clearSellError
+    };
+}
+_s(useBaseTrading, "fgnOID4nm3h3RQSXfPhWj5fgU+M=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useActiveSymbols$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useActiveSymbols"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useTicks$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTicks"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$open$2d$positions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useOpenPositions"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$closed$2d$positions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useClosedPositions"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$sell$2d$contract$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSellContract"]
+    ];
+});
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-closed-positions.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useClosedPositions",
+    ()=>useClosedPositions
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+function useClosedPositions(ws, isConnected, isAuthenticated) {
+    _s();
+    const [positions, setPositions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const fetch = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useClosedPositions.useCallback[fetch]": async ()=>{
+            if (!ws || !isConnected || !isAuthenticated) return;
+            setIsLoading(true);
+            try {
+                const response = await ws.send({
+                    profit_table: 1,
+                    description: 1,
+                    sort: 'DESC',
+                    limit: 50
+                });
+                setPositions(response.profit_table?.transactions ?? []);
+            } catch  {
+            // silent — table simply stays empty on error
+            } finally{
+                setIsLoading(false);
+            }
+        }
+    }["useClosedPositions.useCallback[fetch]"], [
+        ws,
+        isConnected,
+        isAuthenticated
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useClosedPositions.useEffect": ()=>{
+            fetch();
+        }
+    }["useClosedPositions.useEffect"], [
+        fetch
+    ]);
+    return {
+        positions,
+        isLoading,
+        refresh: fetch
+    };
+}
+_s(useClosedPositions, "eKk/wjGRoyr1PeFRIQqAay+qTro=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-contract-markers.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useContractMarkers",
+    ()=>useContractMarkers
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$chart$2d$markers$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/chart-markers.ts [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+function useContractMarkers(positions, activeSymbol, isMobile = false) {
+    _s();
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useContractMarkers.useMemo": ()=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$chart$2d$markers$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["calculateContractMarkers"])(positions, activeSymbol, isMobile)
+    }["useContractMarkers.useMemo"], [
+        positions,
+        activeSymbol,
+        isMobile
+    ]);
+}
+_s(useContractMarkers, "nwk+m61qLgjDVUp4IGV/072DDN4=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-is-mobile.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useIsMobile",
+    ()=>useIsMobile
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+/** Matches Tailwind `lg` breakpoint — below this is considered mobile layout. */ const MOBILE_MEDIA_QUERY = '(max-width: 1023px)';
+function useIsMobile() {
+    _s();
+    const [isMobile, setIsMobile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useIsMobile.useEffect": ()=>{
+            const mq = window.matchMedia(MOBILE_MEDIA_QUERY);
+            const sync = {
+                "useIsMobile.useEffect.sync": ()=>setIsMobile(mq.matches)
+            }["useIsMobile.useEffect.sync"];
+            sync();
+            mq.addEventListener('change', sync);
+            return ({
+                "useIsMobile.useEffect": ()=>mq.removeEventListener('change', sync)
+            })["useIsMobile.useEffect"];
+        }
+    }["useIsMobile.useEffect"], []);
+    return isMobile;
+}
+_s(useIsMobile, "0VTTNJATKABQPGLm9RVT0tKGUgU=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-open-positions.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useOpenPositions",
+    ()=>useOpenPositions
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+// How long (ms) to keep a just-closed position in state so SmartCharts can
+// render the exit spot and P&L label markers before removing it.
+const CLOSED_POSITION_TTL_MS = 1500;
+function useOpenPositions(ws, isConnected, isAuthenticated) {
+    _s();
+    const [positions, setPositions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    // Track pending removal timers keyed by contract_id
+    const removalTimers = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(new Map());
+    // Track whether we have an active subscription so we can forget_all on cleanup
+    const isSubscribedRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(false);
+    const scheduleRemoval = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useOpenPositions.useCallback[scheduleRemoval]": (contractId)=>{
+            // Cancel any existing timer for this contract first
+            const existing = removalTimers.current.get(contractId);
+            if (existing) clearTimeout(existing);
+            const timer = setTimeout({
+                "useOpenPositions.useCallback[scheduleRemoval].timer": ()=>{
+                    setPositions({
+                        "useOpenPositions.useCallback[scheduleRemoval].timer": (prev)=>prev.filter({
+                                "useOpenPositions.useCallback[scheduleRemoval].timer": (p)=>p.contract_id !== contractId
+                            }["useOpenPositions.useCallback[scheduleRemoval].timer"])
+                    }["useOpenPositions.useCallback[scheduleRemoval].timer"]);
+                    removalTimers.current.delete(contractId);
+                }
+            }["useOpenPositions.useCallback[scheduleRemoval].timer"], CLOSED_POSITION_TTL_MS);
+            removalTimers.current.set(contractId, timer);
+        }
+    }["useOpenPositions.useCallback[scheduleRemoval]"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useOpenPositions.useEffect": ()=>{
+            if (!ws || !isConnected || !isAuthenticated) {
+                return ({
+                    "useOpenPositions.useEffect": ()=>{
+                        setPositions([]);
+                    }
+                })["useOpenPositions.useEffect"];
+            }
+            // Capture ref value at effect time so the cleanup closure has a stable reference
+            const timers = removalTimers.current;
+            // Use global message listener — each open contract has its own subscription.id
+            // so we can't use ws.subscribe() for all of them; onMessage catches everything.
+            const unsubscribeListener = ws.onMessage({
+                "useOpenPositions.useEffect.unsubscribeListener": (data)=>{
+                    if (data.msg_type !== 'proposal_open_contract') return;
+                    const contract = data.proposal_open_contract;
+                    if (!contract) return;
+                    const isClosed = !!contract.is_sold || !!contract.is_expired || contract.status !== 'open';
+                    setPositions({
+                        "useOpenPositions.useEffect.unsubscribeListener": (prev)=>{
+                            const map = new Map(prev.map({
+                                "useOpenPositions.useEffect.unsubscribeListener": (p)=>[
+                                        p.contract_id,
+                                        p
+                                    ]
+                            }["useOpenPositions.useEffect.unsubscribeListener"]));
+                            // Always upsert the latest data (including exit_spot/exit_spot_time on close)
+                            map.set(contract.contract_id, contract);
+                            return Array.from(map.values());
+                        }
+                    }["useOpenPositions.useEffect.unsubscribeListener"]);
+                    if (isClosed) {
+                        // Schedule removal after TTL so exit markers are briefly visible
+                        scheduleRemoval(contract.contract_id);
+                    }
+                }
+            }["useOpenPositions.useEffect.unsubscribeListener"]);
+            // Kick off subscription — server sends one message per open contract,
+            // each with its own subscription.id for live updates.
+            ws.send({
+                proposal_open_contract: 1,
+                subscribe: 1
+            }).then({
+                "useOpenPositions.useEffect": ()=>{
+                    isSubscribedRef.current = true;
+                }
+            }["useOpenPositions.useEffect"]).catch({
+                "useOpenPositions.useEffect": ()=>{}
+            }["useOpenPositions.useEffect"]);
+            return ({
+                "useOpenPositions.useEffect": ()=>{
+                    unsubscribeListener();
+                    // Clear all pending removal timers on cleanup
+                    timers.forEach({
+                        "useOpenPositions.useEffect": (t)=>clearTimeout(t)
+                    }["useOpenPositions.useEffect"]);
+                    timers.clear();
+                    setPositions([]);
+                    // Cancel all open-contract streams on the server so the next mount
+                    // can re-subscribe without hitting AlreadySubscribed.
+                    if (isSubscribedRef.current && ws.isConnected) {
+                        ws.send({
+                            forget_all: 'proposal_open_contract'
+                        }).catch({
+                            "useOpenPositions.useEffect": ()=>{}
+                        }["useOpenPositions.useEffect"]);
+                    }
+                    isSubscribedRef.current = false;
+                }
+            })["useOpenPositions.useEffect"];
+        }
+    }["useOpenPositions.useEffect"], [
+        ws,
+        isConnected,
+        isAuthenticated,
+        scheduleRemoval
+    ]);
+    return {
+        positions
+    };
+}
+_s(useOpenPositions, "lZoxW2OQ70zpqPN8pFqoiCnuFC4=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-rearrange-drag.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useRearrangeDrag",
+    ()=>useRearrangeDrag
+]);
+/**
+ * Reusable drag-to-reorder hook for the no-code builders' "rearrange mode".
+ *
+ * Template-agnostic: it works on any list of string keys (a template's
+ * `config.order`). The builder dashboard toggles rearrange mode via a
+ * `SET_REARRANGE_MODE` postMessage; while it's on, each layout block becomes
+ * draggable and dropping one onto another reorders the list. The new order is
+ * reported back through `onReorder` (which the /edit route forwards to the
+ * dashboard as a `REORDER` message).
+ *
+ * Uses native HTML5 drag-and-drop (no library) — spread `getItemProps(key)`
+ * onto each draggable block. `draggingKey`/`overKey` drive visual feedback.
+ */ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+function useRearrangeDrag(order, onReorder) {
+    _s();
+    const [draggingKey, setDraggingKey] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [overKey, setOverKey] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const move = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useRearrangeDrag.useCallback[move]": (from, to)=>{
+            if (from === to) return;
+            const next = [
+                ...order
+            ];
+            const fromIdx = next.indexOf(from);
+            const toIdx = next.indexOf(to);
+            if (fromIdx < 0 || toIdx < 0) return;
+            next.splice(fromIdx, 1);
+            next.splice(toIdx, 0, from);
+            onReorder(next);
+        }
+    }["useRearrangeDrag.useCallback[move]"], [
+        order,
+        onReorder
+    ]);
+    const getItemProps = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useRearrangeDrag.useCallback[getItemProps]": (key)=>({
+                draggable: true,
+                onDragStart: ({
+                    "useRearrangeDrag.useCallback[getItemProps]": (event)=>{
+                        setDraggingKey(key);
+                        event.dataTransfer.effectAllowed = 'move';
+                        // setData is required for drag to work in Firefox.
+                        try {
+                            event.dataTransfer.setData('text/plain', key);
+                        } catch  {
+                        /* ignore */ }
+                    }
+                })["useRearrangeDrag.useCallback[getItemProps]"],
+                onDragOver: ({
+                    "useRearrangeDrag.useCallback[getItemProps]": (event)=>{
+                        // A drag that didn't start in this list (e.g. the other column of a
+                        // split desktop layout, or content from outside the page) has no valid
+                        // drop target here. Leaving dragover uncancelled tells the browser the
+                        // drop is not allowed, so the cursor shows the native not-allowed
+                        // feedback instead of a "move" affordance that would silently no-op.
+                        if (draggingKey === null) {
+                            event.dataTransfer.dropEffect = 'none';
+                            return;
+                        }
+                        event.preventDefault();
+                        event.dataTransfer.dropEffect = 'move';
+                        setOverKey({
+                            "useRearrangeDrag.useCallback[getItemProps]": (prev)=>prev === key ? prev : key
+                        }["useRearrangeDrag.useCallback[getItemProps]"]);
+                    }
+                })["useRearrangeDrag.useCallback[getItemProps]"],
+                onDragEnter: ({
+                    "useRearrangeDrag.useCallback[getItemProps]": (event)=>{
+                        if (draggingKey === null) return;
+                        event.preventDefault();
+                        setOverKey({
+                            "useRearrangeDrag.useCallback[getItemProps]": (prev)=>prev === key ? prev : key
+                        }["useRearrangeDrag.useCallback[getItemProps]"]);
+                    }
+                })["useRearrangeDrag.useCallback[getItemProps]"],
+                onDrop: ({
+                    "useRearrangeDrag.useCallback[getItemProps]": (event)=>{
+                        event.preventDefault();
+                        setDraggingKey({
+                            "useRearrangeDrag.useCallback[getItemProps]": (dragged)=>{
+                                if (dragged && dragged !== key) move(dragged, key);
+                                return null;
+                            }
+                        }["useRearrangeDrag.useCallback[getItemProps]"]);
+                        setOverKey(null);
+                    }
+                })["useRearrangeDrag.useCallback[getItemProps]"],
+                onDragEnd: ({
+                    "useRearrangeDrag.useCallback[getItemProps]": ()=>{
+                        setDraggingKey(null);
+                        setOverKey(null);
+                    }
+                })["useRearrangeDrag.useCallback[getItemProps]"]
+            })
+    }["useRearrangeDrag.useCallback[getItemProps]"], [
+        move,
+        draggingKey
+    ]);
+    return {
+        draggingKey,
+        overKey: draggingKey !== null ? overKey : null,
+        isDragging: draggingKey !== null,
+        getItemProps
+    };
+}
+_s(useRearrangeDrag, "a2jODC19LsGd6RwCyOkJy3e2A1g=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-rise-fall-trading.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useRiseFallTrading",
+    ()=>useRiseFallTrading
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$index$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/core/src/index.ts [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useProposal$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/core/src/react/useProposal.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useBuy$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/core/src/react/useBuy.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$base$2d$trading$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/use-base-trading.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/duration-utils.ts [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+;
+;
+;
+const CONTRACT_TYPES = [
+    'CALL',
+    'PUT'
+];
+function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticated, onAuthWSFailed }) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const { ws: tradingWs, isConnected: tradingIsConnected, isLoading, error, symbols, activeSymbol, selectSymbol, currentTick, prices, pipSize, contracts, openPositions, closedPositions, sellContract, sellingId, sellError, clearSellError } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$base$2d$trading$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBaseTrading"])({
+        ws,
+        isConnected,
+        isExhausted,
+        isAuthenticated,
+        onAuthWSFailed,
+        contractTypes: CONTRACT_TYPES
+    });
+    const [direction, setDirection] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('CALL');
+    const [allowEquals, setAllowEquals] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [stake, setStake] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('10');
+    const [duration, setDuration] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(1);
+    const [durationUnit, setDurationUnitRaw] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('t');
+    const [endDate, setEndDate] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(undefined);
+    const [endTime, setEndTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [durationOptionsSymbol, setDurationOptionsSymbol] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const durationOptions = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useRiseFallTrading.useMemo[durationOptions]": ()=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getDurationOptions"])(contracts, (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getDurationUnitLabels"])(localize))
+    }["useRiseFallTrading.useMemo[durationOptions]"], [
+        contracts,
+        localize
+    ]);
+    // Track durationUnit and activeSymbol in refs so the duration-options effect doesn't list them in deps
+    const durationUnitRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(durationUnit);
+    const activeSymbolKeyRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(activeSymbol?.underlying_symbol);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useRiseFallTrading.useEffect": ()=>{
+            durationUnitRef.current = durationUnit;
+        }
+    }["useRiseFallTrading.useEffect"], [
+        durationUnit
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useRiseFallTrading.useEffect": ()=>{
+            activeSymbolKeyRef.current = activeSymbol?.underlying_symbol;
+        }
+    }["useRiseFallTrading.useEffect"], [
+        activeSymbol?.underlying_symbol
+    ]);
+    /* eslint-disable react-hooks/set-state-in-effect -- reset duration/end-time state when contracts-derived options change */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useRiseFallTrading.useEffect": ()=>{
+            if (!durationOptions.length) return;
+            setEndDate(undefined);
+            setEndTime('');
+            setDurationOptionsSymbol(activeSymbolKeyRef.current ?? null);
+            const currentOpt = durationOptions.find({
+                "useRiseFallTrading.useEffect.currentOpt": (o)=>o.unit === durationUnitRef.current
+            }["useRiseFallTrading.useEffect.currentOpt"]);
+            if (!currentOpt) {
+                const first = durationOptions[0];
+                setDurationUnitRaw(first.unit);
+                if (first.unit !== 'end-time') setDuration(first.min);
+            } else if (currentOpt.unit !== 'end-time') {
+                setDuration({
+                    "useRiseFallTrading.useEffect": (prev)=>prev < currentOpt.min || prev > currentOpt.max ? currentOpt.min : prev
+                }["useRiseFallTrading.useEffect"]);
+            }
+        }
+    }["useRiseFallTrading.useEffect"], [
+        durationOptions
+    ]);
+    /* eslint-enable react-hooks/set-state-in-effect */ const setDurationUnit = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useRiseFallTrading.useCallback[setDurationUnit]": (unit)=>{
+            setDurationUnitRaw(unit);
+            const opt = durationOptions.find({
+                "useRiseFallTrading.useCallback[setDurationUnit].opt": (o)=>o.unit === unit
+            }["useRiseFallTrading.useCallback[setDurationUnit].opt"]);
+            if (opt && unit !== 'end-time') setDuration(opt.min);
+        }
+    }["useRiseFallTrading.useCallback[setDurationUnit]"], [
+        durationOptions
+    ]);
+    const { buyContract: buyWithProposal, isBuying, buyResult, buyError, clearBuyResult } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useBuy$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBuy"])(tradingWs, tradingIsConnected);
+    const proposalParams = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useRiseFallTrading.useMemo[proposalParams]": ()=>{
+            if (isBuying || !activeSymbol || !durationOptions.length) return null;
+            if (durationOptionsSymbol !== activeSymbol.underlying_symbol) return null;
+            const stakeNum = parseFloat(stake);
+            if (!stakeNum || stakeNum <= 0) return null;
+            const base = {
+                contractType: allowEquals ? `${direction}E` : direction,
+                symbol: activeSymbol.underlying_symbol,
+                amount: stakeNum,
+                basis: 'stake',
+                currency: 'USD'
+            };
+            if (durationUnit === 'end-time') {
+                const dateExpiry = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$duration$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["computeEndTimeEpoch"])(endDate, endTime);
+                if (!dateExpiry) return null;
+                return {
+                    ...base,
+                    duration: 0,
+                    durationUnit: 'd',
+                    dateExpiry
+                };
+            }
+            const opt = durationOptions.find({
+                "useRiseFallTrading.useMemo[proposalParams].opt": (o)=>o.unit === durationUnit
+            }["useRiseFallTrading.useMemo[proposalParams].opt"]);
+            if (!opt || duration < opt.min || duration > opt.max) return null;
+            if (durationUnit === 'h') {
+                return {
+                    ...base,
+                    duration: duration * 60,
+                    durationUnit: 'm'
+                };
+            }
+            return {
+                ...base,
+                duration,
+                durationUnit
+            };
+        }
+    }["useRiseFallTrading.useMemo[proposalParams]"], [
+        activeSymbol,
+        direction,
+        allowEquals,
+        stake,
+        duration,
+        durationUnit,
+        endDate,
+        endTime,
+        isBuying,
+        durationOptions,
+        durationOptionsSymbol
+    ]);
+    const { proposal } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useProposal$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useProposal"])(tradingWs, tradingIsConnected, proposalParams);
+    const buyContract = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useRiseFallTrading.useCallback[buyContract]": async ()=>{
+            if (proposal) await buyWithProposal(proposal);
+        }
+    }["useRiseFallTrading.useCallback[buyContract]"], [
+        proposal,
+        buyWithProposal
+    ]);
+    return {
+        ws: tradingWs,
+        isConnected: tradingIsConnected,
+        isLoading,
+        error,
+        symbols,
+        activeSymbol,
+        selectSymbol,
+        currentTick,
+        prices,
+        pipSize,
+        direction,
+        setDirection,
+        allowEquals,
+        setAllowEquals,
+        stake,
+        setStake,
+        duration,
+        setDuration,
+        durationOptions,
+        durationUnit,
+        setDurationUnit,
+        endDate,
+        setEndDate,
+        endTime,
+        setEndTime,
+        proposal,
+        buyContract,
+        isBuying,
+        buyResult,
+        buyError,
+        clearBuyResult,
+        openPositions,
+        closedPositions,
+        sellContract,
+        sellingId,
+        sellError,
+        clearSellError
+    };
+}
+_s(useRiseFallTrading, "ASmURi6sosiZLrNStmgjHwWEc9M=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$use$2d$base$2d$trading$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBaseTrading"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useBuy$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useBuy"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$react$2f$useProposal$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useProposal"]
+    ];
+});
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-sell-contract.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useSellContract",
+    ()=>useSellContract
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/custom/i18n-provider.tsx [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+function useSellContract(ws, isConnected) {
+    _s();
+    const { localize } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"])();
+    const [sellingId, setSellingId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [sellError, setSellError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const clearSellError = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSellContract.useCallback[clearSellError]": ()=>setSellError(null)
+    }["useSellContract.useCallback[clearSellError]"], []);
+    const sellContract = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSellContract.useCallback[sellContract]": async (contractId, bidPrice)=>{
+            if (!ws || !isConnected) return;
+            setSellingId(contractId);
+            setSellError(null);
+            try {
+                await ws.send({
+                    sell: contractId,
+                    price: bidPrice
+                });
+            } catch (err) {
+                // Prefer API/Error message; localise only the app-authored fallback.
+                setSellError(err instanceof Error ? err.message : localize('Sell failed'));
+            } finally{
+                setSellingId(null);
+            }
+        }
+    }["useSellContract.useCallback[sellContract]"], [
+        ws,
+        isConnected,
+        localize
+    ]);
+    return {
+        sellContract,
+        sellingId,
+        sellError,
+        clearSellError
+    };
+}
+_s(useSellContract, "aExFBbKZaDB+YgMgvauRQFJg/sg=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$custom$2f$i18n$2d$provider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAppTranslations"]
+    ];
+});
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-smartchart-chart-data.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useSmartChartChartData",
+    ()=>useSmartChartChartData
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$active$2d$symbols$2d$display$2d$names$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/active-symbols-display-names.ts [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+/**
+ * Transforms the Deriv `trading_times: 'today'` response into the simplified
+ * map SmartCharts' TradingTimes store expects. Every symbol the chart might
+ * render needs an entry — otherwise `getDelayedMinutes()` throws on
+ * `undefined.delay_amount` when the chart calls `fetchInitialData`.
+ */ function buildTradingTimesMap(response) {
+    const markets = response?.trading_times?.markets;
+    if (!markets) return {};
+    const map = {};
+    const now = new Date();
+    const dateStr = now.toISOString().substring(0, 11);
+    for (const market of markets){
+        market.submarkets?.forEach((submarket)=>{
+            submarket.symbols?.forEach((symbolObj)=>{
+                const symbol = symbolObj.underlying_symbol || symbolObj.symbol;
+                const { times } = symbolObj;
+                if (!symbol || !times) return;
+                const { open, close } = times;
+                const isOpenAllDay = open.length === 1 && open[0] === '00:00:00' && close[0] === '23:59:59';
+                const isClosedAllDay = open.length === 1 && open[0] === '--' && close[0] === '--';
+                let isOpen = isOpenAllDay;
+                let openTime = '';
+                let closeTime = '';
+                if (!isClosedAllDay && open.length > 0 && close.length > 0) {
+                    openTime = `${dateStr}${open[0]}Z`;
+                    closeTime = `${dateStr}${close[0]}Z`;
+                    const openDate = new Date(openTime);
+                    const closeDate = new Date(closeTime);
+                    isOpen = now >= openDate && now < closeDate;
+                }
+                map[symbol] = {
+                    isOpen,
+                    openTime,
+                    closeTime
+                };
+            });
+        });
+    }
+    return map;
+}
+function useSmartChartChartData(ws, isConnected, symbols) {
+    _s();
+    const [tradingTimes, setTradingTimes] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useSmartChartChartData.useEffect": ()=>{
+            if (!ws || !isConnected) return;
+            let cancelled = false;
+            ws.send({
+                trading_times: 'today'
+            }).then({
+                "useSmartChartChartData.useEffect": (response)=>{
+                    if (cancelled) return;
+                    setTradingTimes(buildTradingTimesMap(response));
+                }
+            }["useSmartChartChartData.useEffect"]).catch({
+                "useSmartChartChartData.useEffect": ()=>{
+                    if (cancelled) return;
+                    setTradingTimes({});
+                }
+            }["useSmartChartChartData.useEffect"]);
+            return ({
+                "useSmartChartChartData.useEffect": ()=>{
+                    cancelled = true;
+                }
+            })["useSmartChartChartData.useEffect"];
+        }
+    }["useSmartChartChartData.useEffect"], [
+        ws,
+        isConnected
+    ]);
+    const chartData = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
+        "useSmartChartChartData.useMemo[chartData]": ()=>{
+            if (symbols.length === 0 || !tradingTimes) return undefined;
+            // Pristine @deriv-com/smartcharts-champion@1.9.12 reads these fields without null
+            // guards: `submarket_display_name.localeCompare(...)` and `pip.toString().length`
+            // crash if either is missing. Keep every field defined.
+            const activeSymbols = symbols.map({
+                "useSmartChartChartData.useMemo[chartData].activeSymbols": (s)=>({
+                        symbol: s.underlying_symbol,
+                        display_name: s.underlying_symbol_name ?? s.underlying_symbol,
+                        exchange_is_open: s.exchange_is_open,
+                        is_trading_suspended: s.is_trading_suspended,
+                        market: s.market ?? '',
+                        market_display_name: s.market_display_name ?? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$active$2d$symbols$2d$display$2d$names$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getMarketDisplayName"])(s.market ?? ''),
+                        pip: s.pip_size ?? 0.01,
+                        subgroup: s.subgroup ?? '',
+                        subgroup_display_name: s.subgroup_display_name ?? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$active$2d$symbols$2d$display$2d$names$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getSubgroupDisplayName"])(s.subgroup ?? ''),
+                        submarket: s.submarket ?? '',
+                        submarket_display_name: s.submarket_display_name ?? (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$active$2d$symbols$2d$display$2d$names$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getSubmarketDisplayName"])(s.submarket ?? ''),
+                        symbol_type: s.underlying_symbol_type ?? ''
+                    })
+            }["useSmartChartChartData.useMemo[chartData].activeSymbols"]);
+            // Ensure every activeSymbol has a tradingTimes entry. Pristine v1.9.12's
+            // `getDelayedMinutes()` does `_tradingTimesMap?.[symbol].delay_amount` — if
+            // `symbol` is missing from the map, `.delay_amount` throws on undefined.
+            const filledTradingTimes = {
+                ...tradingTimes
+            };
+            for (const s of activeSymbols){
+                if (!filledTradingTimes[s.symbol]) {
+                    filledTradingTimes[s.symbol] = {
+                        isOpen: !!s.exchange_is_open,
+                        openTime: '',
+                        closeTime: ''
+                    };
+                }
+            }
+            return {
+                tradingTimes: filledTradingTimes,
+                activeSymbols
+            };
+        }
+    }["useSmartChartChartData.useMemo[chartData]"], [
+        tradingTimes,
+        symbols
+    ]);
+    return {
+        chartData
+    };
+}
+_s(useSmartChartChartData, "R3XIh/p59cO/4ioslHDqKSbq7uA=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/hooks/use-smartcharts-api.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "QUOTE_FORGET_LINGER_MS",
+    ()=>QUOTE_FORGET_LINGER_MS,
+    "useSmartChartsApi",
+    ()=>useSmartChartsApi
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$index$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/packages/core/src/index.ts [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$deriv$2d$ws$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/core/src/ws/deriv-ws.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$stream$2d$family$2d$forget$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/packages/core/src/ws/stream-family-forget.ts [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature();
+'use client';
+;
+;
+const QUOTE_FORGET_LINGER_MS = 500;
+function quoteKey(symbol, granularity) {
+    return `${symbol}-${granularity ?? 0}`;
+}
+/** Stream family to clear when retaking a colliding subscription. */ function streamFamily(granularity) {
+    return granularity ? 'candles' : 'ticks';
+}
+function useSmartChartsApi(ws) {
+    _s();
+    const wsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(ws);
+    const streamsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(new Map());
+    // Stable identity for this hook instance on the family-forget channel, so our
+    // own `forget_all` never wakes us.
+    const forgetChannelOwner = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])({});
+    // `openStream` announces a family clear and the recovery loop re-opens streams
+    // through `openStream`, so the two are mutually recursive. A ref breaks the
+    // definition cycle without either depending on the other's identity.
+    const recoverStreamsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])({
+        "useSmartChartsApi.useRef[recoverStreamsRef]": ()=>{}
+    }["useSmartChartsApi.useRef[recoverStreamsRef]"]);
+    const closeStream = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[closeStream]": (key, stream)=>{
+            stream.closed = true;
+            if (stream.forgetTimer) {
+                clearTimeout(stream.forgetTimer);
+                stream.forgetTimer = null;
+            }
+            if (streamsRef.current.get(key) === stream) {
+                streamsRef.current.delete(key);
+            }
+            if (stream.unsubscribe) {
+                // Sends `{ forget: <id> }` — scoped to this stream, so other consumers of
+                // the tick family (notably useTicks) keep theirs.
+                void stream.unsubscribe();
+                stream.unsubscribe = null;
+            }
+        }
+    }["useSmartChartsApi.useCallback[closeStream]"], []);
+    const startForgetLinger = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[startForgetLinger]": (key, stream)=>{
+            if (stream.forgetTimer) return;
+            stream.forgetTimer = setTimeout({
+                "useSmartChartsApi.useCallback[startForgetLinger]": ()=>{
+                    stream.forgetTimer = null;
+                    closeStream(key, stream);
+                }
+            }["useSmartChartsApi.useCallback[startForgetLinger]"], QUOTE_FORGET_LINGER_MS);
+        }
+    }["useSmartChartsApi.useCallback[startForgetLinger]"], [
+        closeStream
+    ]);
+    /**
+   * Retire every stream belonging to a socket that can no longer feed it.
+   *
+   * A stream is bound to the connection it was opened on: its `subscription.id`
+   * means nothing on another socket, and `DerivWS` drops its handler table when
+   * the underlying socket closes. Leaving such an entry in the registry would
+   * let an arriving chart "reuse" a feed nothing writes to — no `ticks_history`
+   * would be sent on the live socket and the spot price would freeze for good,
+   * with the entry pinned by its consumers so it could never be released.
+   */ const discardStreamsFor = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[discardStreamsFor]": (socket)=>{
+            for (const [key, stream] of [
+                ...streamsRef.current
+            ]){
+                if (stream.socket === socket) closeStream(key, stream);
+            }
+        }
+    }["useSmartChartsApi.useCallback[discardStreamsFor]"], [
+        closeStream
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useSmartChartsApi.useEffect": ()=>{
+            const previous = wsRef.current;
+            wsRef.current = ws;
+            // `useDerivWS` builds a fresh DerivWS on a login WS swap or account switch.
+            if (previous !== ws) discardStreamsFor(previous);
+        }
+    }["useSmartChartsApi.useEffect"], [
+        ws,
+        discardStreamsFor
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useSmartChartsApi.useEffect": ()=>{
+            if (!ws) return;
+            // The same instance reconnects in place after a drop, but it clears its
+            // subscription handlers on close, so its streams are dead either way.
+            return ws.onConnectionStateChange({
+                "useSmartChartsApi.useEffect": (connected)=>{
+                    if (!connected) discardStreamsFor(ws);
+                }
+            }["useSmartChartsApi.useEffect"]);
+        }
+    }["useSmartChartsApi.useEffect"], [
+        ws,
+        discardStreamsFor
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useSmartChartsApi.useEffect": ()=>{
+            const streams = streamsRef.current;
+            return ({
+                "useSmartChartsApi.useEffect": ()=>{
+                    for (const [key, stream] of [
+                        ...streams
+                    ]){
+                        closeStream(key, stream);
+                    }
+                    streams.clear();
+                }
+            })["useSmartChartsApi.useEffect"];
+        }
+    }["useSmartChartsApi.useEffect"], [
+        closeStream
+    ]);
+    const getQuotes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[getQuotes]": async ({ symbol, granularity, count, start, end })=>{
+            if (!wsRef.current) throw new Error('WebSocket not connected');
+            const request = {
+                ticks_history: symbol,
+                style: granularity ? 'candles' : 'ticks',
+                count: count ?? 1000,
+                end: end ? String(end) : 'latest',
+                adjust_start_time: 1
+            };
+            if (granularity) request.granularity = granularity;
+            if (start) request.start = String(start);
+            return wsRef.current.send(request);
+        }
+    }["useSmartChartsApi.useCallback[getQuotes]"], []);
+    /**
+   * Open the server stream for a pair and fan every quote out to its consumers.
+   * A duplicate-subscription rejection is retried exactly once after clearing
+   * the colliding family: bounded, so two rival owners cannot ping-pong, but
+   * enough to turn a dead feed back into a live one.
+   *
+   * `allowFamilyForget` is false when this call *is* the recovery from someone
+   * else's family clear — see `recoverStreamsInFamily`.
+   */ const openStream = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[openStream]": async (socket, key, stream, { symbol, granularity, style }, allowFamilyForget = true)=>{
+            const request = {
+                ticks_history: symbol,
+                style: style || granularity ? 'candles' : 'ticks',
+                adjust_start_time: 1,
+                count: 1,
+                end: 'latest'
+            };
+            if (granularity) request.granularity = granularity;
+            const emit = {
+                "useSmartChartsApi.useCallback[openStream].emit": (quote)=>{
+                    for (const consumer of [
+                        ...stream.consumers
+                    ]){
+                        consumer(quote);
+                    }
+                }
+            }["useSmartChartsApi.useCallback[openStream].emit"];
+            const handler = {
+                "useSmartChartsApi.useCallback[openStream].handler": (response)=>{
+                    if (response.tick) {
+                        const tick = response.tick;
+                        emit({
+                            Date: new Date(tick.epoch * 1000).toISOString(),
+                            Close: tick.quote,
+                            tick,
+                            DT: new Date(tick.epoch * 1000)
+                        });
+                    }
+                    if (response.ohlc) {
+                        const ohlc = response.ohlc;
+                        emit({
+                            Date: new Date(ohlc.open_time * 1000).toISOString(),
+                            Open: parseFloat(ohlc.open),
+                            High: parseFloat(ohlc.high),
+                            Low: parseFloat(ohlc.low),
+                            Close: parseFloat(ohlc.close),
+                            ohlc,
+                            DT: new Date(ohlc.open_time * 1000)
+                        });
+                    }
+                }
+            }["useSmartChartsApi.useCallback[openStream].handler"];
+            const subscribeOnceRetried = {
+                "useSmartChartsApi.useCallback[openStream].subscribeOnceRetried": async (allowClear)=>{
+                    try {
+                        return await socket.subscribe(request, handler);
+                    } catch (err) {
+                        if (!allowClear) throw err;
+                        if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$deriv$2d$ws$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isDerivApiError"])(err) || err.code !== 'AlreadySubscribed') throw err;
+                        const family = streamFamily(granularity);
+                        const cleared = await socket.send({
+                            forget_all: family
+                        }).then({
+                            "useSmartChartsApi.useCallback[openStream].subscribeOnceRetried": ()=>true
+                        }["useSmartChartsApi.useCallback[openStream].subscribeOnceRetried"], {
+                            "useSmartChartsApi.useCallback[openStream].subscribeOnceRetried": ()=>false
+                        }["useSmartChartsApi.useCallback[openStream].subscribeOnceRetried"]);
+                        // The clear is connection-wide: it also cancelled streams owned by
+                        // other consumers, and they get no error frame to notice it by. Tell
+                        // them, now that it has landed so their replacement is not cancelled
+                        // by our own request. Only a clear the server actually performed can
+                        // have done collateral damage.
+                        if (cleared) {
+                            // This hook instance can own several streams in the family (one per
+                            // chart symbol/granularity), and the announcement skips our own
+                            // listener, so nothing else would revive them. Re-take them here —
+                            // all but this stream, which the retry below takes care of.
+                            recoverStreamsRef.current({
+                                socket,
+                                family
+                            }, stream);
+                            (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$stream$2d$family$2d$forget$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["notifyStreamFamilyForgotten"])({
+                                socket,
+                                family
+                            }, forgetChannelOwner.current);
+                        }
+                        if (stream.closed) return null;
+                        return await socket.subscribe(request, handler);
+                    }
+                }
+            }["useSmartChartsApi.useCallback[openStream].subscribeOnceRetried"];
+            let allowClear = allowFamilyForget;
+            stream.opening = true;
+            try {
+                for(;;){
+                    stream.clearedWhileOpening = false;
+                    const sub = await subscribeOnceRetried(allowClear);
+                    if (!sub) return;
+                    if (stream.closed) {
+                        void sub.unsubscribe();
+                        return;
+                    }
+                    if (!stream.clearedWhileOpening) {
+                        stream.subscriptionId = sub.subscriptionId;
+                        stream.unsubscribe = sub.unsubscribe;
+                        return;
+                    }
+                    // A family clear landed while this handshake was in flight, so what we
+                    // just opened is already dead. Release the handler slot and take it
+                    // again — never with a clear of our own, so waking cannot cascade.
+                    void sub.unsubscribe();
+                    allowClear = false;
+                }
+            } catch (err) {
+                // Never surfaced to the trader: a dead quote stream is a developer
+                // signal, and the chart's own retry is the user-facing remedy.
+                console.warn('[useSmartChartsApi] quote subscription failed', {
+                    symbol,
+                    granularity,
+                    code: (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$deriv$2d$ws$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isDerivApiError"])(err) ? err.code : undefined,
+                    msgType: (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$deriv$2d$ws$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isDerivApiError"])(err) ? err.msgType : undefined,
+                    error: err
+                });
+                // Retire it properly rather than only dropping the registry entry: a
+                // stream left `closed: false` with consumers still in its set reads as
+                // live to anything holding a reference to it.
+                stream.closed = true;
+                stream.consumers.clear();
+                if (streamsRef.current.get(key) === stream) {
+                    streamsRef.current.delete(key);
+                }
+            } finally{
+                stream.opening = false;
+                stream.clearedWhileOpening = false;
+            }
+        }
+    }["useSmartChartsApi.useCallback[openStream]"], []);
+    /**
+   * Another owner on our connection cleared a whole stream family. Our streams
+   * in it stopped delivering without an error frame or a close event, so this
+   * notification is the only signal to re-take them — otherwise the chart keeps
+   * a live consumer wired to a feed nothing writes to and the spot price freezes.
+   *
+   * The re-open is denied a family clear of its own, so waking cannot cascade.
+   *
+   * `exclude` is the stream whose own retry issued the clear: it re-takes itself
+   * on that path, and waking it here would make it discard and re-open the very
+   * subscription it is in the middle of establishing.
+   */ const recoverStreamsInFamily = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[recoverStreamsInFamily]": (event, exclude)=>{
+            for (const [key, stream] of [
+                ...streamsRef.current
+            ]){
+                if (stream === exclude) continue;
+                if (stream.socket !== event.socket) continue;
+                if (streamFamily(stream.params.granularity) !== event.family) continue;
+                if (stream.closed) continue;
+                if (stream.consumers.size === 0) {
+                    // Lingering with no consumer: the server-side stream is gone, so it
+                    // must not survive to be handed to a chart that remounts inside the
+                    // window — that chart sends no `ticks_history` of its own and would be
+                    // left wired to a feed nothing writes to, with no error to notice it by.
+                    closeStream(key, stream);
+                    continue;
+                }
+                if (stream.opening) {
+                    // Mid-handshake: whatever it produces is already dead. Let that
+                    // attempt finish and take the stream again from inside it, rather than
+                    // opening a second one in parallel.
+                    stream.clearedWhileOpening = true;
+                    continue;
+                }
+                // The server-side stream is already gone; releasing it here only frees
+                // the local handler slot, so nothing can still write into the fan-out.
+                // Not awaited: a `forget` for a dead id cannot collide with the
+                // replacement, which carries a different id.
+                if (stream.unsubscribe) void stream.unsubscribe();
+                stream.subscriptionId = null;
+                stream.unsubscribe = null;
+                void openStream(stream.socket, key, stream, stream.params, false);
+            }
+        }
+    }["useSmartChartsApi.useCallback[recoverStreamsInFamily]"], [
+        closeStream,
+        openStream
+    ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useSmartChartsApi.useEffect": ()=>{
+            recoverStreamsRef.current = recoverStreamsInFamily;
+            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$packages$2f$core$2f$src$2f$ws$2f$stream$2d$family$2d$forget$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["onStreamFamilyForgotten"])(forgetChannelOwner.current, recoverStreamsInFamily);
+        }
+    }["useSmartChartsApi.useEffect"], [
+        recoverStreamsInFamily
+    ]);
+    const releaseConsumer = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[releaseConsumer]": (key, callback)=>{
+            const stream = streamsRef.current.get(key);
+            if (!stream) return;
+            stream.consumers.delete(callback);
+            if (stream.consumers.size === 0) startForgetLinger(key, stream);
+        }
+    }["useSmartChartsApi.useCallback[releaseConsumer]"], [
+        startForgetLinger
+    ]);
+    const subscribeQuotes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[subscribeQuotes]": (params, callback)=>{
+            const socket = wsRef.current;
+            if (!socket) return ({
+                "useSmartChartsApi.useCallback[subscribeQuotes]": ()=>{}
+            })["useSmartChartsApi.useCallback[subscribeQuotes]"];
+            const key = quoteKey(params.symbol, params.granularity);
+            const existing = streamsRef.current.get(key);
+            if (existing && existing.socket === socket) {
+                // Reuse the stream and abandon any pending cancellation, so a remount
+                // costs no server round-trip and cannot collide with itself.
+                if (existing.forgetTimer) {
+                    clearTimeout(existing.forgetTimer);
+                    existing.forgetTimer = null;
+                }
+                existing.consumers.add(callback);
+                return ({
+                    "useSmartChartsApi.useCallback[subscribeQuotes]": ()=>releaseConsumer(key, callback)
+                })["useSmartChartsApi.useCallback[subscribeQuotes]"];
+            }
+            if (existing) {
+                // Opened on a socket that has since been replaced: retire it and open a
+                // fresh stream below rather than joining a feed that will never deliver.
+                closeStream(key, existing);
+            }
+            const stream = {
+                socket,
+                params,
+                consumers: new Set([
+                    callback
+                ]),
+                subscriptionId: null,
+                unsubscribe: null,
+                forgetTimer: null,
+                closed: false,
+                opening: false,
+                clearedWhileOpening: false
+            };
+            streamsRef.current.set(key, stream);
+            void openStream(socket, key, stream, params);
+            return ({
+                "useSmartChartsApi.useCallback[subscribeQuotes]": ()=>releaseConsumer(key, callback)
+            })["useSmartChartsApi.useCallback[subscribeQuotes]"];
+        }
+    }["useSmartChartsApi.useCallback[subscribeQuotes]"], [
+        closeStream,
+        openStream,
+        releaseConsumer
+    ]);
+    const unsubscribeQuotes = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
+        "useSmartChartsApi.useCallback[unsubscribeQuotes]": (request, callback)=>{
+            if (!request?.symbol) return;
+            const key = quoteKey(request.symbol, request.granularity);
+            if (callback) {
+                releaseConsumer(key, callback);
+                return;
+            }
+            // No consumer identity: release the pair as a whole.
+            const stream = streamsRef.current.get(key);
+            if (!stream) return;
+            stream.consumers.clear();
+            startForgetLinger(key, stream);
+        }
+    }["useSmartChartsApi.useCallback[unsubscribeQuotes]"], [
+        releaseConsumer,
+        startForgetLinger
+    ]);
+    return {
+        getQuotes,
+        subscribeQuotes,
+        unsubscribeQuotes
+    };
+}
+_s(useSmartChartsApi, "V+VW7mweWpPEvN86AKdzQl7c55Q=");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/lib/active-symbols-display-names.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * Static display name mappings for Deriv active_symbols API keys.
+ *
+ * market_display_name, submarket_display_name, and subgroup_display_name are
+ * optional fields in the active_symbols response and may be absent for some
+ * symbols or configurations. These maps provide reliable fallbacks so
+ * SmartCharts' market browser and the positions table always show correct
+ * labels (e.g. "Gold Basket" instead of "WLDXAU",
+ * "Commodities Basket" instead of "commodity_basket").
+ *
+ * Source: deriv-com/derivatives-charts src/config/displayNames.ts
+ */ // ---------------------------------------------------------------------------
+// Symbol display names
+// Mapping of raw underlying symbol codes → human-readable names.
+// Used in the positions table/cards where only the raw symbol code is available.
+// ---------------------------------------------------------------------------
+__turbopack_context__.s([
+    "MARKET_DISPLAY_NAMES",
+    ()=>MARKET_DISPLAY_NAMES,
+    "SUBGROUP_DISPLAY_NAMES",
+    ()=>SUBGROUP_DISPLAY_NAMES,
+    "SUBMARKET_DISPLAY_NAMES",
+    ()=>SUBMARKET_DISPLAY_NAMES,
+    "SYMBOL_DISPLAY_NAMES",
+    ()=>SYMBOL_DISPLAY_NAMES,
+    "getMarketDisplayName",
+    ()=>getMarketDisplayName,
+    "getSubgroupDisplayName",
+    ()=>getSubgroupDisplayName,
+    "getSubmarketDisplayName",
+    ()=>getSubmarketDisplayName,
+    "getSymbolDisplayName",
+    ()=>getSymbolDisplayName
+]);
+const SYMBOL_DISPLAY_NAMES = {
+    // Major Pairs
+    frxAUDJPY: 'AUD/JPY',
+    frxAUDUSD: 'AUD/USD',
+    frxEURAUD: 'EUR/AUD',
+    frxEURCAD: 'EUR/CAD',
+    frxEURCHF: 'EUR/CHF',
+    frxEURGBP: 'EUR/GBP',
+    frxEURJPY: 'EUR/JPY',
+    frxEURUSD: 'EUR/USD',
+    frxGBPAUD: 'GBP/AUD',
+    frxGBPJPY: 'GBP/JPY',
+    frxGBPNOK: 'GBP/NOK',
+    frxgbpnok: 'GBP/NOK',
+    frxGBPUSD: 'GBP/USD',
+    frxUSDCAD: 'USD/CAD',
+    frxUSDCHF: 'USD/CHF',
+    frxUSDJPY: 'USD/JPY',
+    frxUSDNOK: 'USD/NOK',
+    frxusdnok: 'USD/NOK',
+    frxUSDSEK: 'USD/SEK',
+    frxusdsek: 'USD/SEK',
+    // Minor Pairs
+    frxGBPPLN: 'GBP/PLN',
+    frxgbppln: 'GBP/PLN',
+    frxAUDCAD: 'AUD/CAD',
+    frxAUDCHF: 'AUD/CHF',
+    frxAUDNZD: 'AUD/NZD',
+    frxEURNZD: 'EUR/NZD',
+    frxGBPCAD: 'GBP/CAD',
+    frxGBPCHF: 'GBP/CHF',
+    frxGBPNZD: 'GBP/NZD',
+    frxNZDJPY: 'NZD/JPY',
+    frxNZDUSD: 'NZD/USD',
+    frxUSDMXN: 'USD/MXN',
+    frxUSDPLN: 'USD/PLN',
+    frxCADJPY: 'CAD/JPY',
+    frxCHFJPY: 'CHF/JPY',
+    frxCADCHF: 'CAD/CHF',
+    frxNZDCAD: 'NZD/CAD',
+    frxNZDCHF: 'NZD/CHF',
+    // Basket Indices
+    WLDXAU: 'Gold Basket',
+    WLDAUD: 'AUD Basket',
+    WLDEUR: 'EUR Basket',
+    WLDGBP: 'GBP Basket',
+    WLDUSD: 'USD Basket',
+    // Continuous Indices — Volatility
+    R_10: 'Volatility 10 Index',
+    R_25: 'Volatility 25 Index',
+    R_50: 'Volatility 50 Index',
+    R_75: 'Volatility 75 Index',
+    R_100: 'Volatility 100 Index',
+    '1HZ10V': 'Volatility 10 (1s) Index',
+    '1HZ25V': 'Volatility 25 (1s) Index',
+    '1HZ50V': 'Volatility 50 (1s) Index',
+    '1HZ75V': 'Volatility 75 (1s) Index',
+    '1HZ100V': 'Volatility 100 (1s) Index',
+    '1HZ150V': 'Volatility 150 (1s) Index',
+    '1HZ200V': 'Volatility 200 (1s) Index',
+    '1HZ250V': 'Volatility 250 (1s) Index',
+    '1HZ300V': 'Volatility 300 (1s) Index',
+    // Crash/Boom Indices
+    BOOM250: 'Boom 250 Index',
+    BOOM300N: 'Boom 300 Index',
+    BOOM500: 'Boom 500 Index',
+    BOOM600: 'Boom 600 Index',
+    BOOM900: 'Boom 900 Index',
+    BOOM1000: 'Boom 1000 Index',
+    CRASH250: 'Crash 250 Index',
+    CRASH300N: 'Crash 300 Index',
+    CRASH500: 'Crash 500 Index',
+    CRASH600: 'Crash 600 Index',
+    CRASH900: 'Crash 900 Index',
+    CRASH1000: 'Crash 1000 Index',
+    // Daily Reset Indices
+    RDBEAR: 'Bear Market Index',
+    RDBULL: 'Bull Market Index',
+    RDBEAR10: 'Bear Market 10 Index',
+    RDBULL10: 'Bull Market 10 Index',
+    RDBEAR25: 'Bear Market 25 Index',
+    RDBULL25: 'Bull Market 25 Index',
+    // Jump Indices
+    JD10: 'Jump 10 Index',
+    JD25: 'Jump 25 Index',
+    JD50: 'Jump 50 Index',
+    JD75: 'Jump 75 Index',
+    JD100: 'Jump 100 Index',
+    JD200: 'Jump 200 Index',
+    JD300: 'Jump 300 Index',
+    // Step Indices
+    stpRNG: 'Step Index 100',
+    stpRNG2: 'Step Index 200',
+    stpRNG3: 'Step Index 300',
+    stpRNG4: 'Step Index 400',
+    stpRNG5: 'Step Index 500',
+    STPIDX100: 'Step Index 100',
+    STPIDX200: 'Step Index 200',
+    STPIDX300: 'Step Index 300',
+    STPIDX400: 'Step Index 400',
+    STPIDX500: 'Step Index 500',
+    // Stock Indices — Americas
+    OTC_SPC: 'US 500',
+    OTC_NDX: 'US Tech 100',
+    OTC_DJI: 'Wall Street 30',
+    // Stock Indices — Asia/Oceania
+    OTC_AS51: 'Australia 200',
+    OTC_HSI: 'Hong Kong 50',
+    OTC_IBEX35: 'Spain 35',
+    OTC_N225: 'Japan 225',
+    // Stock Indices — Europe
+    OTC_SX5E: 'Euro 50',
+    OTC_FCHI: 'France 40',
+    OTC_GDAXI: 'Germany 40',
+    OTC_AEX: 'Netherlands 25',
+    OTC_SMI: 'Swiss 20',
+    OTC_SSMI: 'Swiss 20',
+    otc_ssmi: 'Swiss 20',
+    OTC_FTSE: 'UK 100',
+    // Cryptocurrencies
+    cryBTCUSD: 'BTC/USD',
+    cryETHUSD: 'ETH/USD',
+    cryLTCUSD: 'LTC/USD',
+    cryBCHUSD: 'BCH/USD',
+    cryXRPUSD: 'XRP/USD',
+    cryADAUSD: 'ADA/USD',
+    cryDOTUSD: 'DOT/USD',
+    // Metals / Commodities
+    frxXAUUSD: 'Gold/USD',
+    frxXPDUSD: 'Palladium/USD',
+    frxXPTUSD: 'Platinum/USD',
+    frxXAGUSD: 'Silver/USD',
+    frxBROUSD: 'Brent Oil/USD',
+    frxbrousd: 'Brent Oil/USD'
+};
+function getSymbolDisplayName(symbolCode) {
+    return SYMBOL_DISPLAY_NAMES[symbolCode] ?? symbolCode;
+}
+const MARKET_DISPLAY_NAMES = {
+    forex: 'Forex',
+    indices: 'Stock Indices',
+    stocks: 'Stocks',
+    commodities: 'Commodities',
+    cryptocurrency: 'Cryptocurrencies',
+    synthetic_index: 'Derived',
+    basket_index: 'Baskets',
+    energy: 'Energy',
+    metals: 'Metals',
+    agricultural: 'Agricultural'
+};
+const SUBMARKET_DISPLAY_NAMES = {
+    major_pairs: 'Major Pairs',
+    minor_pairs: 'Minor Pairs',
+    exotic_pairs: 'Exotic Pairs',
+    smart_fx: 'Smart FX',
+    americas: 'American indices',
+    asia_oceania: 'Asian indices',
+    europe_africa: 'European indices',
+    europe: 'European indices',
+    americas_OTC: 'American indices',
+    asia_oceania_OTC: 'Asian indices',
+    europe_OTC: 'European indices',
+    otc_index: 'OTC Indices',
+    random_index: 'Continuous Indices',
+    random_daily: 'Daily Reset Indices',
+    crash_boom: 'Crash/Boom Indices',
+    crash_index: 'Crash/Boom Indices',
+    jump_index: 'Jump Indices',
+    step_index: 'Step Indices',
+    volatility_indices: 'Volatility Indices',
+    range_break_indices: 'Range Break Indices',
+    forex_basket: 'Forex Basket',
+    commodity_basket: 'Commodities Basket',
+    cryptocurrency_basket: 'Cryptocurrency Basket',
+    energy_basket: 'Energy Basket',
+    precious_metals: 'Precious Metals',
+    base_metals: 'Base Metals',
+    grains: 'Grains',
+    soft_commodities: 'Soft Commodities',
+    livestock: 'Livestock',
+    crypto_usd: 'Cryptocurrencies',
+    non_stable_coin: 'Cryptocurrencies',
+    crypto_non_usd: 'Crypto/Non-USD',
+    us_stocks: 'US Stocks',
+    european_stocks: 'European Stocks',
+    asian_stocks: 'Asian Stocks',
+    metals: 'Metals'
+};
+const SUBGROUP_DISPLAY_NAMES = {
+    none: '',
+    major: 'Major',
+    minor: 'Minor',
+    exotic: 'Exotic',
+    micro: 'Micro',
+    smart: 'Smart',
+    baskets: 'Baskets',
+    synthetics: 'Synthetics',
+    commodities_basket: 'Commodities Basket',
+    forex_basket: 'Forex Basket',
+    forex: 'Forex',
+    indices: 'Indices',
+    commodities: 'Commodities',
+    energy: 'Energy',
+    metals: 'Metals',
+    agricultural: 'Agricultural',
+    cryptocurrencies: 'Cryptocurrencies',
+    stocks: 'Stocks'
+};
+function getMarketDisplayName(market) {
+    return MARKET_DISPLAY_NAMES[market] ?? formatRawKey(market);
+}
+function getSubmarketDisplayName(submarket) {
+    return SUBMARKET_DISPLAY_NAMES[submarket] ?? formatRawKey(submarket);
+}
+function getSubgroupDisplayName(subgroup) {
+    if (subgroup === 'none') return '';
+    return SUBGROUP_DISPLAY_NAMES[subgroup] ?? formatRawKey(subgroup);
+}
+/** Converts a snake_case or kebab-case key to Title Case. */ function formatRawKey(raw) {
+    if (!raw) return '';
+    return raw.replace(/[_-]/g, ' ').split(' ').map((word)=>word.length ? word[0].toUpperCase() + word.slice(1).toLowerCase() : word).join(' ').trim();
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/lib/app-config.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "ALL_BLOCK_KEYS",
+    ()=>ALL_BLOCK_KEYS,
+    "ALL_CONTROL_KEYS",
+    ()=>ALL_CONTROL_KEYS,
+    "DEFAULT_APP_CONFIG",
+    ()=>DEFAULT_APP_CONFIG,
+    "normalizeAppConfig",
+    ()=>normalizeAppConfig
+]);
+/**
+ * No-code Rise/Fall app config.
+ *
+ * Drives the EDITABLE parts of the real Rise/Fall app: the style variant of the
+ * Rise/Fall, Duration and Stake controls, and the order of the control rows.
+ * The symbol dropdown, chart, header and login/sign-up stay fixed. The theme
+ * colour is handled by the existing branding pipeline (globals.css --primary).
+ *
+ * When no config is present the app renders exactly as today (default below).
+ */ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/no-code-config.ts [app-client] (ecmascript)");
+;
+const ALL_CONTROL_KEYS = [
+    'riseFall',
+    'allowEquals',
+    'stake',
+    'duration',
+    'buy'
+];
+const ALL_BLOCK_KEYS = [
+    'chart',
+    'riseFall',
+    'allowEquals',
+    'stake',
+    'duration',
+    'buy'
+];
+const DEFAULT_APP_CONFIG = {
+    styles: {
+        riseFall: 'a',
+        allowEquals: 'a',
+        duration: 'a',
+        stake: 'a',
+        buy: 'a'
+    },
+    order: [
+        'chart',
+        'riseFall',
+        'allowEquals',
+        'stake',
+        'duration',
+        'buy'
+    ],
+    chart: {
+        hidden: false
+    },
+    buy: {
+        pinned: true
+    }
+};
+function normalizeAppConfig(value) {
+    if (!value || typeof value !== 'object') return DEFAULT_APP_CONFIG;
+    const raw = value;
+    const styles = {
+        riseFall: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isStyleVariant"])(raw.styles?.riseFall) ? raw.styles.riseFall : 'a',
+        allowEquals: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isStyleVariant"])(raw.styles?.allowEquals) ? raw.styles.allowEquals : 'a',
+        duration: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isStyleVariant"])(raw.styles?.duration) ? raw.styles.duration : 'a',
+        stake: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isStyleVariant"])(raw.styles?.stake) ? raw.styles.stake : 'a',
+        buy: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isStyleVariant"])(raw.styles?.buy) ? raw.styles.buy : 'a'
+    };
+    const order = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$no$2d$code$2d$config$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["normalizeBlockOrder"])(raw.order, ALL_BLOCK_KEYS);
+    // A stored config with no `buy` key predates the pin option: keep that app
+    // unpinned rather than adopting the new default on its owner's behalf.
+    return {
+        styles,
+        order,
+        chart: {
+            hidden: raw.chart?.hidden === true
+        },
+        buy: {
+            pinned: !!raw.buy?.pinned
+        }
+    };
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/lib/chart-markers.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "calculateContractMarkers",
+    ()=>calculateContractMarkers,
+    "calculateMarkerFromPosition",
+    ()=>calculateMarkerFromPosition
+]);
+'use strict';
+// Contract types supported in this project
+const ACCUMULATOR_TYPES = new Set([
+    'ACCU'
+]);
+// Rise/Fall UP contracts
+const UP_CONTRACTS = new Set([
+    'CALL',
+    'CALLE'
+]);
+// Rise/Fall DOWN contracts
+const DOWN_CONTRACTS = new Set([
+    'PUT',
+    'PUTE'
+]);
+/**
+ * Determines the SmartCharts marker contract type.
+ * Accumulators → 'AccumulatorContract'.
+ * Rise/Fall with tick_count → 'TickContract'.
+ * Rise/Fall without tick_count (time-based) → 'NonTickContract'.
+ */ function getMarkerContractType(contractType, tickCount) {
+    if (ACCUMULATOR_TYPES.has(contractType)) {
+        return 'AccumulatorContract';
+    }
+    return tickCount > 0 ? 'TickContract' : 'NonTickContract';
+}
+/**
+ * Determines the marker direction for supported contract types.
+ * CALL / CALLE → 'up', PUT / PUTE → 'down', ACCU → 'up' (neutral default).
+ */ function getMarkerDirection(contractType) {
+    if (UP_CONTRACTS.has(contractType)) return 'up';
+    if (DOWN_CONTRACTS.has(contractType)) return 'down';
+    // Default to 'up' for ACCU and any unrecognised contract types
+    return 'up';
+}
+/**
+ * Formats profit/loss text for display on the chart marker.
+ * Returns null if profit is not a valid number.
+ */ function formatProfitLossText(profit, currency) {
+    const numericProfit = parseFloat(profit);
+    if (isNaN(numericProfit)) return null;
+    const sign = numericProfit > 0 ? '+' : '';
+    return `${sign}${numericProfit.toFixed(2)} ${currency}`;
+}
+function calculateMarkerFromPosition(position, isLastContract = false, isMobile = false) {
+    if (!position.date_start) return null;
+    const contractType = position.contract_type ?? '';
+    const tickCount = position.tick_count ?? 0;
+    const type = getMarkerContractType(contractType, tickCount);
+    const direction = getMarkerDirection(contractType);
+    const profitAndLossText = formatProfitLossText(position.profit, position.currency);
+    const entrySpotTime = position.entry_tick_time ?? position.date_start;
+    const entrySpotQuote = position.entry_spot ?? null;
+    const profit = parseFloat(position.profit);
+    const isProfit = isNaN(profit) ? true : profit >= 0;
+    const isRunning = !position.is_sold && !position.is_expired;
+    const contractMarkerLeftPadding = isMobile ? 10 : 100;
+    const isAccumulator = type === 'AccumulatorContract';
+    const isTickContract = type === 'TickContract';
+    const markers = [];
+    // Entry spot marker — shown for all supported contract types
+    if (entrySpotQuote !== null) {
+        markers.push({
+            epoch: entrySpotTime,
+            quote: entrySpotQuote,
+            type: 'entrySpot',
+            direction
+        });
+    }
+    const isContractClosed = !!position.is_sold || !!position.is_expired;
+    const exitSpotTime = position.exit_spot_time ?? null;
+    const exitSpotQuote = position.exit_spot ?? null;
+    if (!isAccumulator) {
+        if (isContractClosed) {
+            // --- Closed NonTick/Tick contract markers ---
+            // exitSpot — filled dot at the exit price
+            if (exitSpotTime !== null && exitSpotQuote !== null) {
+                markers.push({
+                    epoch: exitSpotTime,
+                    quote: exitSpotQuote,
+                    type: 'exitSpot',
+                    direction
+                });
+                // profitAndLossLabel — the P&L badge shown above/below the exit dot
+                if (profitAndLossText !== null) {
+                    const exitAboveEntry = entrySpotQuote !== null ? exitSpotQuote >= entrySpotQuote : true;
+                    markers.push({
+                        epoch: exitSpotTime,
+                        quote: exitSpotQuote,
+                        type: 'profitAndLossLabel',
+                        direction,
+                        displayOffsetY: exitAboveEntry ? -24 : 24
+                    });
+                }
+            }
+        } else {
+            // --- Running NonTick/Tick contract markers ---
+            // startTimeCollapsed — collapsed start marker shown for all running contracts
+            // when entry_spot is known. Creates the hollow circle + horizontal dotted line
+            // at entry spot price, connecting contractMarker to entrySpot.
+            if (entrySpotQuote !== null) {
+                markers.push({
+                    epoch: position.date_start,
+                    quote: entrySpotQuote,
+                    type: 'startTimeCollapsed',
+                    direction
+                });
+            }
+            // startTime — expanded vertical dashed line, only for the most recently
+            // purchased contract.
+            if (isLastContract) {
+                markers.push({
+                    epoch: position.date_start,
+                    ...entrySpotQuote !== null ? {
+                        quote: entrySpotQuote
+                    } : {},
+                    type: 'startTime',
+                    direction
+                });
+            }
+            // contractMarker — the pill/direction-arrow rendered at date_start.
+            if (entrySpotQuote !== null) {
+                // For tick contracts show a running tick counter (e.g. "3/5")
+                // tick_stream is an array that grows by one entry per elapsed tick
+                const tickPassed = position.tick_stream?.length ?? 0;
+                const tickCounterText = isTickContract ? `${tickPassed}/${tickCount}` : undefined;
+                markers.push({
+                    epoch: position.date_start,
+                    quote: entrySpotQuote,
+                    type: 'contractMarker',
+                    direction,
+                    ...tickCounterText ? {
+                        text: tickCounterText,
+                        textType: 'counter'
+                    } : {}
+                });
+            }
+            // exitTimeCollapsed — dashed vertical end-time line at contract end
+            if (position.date_expiry) {
+                markers.push({
+                    epoch: position.date_expiry,
+                    quote: entrySpotQuote ?? 0,
+                    type: 'exitTimeCollapsed',
+                    direction
+                });
+            }
+        }
+    } else {
+        // Accumulator
+        if (isContractClosed) {
+            // Closed accumulator: show exit spot and P&L label
+            if (exitSpotTime !== null && exitSpotQuote !== null) {
+                markers.push({
+                    epoch: exitSpotTime,
+                    quote: exitSpotQuote,
+                    type: 'exitSpot',
+                    direction
+                });
+                if (profitAndLossText !== null) {
+                    const exitAboveEntry = entrySpotQuote !== null ? exitSpotQuote >= entrySpotQuote : true;
+                    markers.push({
+                        epoch: exitSpotTime,
+                        quote: exitSpotQuote,
+                        type: 'profitAndLossLabel',
+                        direction,
+                        displayOffsetY: exitAboveEntry ? -24 : 24
+                    });
+                }
+            }
+        } else {
+            // Running accumulator: show startTime line for the active (last) contract
+            if (isLastContract) {
+                markers.push({
+                    epoch: position.date_start,
+                    quote: entrySpotQuote ?? 0,
+                    type: 'startTime',
+                    direction
+                });
+            }
+        }
+    }
+    const currentEpoch = position.current_spot_time ?? Math.floor(Date.now() / 1000);
+    return {
+        type,
+        markers,
+        props: {
+            isProfit,
+            isRunning,
+            contractMarkerLeftPadding,
+            markerLabel: null
+        },
+        direction,
+        profitAndLossText,
+        currentEpoch
+    };
+}
+function calculateContractMarkers(positions, activeSymbol, isMobile = false) {
+    if (!activeSymbol || positions.length === 0) return [];
+    const filtered = positions.filter((p)=>p.underlying_symbol === activeSymbol);
+    if (filtered.length === 0) return [];
+    // Sort newest first so index 0 is the last-purchased contract
+    const sorted = [
+        ...filtered
+    ].sort((a, b)=>(b.date_start ?? 0) - (a.date_start ?? 0));
+    const markers = [];
+    for(let i = 0; i < sorted.length; i++){
+        const marker = calculateMarkerFromPosition(sorted[i], i === 0, isMobile);
+        if (marker) markers.push(marker);
+    }
+    return markers;
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/lib/duration-utils.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "computeEndTimeEpoch",
+    ()=>computeEndTimeEpoch,
+    "getCloseTimeForDate",
+    ()=>getCloseTimeForDate,
+    "getDurationOptions",
+    ()=>getDurationOptions,
+    "getDurationUnitLabels",
+    ()=>getDurationUnitLabels,
+    "getEarlyCloseDates",
+    ()=>getEarlyCloseDates,
+    "parseCloseTime",
+    ()=>parseCloseTime,
+    "parseTradingDays",
+    ()=>parseTradingDays
+]);
+const DURATION_ORDER = [
+    't',
+    's',
+    'm',
+    'h',
+    'd',
+    'end-time'
+];
+function getDurationUnitLabels(localize) {
+    return {
+        t: localize('Ticks'),
+        s: localize('Seconds'),
+        m: localize('Minutes'),
+        h: localize('Hours'),
+        d: localize('Days'),
+        'end-time': localize('End Time')
+    };
+}
+function parseDurationToSeconds(durationStr) {
+    const num = parseInt(durationStr, 10);
+    const unit = durationStr.replace(/^\d+/, '');
+    switch(unit){
+        case 's':
+            return num;
+        case 'm':
+            return num * 60;
+        case 'h':
+            return num * 3600;
+        case 'd':
+            return num * 86400;
+        default:
+            return num;
+    }
+}
+function getDurationOptions(contracts, labels = getDurationUnitLabels((text)=>text)) {
+    const optMap = new Map();
+    for (const contract of contracts){
+        const minStr = contract.min_contract_duration;
+        const maxStr = contract.max_contract_duration;
+        const expiryType = contract.expiry_type;
+        if (expiryType === 'tick') {
+            if (!optMap.has('t')) {
+                optMap.set('t', {
+                    unit: 't',
+                    label: labels.t,
+                    min: parseInt(minStr, 10),
+                    max: parseInt(maxStr, 10)
+                });
+            }
+        } else if (expiryType === 'intraday') {
+            const minSec = parseDurationToSeconds(minStr);
+            const maxSec = parseDurationToSeconds(maxStr);
+            if (maxSec >= 1 && !optMap.has('s')) {
+                const sMin = Math.max(1, minSec);
+                const sMax = Math.min(59, maxSec);
+                if (sMin <= sMax) optMap.set('s', {
+                    unit: 's',
+                    label: labels.s,
+                    min: sMin,
+                    max: sMax
+                });
+            }
+            if (maxSec >= 60 && !optMap.has('m')) {
+                const mMin = Math.max(1, Math.ceil(minSec / 60));
+                const mMax = Math.floor(maxSec / 60);
+                if (mMin <= mMax) optMap.set('m', {
+                    unit: 'm',
+                    label: labels.m,
+                    min: mMin,
+                    max: mMax
+                });
+            }
+            if (maxSec >= 3600 && !optMap.has('h')) {
+                const hMin = Math.max(1, Math.ceil(minSec / 3600));
+                const hMax = Math.floor(maxSec / 3600);
+                if (hMin <= hMax) optMap.set('h', {
+                    unit: 'h',
+                    label: labels.h,
+                    min: hMin,
+                    max: hMax
+                });
+            }
+        } else if (expiryType === 'daily') {
+            const dMin = parseInt(minStr, 10);
+            const dMax = parseInt(maxStr, 10);
+            if (!optMap.has('d')) optMap.set('d', {
+                unit: 'd',
+                label: labels.d,
+                min: dMin,
+                max: dMax
+            });
+            if (!optMap.has('end-time')) optMap.set('end-time', {
+                unit: 'end-time',
+                label: labels['end-time'],
+                min: dMin,
+                max: dMax
+            });
+        }
+    }
+    return DURATION_ORDER.reduce((acc, u)=>{
+        const opt = optMap.get(u);
+        if (opt) acc.push(opt);
+        return acc;
+    }, []);
+}
+function computeEndTimeEpoch(date, timeStr) {
+    if (!date || !timeStr) return null;
+    const parts = timeStr.split(':');
+    if (parts.length < 2) return null;
+    const hours = parseInt(parts[0], 10);
+    const mins = parseInt(parts[1], 10);
+    if (isNaN(hours) || isNaN(mins)) return null;
+    // timeStr is GMT — use local date components (calendar dates are at local midnight)
+    // combined with UTC hours/mins to get the correct UTC epoch
+    const secs = parts.length >= 3 ? parseInt(parts[2], 10) || 0 : 0;
+    const epochMs = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), hours, mins, secs, 0);
+    const epochSec = Math.floor(epochMs / 1000);
+    if (epochSec <= Math.floor(Date.now() / 1000)) return null;
+    return epochSec;
+}
+function parseTradingDays(tradingDays) {
+    const dayMap = {
+        Sun: 0,
+        Mon: 1,
+        Tue: 2,
+        Wed: 3,
+        Thu: 4,
+        Fri: 5,
+        Sat: 6
+    };
+    const tradingSet = new Set();
+    for (const d of tradingDays){
+        const idx = dayMap[d];
+        if (idx !== undefined) tradingSet.add(idx);
+    }
+    return [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+    ].filter((d)=>!tradingSet.has(d));
+}
+function getEarlyCloseDates(events, month) {
+    const year = month.getFullYear();
+    const monthNum = month.getMonth();
+    const result = [];
+    for (const event of events){
+        if (!event.descrip.toLowerCase().includes('closes early')) continue;
+        for (const dateStr of event.dates.split(',').map((d)=>d.trim())){
+            // Parse as local midnight to match how Calendar creates date objects
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) continue;
+            const y = parseInt(parts[0], 10);
+            const mo = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+            if (isNaN(y) || isNaN(mo) || isNaN(day)) continue;
+            if (y === year && mo === monthNum) {
+                result.push(new Date(y, mo, day));
+            }
+        }
+    }
+    return result;
+}
+function parseCloseTime(closeArr) {
+    if (!closeArr || closeArr.length === 0) return '';
+    const parts = closeArr[closeArr.length - 1].split(':');
+    if (parts.length < 2) return '';
+    const hh = parts[0].padStart(2, '0');
+    const mm = parts[1].padStart(2, '0');
+    const ss = (parts[2] ?? '00').padStart(2, '0');
+    return `${hh}:${mm}:${ss}`;
+}
+function getCloseTimeForDate(data, date) {
+    const dayNames = [
+        'Sun',
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat'
+    ];
+    const dayNamePlural = `${dayNames[date.getDay()]}s`;
+    const y = date.getFullYear();
+    const mo = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${y}-${mo}-${d}`;
+    for (const event of data.events){
+        if (!event.descrip.toLowerCase().includes('closes early')) continue;
+        const applies = event.dates.split(',').map((s)=>s.trim()).some((s)=>s === dayNamePlural || s === dateStr);
+        if (!applies) continue;
+        const match = event.descrip.match(/\(at (\d{1,2}):(\d{2})\)/);
+        if (match) return `${match[1].padStart(2, '0')}:${match[2]}:00`;
+    }
+    return parseCloseTime(data.times.close);
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/lib/no-code-config.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * Shared no-code config helpers.
+ *
+ * Every no-code template (rise-fall, accumulators, digits) validates an
+ * arbitrary stored value into a safe app config the same way: coerce each style
+ * to a known variant and rebuild the block order (known-only, de-duped, missing
+ * keys appended). Those two pieces are identical across templates, so they live
+ * here and are called from each template's `normalizeAppConfig`.
+ *
+ * Pure TypeScript, no template-specific knowledge — the caller passes its own
+ * set of block keys. Imported via `@/lib/no-code-config`, so the BFF copies it
+ * into standalone deploys alongside the other shared `@/lib/*` modules.
+ */ /** Style variant of a control row. Every control has exactly three. */ __turbopack_context__.s([
+    "isStyleVariant",
+    ()=>isStyleVariant,
+    "normalizeBlockOrder",
+    ()=>normalizeBlockOrder
+]);
+function isStyleVariant(value) {
+    return value === "a" || value === "b" || value === "c";
+}
+function normalizeBlockOrder(rawOrder, allKeys) {
+    const known = new Set(allKeys);
+    const seen = new Set();
+    const order = [];
+    if (Array.isArray(rawOrder)) {
+        for (const candidate of rawOrder){
+            if (typeof candidate === "string" && known.has(candidate) && !seen.has(candidate)) {
+                seen.add(candidate);
+                const match = allKeys.find((key)=>key === candidate);
+                if (match !== undefined) order.push(match);
+            }
+        }
+    }
+    for (const key of allKeys)if (!seen.has(key)) order.push(key);
+    return order;
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/lib/utils.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cn",
+    ()=>cn
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$clsx$2f$dist$2f$clsx$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/clsx/dist/clsx.mjs [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$tailwind$2d$merge$2f$dist$2f$bundle$2d$mjs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/tailwind-merge/dist/bundle-mjs.mjs [app-client] (ecmascript)");
+;
+;
+function cn(...inputs) {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$tailwind$2d$merge$2f$dist$2f$bundle$2d$mjs$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["twMerge"])((0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$clsx$2f$dist$2f$clsx$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["clsx"])(inputs));
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+]);
+
+//# sourceMappingURL=_0gd67r7._.js.map
