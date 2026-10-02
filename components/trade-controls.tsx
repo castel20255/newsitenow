@@ -38,7 +38,6 @@ interface TradeControlsProps {
 
   onBuy: () => void;
   isBuying: boolean;
-  tradeCountdown?: string | null;
   buyResult: BuyResult | null;
   buyError: string | null;
   onClearBuyResult: () => void;
@@ -68,7 +67,6 @@ export function TradeControls({
   proposal,
   onBuy,
   isBuying,
-  tradeCountdown,
   buyResult,
   buyError,
   onClearBuyResult,

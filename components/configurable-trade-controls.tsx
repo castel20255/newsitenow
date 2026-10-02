@@ -61,7 +61,6 @@ export interface ConfigurableBuyButtonProps {
   proposal: ProposalInfo | null;
   onBuy: () => void;
   isBuying: boolean;
-  tradeCountdown?: string | null;
 }
 
 export function ConfigurableBuyButton({
@@ -70,7 +69,6 @@ export function ConfigurableBuyButton({
   proposal,
   onBuy,
   isBuying,
-  tradeCountdown,
 }: ConfigurableBuyButtonProps) {
   const { localize } = useAppTranslations();
 
@@ -164,7 +162,6 @@ export interface ConfigurableTradeControlsProps {
   proposal: ProposalInfo | null;
   onBuy: () => void;
   isBuying: boolean;
-  tradeCountdown?: string | null;
   buyResult: BuyResult | null;
   buyError: string | null;
   onClearBuyResult: () => void;
@@ -221,7 +218,6 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     proposal,
     onBuy,
     isBuying,
-    tradeCountdown,
     buyResult,
     buyError,
     onClearBuyResult,
@@ -567,7 +563,6 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       proposal={proposal}
       onBuy={onBuy}
       isBuying={isBuying}
-      tradeCountdown={tradeCountdown}
     />
   );
 

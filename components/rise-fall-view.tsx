@@ -7,7 +7,7 @@ import { Header } from '@/components/custom/header';
 import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { placeDemoTrade } from '@/app/actions/demo-trading';
-import { computeEndTimeEpoch, resolveTradeExpiryMs } from '@/lib/duration-utils';
+import { computeEndTimeEpoch } from '@/lib/duration-utils';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { SymbolSelector } from '@/components/custom/symbol-selector';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
@@ -84,15 +84,6 @@ const RiseFallChart = dynamic(() => import('./rise-fall-chart').then(module => m
 // Edit-mode stand-in for the login prompt's auth handlers — same rule as the
 // header: no OAuth navigation out of the editor.
 const noopAsyncAuth = async () => {};
-
-function formatTradeCountdown(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  return [hours, minutes, remainingSeconds]
-    .map(value => String(value).padStart(2, '0'))
-    .join(':');
-}
 
 export interface RiseFallViewProps {
   // Auth
@@ -248,36 +239,12 @@ export function RiseFallView({
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
   const { openAuth, refresh: refreshSiteAuth, paperTrades } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
-  const [countdownNow, setCountdownNow] = useState<number | null>(null);
   const [dismissedTradeIds, setDismissedTradeIds] = useState<string[]>([]);
   const activeOpenTrades = paperTrades
     .filter(trade => trade.account_id === activeAccount?.id && trade.status === 'open')
     .sort((first, second) => Date.parse(first.expires_at) - Date.parse(second.expires_at));
 
-  useEffect(() => {
-    if (!activeOpenTrades.length) {
-      setCountdownNow(null);
-      return;
-    }
-
-    const updateCountdown = () => setCountdownNow(Date.now());
-    updateCountdown();
-    const interval = window.setInterval(updateCountdown, 1000);
-    return () => window.clearInterval(interval);
-  }, [activeOpenTrades.length, activeOpenTrades[0]?.id, activeOpenTrades[0]?.expires_at]);
-
   const visibleTradePanels = activeOpenTrades.filter(trade => !dismissedTradeIds.includes(trade.id));
-  const tradeCountdown = activeOpenTrades[0]
-    ? countdownNow === null
-      ? localize('Trade closes in {{time}}', { time: '--:--' })
-      : (() => {
-          const expiresAtMs = resolveTradeExpiryMs(activeOpenTrades[0]);
-          const remainingSeconds = expiresAtMs === null ? null : Math.max(0, Math.ceil((expiresAtMs - countdownNow) / 1000));
-          return remainingSeconds === null || remainingSeconds === 0 ? null : localize('Trade closes in {{time}}', {
-            time: formatTradeCountdown(remainingSeconds),
-          });
-        })()
-    : null;
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
   // would fail with a "Purchase Failed" toast. One gate covers every Buy
@@ -502,7 +469,6 @@ export function RiseFallView({
         proposal={proposal}
         onBuy={handleBuy}
         isBuying={tradeIsPending}
-        tradeCountdown={tradeCountdown}
         buyResult={buyResult}
         buyError={buyError}
         onClearBuyResult={clearBuyResult}
@@ -521,10 +487,6 @@ export function RiseFallView({
       {visibleTradePanels.length > 0 && (
         <div className="fixed right-4 top-20 z-50 w-[min(360px,calc(100vw-2rem))] space-y-3">
           {visibleTradePanels.map((trade) => {
-            const expiresAtMs = resolveTradeExpiryMs(trade);
-            const remainingSeconds = countdownNow === null || expiresAtMs === null
-              ? null
-              : Math.max(0, Math.ceil((expiresAtMs - countdownNow) / 1000));
             return (
               <div key={trade.id} className="rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur-sm">
                 <div className="mb-2 flex items-start justify-between gap-3">
@@ -546,10 +508,6 @@ export function RiseFallView({
                   <div><span className="text-foreground font-medium">Duration:</span> {trade.duration_seconds}s</div>
                   <div><span className="text-foreground font-medium">Placed:</span> {new Date(trade.created_at).toLocaleString()}</div>
                   <div><span className="text-foreground font-medium">Expires:</span> {new Date(trade.expires_at).toLocaleString()}</div>
-                  <div>
-                    <span className="text-foreground font-medium">Countdown:</span>{' '}
-                    {remainingSeconds === null ? '--:--:--' : remainingSeconds <= 0 ? 'Settling...' : formatTradeCountdown(remainingSeconds)}
-                  </div>
                 </div>
               </div>
             );
@@ -648,7 +606,6 @@ export function RiseFallView({
                   proposal={proposal}
                   onBuy={handleBuy}
                   isBuying={tradeIsPending}
-                  tradeCountdown={tradeCountdown}
                   buyResult={buyResult}
                   buyError={buyError}
                   onClearBuyResult={clearBuyResult}
@@ -674,7 +631,6 @@ export function RiseFallView({
             proposal={proposal}
             onBuy={handleBuy}
             isBuying={tradeIsPending}
-            tradeCountdown={tradeCountdown}
           />
         </PinnedBuyBar>
       )}
