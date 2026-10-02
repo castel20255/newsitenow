@@ -13,8 +13,7 @@ export default function RiseFallPage() {
 
   useEffect(() => {
     let cancelled = false;
-    const base = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-    fetch(`${base}/app-config.json`)
+    fetch('/app-config.json')
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (!cancelled) setConfig(data ? normalizeAppConfig(data) : null);

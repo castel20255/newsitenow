@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { User } from '@supabase/supabase-js';
 import { signOutAccount } from '@/app/actions/account-auth';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser';
-import { getSupabaseConfig } from '@/lib/supabase/config';
+import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
 
 export type SiteAccountType = 'demo' | 'real';
 export type SiteAuthState = 'loading' | 'unauthenticated' | 'authenticated' | 'unconfigured' | 'error';
@@ -65,8 +65,14 @@ interface SiteAuthContextValue {
 const SiteAuthContext = createContext<SiteAuthContextValue | null>(null);
 const ACTIVE_ACCOUNT_KEY = 'site-active-trading-account';
 
-export function SiteAuthProvider({ children }: { children: React.ReactNode }) {
-  const isConfigured = getSupabaseConfig().isBrowserConfigured;
+export function SiteAuthProvider({
+  children,
+  supabaseConfig,
+}: {
+  children: React.ReactNode;
+  supabaseConfig: SupabaseBrowserConfig | null;
+}) {
+  const isConfigured = Boolean(supabaseConfig);
   const [authState, setAuthState] = useState<SiteAuthState>(isConfigured ? 'loading' : 'unconfigured');
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<SiteProfile | null>(null);
@@ -77,7 +83,7 @@ export function SiteAuthProvider({ children }: { children: React.ReactNode }) {
   const [authDialogMode, setAuthDialogMode] = useState<'login' | 'signup'>('signup');
 
   const refresh = useCallback(async () => {
-    const supabase = getSupabaseBrowserClient();
+    const supabase = getSupabaseBrowserClient(supabaseConfig);
     if (!supabase) {
       setAuthState('unconfigured');
       setUser(null);
@@ -128,10 +134,10 @@ export function SiteAuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       setAuthState('error');
     }
-  }, []);
+  }, [supabaseConfig]);
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
+    const supabase = getSupabaseBrowserClient(supabaseConfig);
     if (!supabase) {
       setAuthState('unconfigured');
       return;
@@ -151,7 +157,7 @@ export function SiteAuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
     return () => data.subscription.unsubscribe();
-  }, [refresh]);
+  }, [refresh, supabaseConfig]);
 
   const activeAccount = accounts.find(account => account.id === activeAccountId) ?? null;
   const openAuth = useCallback((mode: 'login' | 'signup') => {
@@ -167,7 +173,7 @@ export function SiteAuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signOutAccount();
     } finally {
-      await getSupabaseBrowserClient()?.auth.signOut();
+      await getSupabaseBrowserClient(supabaseConfig)?.auth.signOut();
       setUser(null);
       setProfile(null);
       setAccounts([]);
@@ -175,7 +181,7 @@ export function SiteAuthProvider({ children }: { children: React.ReactNode }) {
       setActiveAccountId(null);
       setAuthState('unauthenticated');
     }
-  }, []);
+  }, [supabaseConfig]);
 
   const value = useMemo<SiteAuthContextValue>(() => ({
     authState,

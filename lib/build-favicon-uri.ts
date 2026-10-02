@@ -25,8 +25,7 @@ export function buildFaviconUri(): string | null {
     }
   }
 
-  const appName =
-    process.env.NEXT_PUBLIC_DERIV_APP_NAME?.trim() || 'Deriv App';
+  const appName = 'CRYPTO BINARY';
   const letter = appName.trim().charAt(0).toUpperCase() || 'A';
 
   // The App Builder patches globals.css with the user's chosen brand colour as

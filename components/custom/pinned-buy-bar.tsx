@@ -1,19 +1,13 @@
 'use client';
 
-import { FooterBar } from './footer';
 import { cn } from '@/lib/utils';
 
 /**
- * The bottom bar holding a pinned Buy button, above the "Powered by Deriv"
- * footer — the layout the App Builder gallery screenshots advertise.
+ * The bottom bar holding a pinned Buy button in the mobile layout.
  *
  * Rendered **in flow** as the last `shrink-0` child of the mobile `h-dvh`
- * column, not `fixed`. That is deliberate: a fixed bar would need the scrolling
- * column to reserve clearance for it (the `pb-28` the footer alone used to
- * need), and that padding has to be re-guessed whenever the button's style
- * variant changes its height. In flow, the scroll area simply ends where the bar
- * begins. Because the bar is in flow it also owns the footer — the view must not
- * render its standalone fixed footer as well.
+ * column, not `fixed`. The scroll area simply ends where the bar begins, so it
+ * needs no guessed bottom padding when the button's style changes height.
  *
  * Shared by every no-code template: the Buy button itself differs per template
  * (payout, ask price, close-position state), the bar around it does not.
@@ -67,7 +61,7 @@ export function PinnedBuyBar({
   label,
 }: PinnedBuyBarProps) {
   return (
-    <FooterBar>
+    <div className="shrink-0">
       <div className="relative">
         {/* `inert` is what actually makes the button unusable: pointer-events-none
             only removes it from POINTER hit-testing, while the real <button>
@@ -81,7 +75,7 @@ export function PinnedBuyBar({
           className={cn(
             // Symmetric vertical padding: `pt-2` alone left the selection ring
             // flush against the button's bottom edge (8px above, 0 below), and
-            // gave the deployed button no breathing room over the footer.
+            // gives the button breathing room within the bar.
             'w-full px-3 py-2',
             editMode && 'pointer-events-none select-none'
           )}
@@ -120,6 +114,6 @@ export function PinnedBuyBar({
           />
         )}
       </div>
-    </FooterBar>
+    </div>
   );
 }

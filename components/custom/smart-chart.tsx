@@ -18,11 +18,7 @@ import type { SmartChartChartData } from '@/hooks/use-smartchart-chart-data';
 import type { ContractMarker } from '@/lib/chart-markers';
 import { SMART_CHART_DRAWING_TOOL_POSITION } from '@/lib/smartchart-constants';
 
-// In preview deployments the app is served under a basePath, so
-// SmartCharts must load its lazy assets from that same prefix.
-const smartChartsPublicPath =
-  process.env.NEXT_PUBLIC_BASE_PATH ? `${process.env.NEXT_PUBLIC_BASE_PATH}/` : '/';
-setSmartChartsPublicPath(smartChartsPublicPath);
+setSmartChartsPublicPath('/');
 
 /** Configuration for a single barrier rendered on the chart. */
 export interface ChartBarrier {

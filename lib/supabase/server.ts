@@ -5,11 +5,11 @@ import { cookies } from 'next/headers';
 import { getSupabaseConfig } from './config';
 
 export async function createSupabaseServerClient() {
-  const { url, anonKey } = getSupabaseConfig();
-  if (!url || !anonKey) throw new Error('Supabase is not configured.');
+  const { url, publishableKey } = getSupabaseConfig();
+  if (!url || !publishableKey) throw new Error('Supabase is not configured.');
 
   const cookieStore = await cookies();
-  return createServerClient(url, anonKey, {
+  return createServerClient(url, publishableKey, {
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll: cookiesToSet => {
