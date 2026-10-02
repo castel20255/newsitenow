@@ -56,7 +56,8 @@ export function useDemoTradeSettlement({
     };
 
     for (const trade of openTrades) {
-      schedule(trade, Date.parse(trade.expires_at) - Date.now());
+      const remaining = Date.parse(trade.expires_at) - Date.now();
+      schedule(trade, remaining > 0 ? remaining : 0);
     }
 
     return () => {
