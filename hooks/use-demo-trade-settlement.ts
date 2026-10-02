@@ -5,7 +5,7 @@ import { settleDemoTrade } from '@/app/actions/demo-trading';
 import type { SiteAuthState, SitePaperTrade } from '@/components/custom/site-auth-provider';
 import { resolveTradeExpiryMs } from '@/lib/duration-utils';
 
-const MAX_TIMEOUT_MS = 2_147_000_000;
+const CHECK_INTERVAL_MS = 250;
 const RETRY_DELAY_MS = 5000;
 
 export function useDemoTradeSettlement({
@@ -18,53 +18,60 @@ export function useDemoTradeSettlement({
   refresh: () => Promise<void>;
 }) {
   const inFlight = useRef(new Set<string>());
+  const retryTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
 
   useEffect(() => {
     if (authState !== 'authenticated') return;
 
     let active = true;
-    const timers = new Set<ReturnType<typeof setTimeout>>();
     const openTrades = paperTrades.filter(trade => trade.status === 'open');
-
-    const schedule = (trade: SitePaperTrade, delay: number) => {
-      const timer = setTimeout(() => {
-        timers.delete(timer);
-        void settleIfDue(trade);
-      }, Math.max(0, Math.min(delay, MAX_TIMEOUT_MS)));
-      timers.add(timer);
-    };
 
     const settleIfDue = async (trade: SitePaperTrade) => {
       if (!active || inFlight.current.has(trade.id)) return;
+
       const expiresAtMs = resolveTradeExpiryMs(trade);
       if (expiresAtMs === null) return;
+
       const remaining = expiresAtMs - Date.now();
-      if (remaining > 0) {
-        schedule(trade, remaining);
-        return;
-      }
+      if (remaining > 0) return;
 
       inFlight.current.add(trade.id);
       try {
         const result = await settleDemoTrade(trade.id);
-        if (result.error) throw new Error(result.error);
+        if (result.error) {
+          if (!/has not expired/i.test(result.error)) {
+            throw new Error(result.error);
+          }
+          return;
+        }
         await refresh();
       } catch {
-        if (active) schedule(trade, RETRY_DELAY_MS);
+        if (!active) return;
+        const timer = retryTimers.current.get(trade.id);
+        if (timer) clearTimeout(timer);
+        retryTimers.current.set(trade.id, setTimeout(() => {
+          retryTimers.current.delete(trade.id);
+          void settleIfDue(trade);
+        }, RETRY_DELAY_MS));
       } finally {
         inFlight.current.delete(trade.id);
       }
     };
 
-    for (const trade of openTrades) {
-      const expiresAtMs = resolveTradeExpiryMs(trade);
-      const remaining = expiresAtMs === null ? 0 : expiresAtMs - Date.now();
-      schedule(trade, remaining > 0 ? remaining : 0);
-    }
+    const tick = () => {
+      if (!active) return;
+      for (const trade of openTrades) {
+        void settleIfDue(trade);
+      }
+    };
+
+    tick();
+    const interval = setInterval(tick, CHECK_INTERVAL_MS);
 
     return () => {
       active = false;
-      for (const timer of timers) clearTimeout(timer);
+      for (const timer of retryTimers.current.values()) clearTimeout(timer);
+      clearInterval(interval);
     };
   }, [authState, paperTrades, refresh]);
 }

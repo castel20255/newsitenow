@@ -7,7 +7,7 @@ import { Header } from '@/components/custom/header';
 import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { placeDemoTrade } from '@/app/actions/demo-trading';
-import { computeEndTimeEpoch } from '@/lib/duration-utils';
+import { computeEndTimeEpoch, resolveTradeExpiryMs } from '@/lib/duration-utils';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { SymbolSelector } from '@/components/custom/symbol-selector';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
@@ -507,7 +507,10 @@ export function RiseFallView({
                   <div><span className="text-foreground font-medium">Stake:</span> ${Number(trade.stake).toFixed(2)}</div>
                   <div><span className="text-foreground font-medium">Duration:</span> {trade.duration_seconds}s</div>
                   <div><span className="text-foreground font-medium">Placed:</span> {new Date(trade.created_at).toLocaleString()}</div>
-                  <div><span className="text-foreground font-medium">Expires:</span> {new Date(trade.expires_at).toLocaleString()}</div>
+                  <div><span className="text-foreground font-medium">Expires:</span> {(() => {
+                    const expiryMs = resolveTradeExpiryMs(trade);
+                    return expiryMs === null ? '—' : new Date(expiryMs).toLocaleString();
+                  })()}</div>
                 </div>
               </div>
             );
