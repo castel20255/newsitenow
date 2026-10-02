@@ -74,8 +74,8 @@ export function ConfigurableBuyButton({
 }: ConfigurableBuyButtonProps) {
   const { localize } = useAppTranslations();
 
-  const disabled = !isConnected || !proposal || isBuying || !!tradeCountdown;
-  const payout = proposal && !tradeCountdown ? proposal.payout.toFixed(2) : null;
+  const disabled = !isConnected || !proposal || isBuying;
+  const payout = proposal ? proposal.payout.toFixed(2) : null;
 
   const variants: Record<StyleVariant, () => React.ReactNode> = {
     // a — pill (default)
@@ -86,9 +86,7 @@ export function ConfigurableBuyButton({
         disabled={disabled}
         onClick={onBuy}
       >
-        {tradeCountdown ? (
-          tradeCountdown
-        ) : isBuying ? (
+        {isBuying ? (
           <Localize i18n_default_text="Purchasing..." />
         ) : (
           <span className="flex flex-col items-center leading-tight gap-0.5">
@@ -110,7 +108,7 @@ export function ConfigurableBuyButton({
         onClick={onBuy}
       >
         <span className="flex w-full items-center justify-between px-1">
-          <span>{tradeCountdown || (isBuying ? localize('Purchasing...') : localize('Buy'))}</span>
+          <span>{isBuying ? localize('Purchasing...') : localize('Buy')}</span>
           {payout && (
             <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium">
               {payout} USD
@@ -129,7 +127,7 @@ export function ConfigurableBuyButton({
         <span className="flex flex-col items-center leading-tight gap-0.5">
           <span className="flex items-center gap-1.5 font-semibold">
             <TrendingUp className="h-4 w-4" />
-            {tradeCountdown || (isBuying ? localize('Purchasing...') : localize('Buy'))}
+            {isBuying ? localize('Purchasing...') : localize('Buy')}
           </span>
           {payout && (
             <span className="text-xs font-normal opacity-90">

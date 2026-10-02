@@ -60,6 +60,11 @@ interface UseRiseFallTradingReturn {
 
 export type UseRiseFallTradingParams = Pick<UseBaseTradingParams, 'ws' | 'isConnected' | 'isExhausted' | 'isAuthenticated' | 'onAuthWSFailed'>;
 
+function clampDuration(value: number, option: DurationOption): number {
+  if (!Number.isFinite(value) || value <= 0) return option.min;
+  return Math.min(Math.max(value, option.min), option.max);
+}
+
 export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticated, onAuthWSFailed }: UseRiseFallTradingParams): UseRiseFallTradingReturn {
   const { localize } = useAppTranslations();
   const {
@@ -85,7 +90,7 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
   const [direction, setDirection] = useState<Direction>('CALL');
   const [allowEquals, setAllowEquals] = useState<boolean>(false);
   const [stake, setStake] = useState<string>('10');
-  const [duration, setDurationRaw] = useState<number>(15);
+  const [duration, setDurationRaw] = useState<number>(0);
   const [durationUnit, setDurationUnitRaw] = useState<DurationSelectUnit>('s');
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [endTime, setEndTime] = useState<string>('');
@@ -118,33 +123,24 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
     if (!currentOpt) {
       const first = durationOptions[0];
       setDurationUnitRaw(first.unit);
-      if (first.unit !== 'end-time') setDurationRaw(normalizeDurationValue(first.min, first.unit, first.min));
+      if (first.unit !== 'end-time') setDurationRaw(first.min);
     } else if (currentOpt.unit !== 'end-time') {
-      setDurationRaw(prev => normalizeDurationValue(prev, currentOpt.unit, currentOpt.min));
+      setDurationRaw(prev => clampDuration(prev, currentOpt));
     }
   }, [durationOptions]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const normalizeDurationValue = useCallback((value: number, unit: DurationSelectUnit, fallbackMin = 15): number => {
-    if (unit === 'end-time') return value;
-    if (!Number.isFinite(value) || value <= 0) return fallbackMin;
-
-    const opt = durationOptions.find(o => o.unit === unit);
-    if (!opt) return Math.max(fallbackMin, value);
-
-    return Math.min(Math.max(value, opt.min), opt.max);
-  }, [durationOptions]);
-
   const setDuration = useCallback((value: number) => {
     if (durationUnit === 'end-time') return;
-    setDurationRaw(normalizeDurationValue(value, durationUnit));
-  }, [durationUnit, normalizeDurationValue]);
+    const option = durationOptions.find(o => o.unit === durationUnit);
+    if (option) setDurationRaw(clampDuration(value, option));
+  }, [durationUnit, durationOptions]);
 
   const setDurationUnit = useCallback((unit: DurationSelectUnit) => {
     setDurationUnitRaw(unit);
     const opt = durationOptions.find(o => o.unit === unit);
-    if (opt && unit !== 'end-time') setDurationRaw(normalizeDurationValue(opt.min, unit, opt.min));
-  }, [durationOptions, normalizeDurationValue]);
+    if (opt && unit !== 'end-time') setDurationRaw(opt.min);
+  }, [durationOptions]);
 
   const { buyContract: buyWithProposal, isBuying, buyResult, buyError, clearBuyResult } =
     useBuy(tradingWs, tradingIsConnected);
