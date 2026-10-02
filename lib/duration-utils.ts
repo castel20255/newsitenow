@@ -113,6 +113,30 @@ export function getDurationOptions(
   }, []);
 }
 
+export function resolveTradeExpiryMs(
+  trade: {
+    created_at?: string | null;
+    expires_at?: string | null;
+    duration_seconds?: number | string | null;
+  }
+): number | null {
+  const createdAtMs = trade.created_at ? Date.parse(trade.created_at) : Number.NaN;
+  const expiresAtMs = trade.expires_at ? Date.parse(trade.expires_at) : Number.NaN;
+  const durationSeconds = Number(trade.duration_seconds);
+
+  if (Number.isFinite(createdAtMs) && Number.isFinite(durationSeconds) && durationSeconds > 0) {
+    const expectedExpiryMs = createdAtMs + durationSeconds * 1000;
+    if (Number.isFinite(expiresAtMs)) {
+      const driftMs = Math.abs(expiresAtMs - expectedExpiryMs);
+      if (driftMs > 1000) return expectedExpiryMs;
+    } else {
+      return expectedExpiryMs;
+    }
+  }
+
+  return Number.isFinite(expiresAtMs) ? expiresAtMs : null;
+}
+
 export function computeEndTimeEpoch(date: Date | undefined, timeStr: string): number | null {
   if (!date || !timeStr) return null;
   const parts = timeStr.split(':');

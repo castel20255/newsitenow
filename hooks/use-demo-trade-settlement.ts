@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { settleDemoTrade } from '@/app/actions/demo-trading';
 import type { SiteAuthState, SitePaperTrade } from '@/components/custom/site-auth-provider';
+import { resolveTradeExpiryMs } from '@/lib/duration-utils';
 
 const MAX_TIMEOUT_MS = 2_147_000_000;
 const RETRY_DELAY_MS = 5000;
@@ -35,9 +36,9 @@ export function useDemoTradeSettlement({
 
     const settleIfDue = async (trade: SitePaperTrade) => {
       if (!active || inFlight.current.has(trade.id)) return;
-      const expiresAt = Date.parse(trade.expires_at);
-      if (!Number.isFinite(expiresAt)) return;
-      const remaining = expiresAt - Date.now();
+      const expiresAtMs = resolveTradeExpiryMs(trade);
+      if (expiresAtMs === null) return;
+      const remaining = expiresAtMs - Date.now();
       if (remaining > 0) {
         schedule(trade, remaining);
         return;
@@ -56,7 +57,8 @@ export function useDemoTradeSettlement({
     };
 
     for (const trade of openTrades) {
-      const remaining = Date.parse(trade.expires_at) - Date.now();
+      const expiresAtMs = resolveTradeExpiryMs(trade);
+      const remaining = expiresAtMs === null ? 0 : expiresAtMs - Date.now();
       schedule(trade, remaining > 0 ? remaining : 0);
     }
 
