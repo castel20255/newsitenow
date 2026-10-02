@@ -2,6 +2,7 @@
 
 import { WebSocket } from 'undici';
 import { getPublicWsUrl } from '@deriv/core';
+import { getDurationSeconds } from '@/lib/duration-utils';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 type DemoDurationUnit = 's' | 'm' | 'h' | 'd' | 'end-time';
@@ -27,13 +28,7 @@ function getProposalRequest(input: DemoTradeInput): Record<string, unknown> | nu
   }
 
   if (!Number.isInteger(input.duration) || input.duration < 1) return null;
-  const secondsPerUnit: Record<Exclude<DemoDurationUnit, 'end-time'>, number> = {
-    s: 1,
-    m: 60,
-    h: 3600,
-    d: 86400,
-  };
-  const durationSeconds = input.duration * secondsPerUnit[input.durationUnit];
+  const durationSeconds = getDurationSeconds(input.duration, input.durationUnit);
   if (
     !Number.isSafeInteger(durationSeconds) ||
     durationSeconds < MIN_DURATION_SECONDS ||
@@ -51,13 +46,7 @@ function getTradeDurationSeconds(input: DemoTradeInput): number | null {
     return Math.ceil((input.dateExpiry as number) - Date.now() / 1000);
   }
 
-  const secondsPerUnit: Record<Exclude<DemoDurationUnit, 'end-time'>, number> = {
-    s: 1,
-    m: 60,
-    h: 3600,
-    d: 86400,
-  };
-  return input.duration * secondsPerUnit[input.durationUnit];
+  return getDurationSeconds(input.duration, input.durationUnit);
 }
 
 function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {

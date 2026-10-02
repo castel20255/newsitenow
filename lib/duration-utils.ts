@@ -52,6 +52,18 @@ function parseDurationToSeconds(durationStr: string): number {
   }
 }
 
+export function getDurationSeconds(duration: number, unit: Exclude<DurationSelectUnit, 'end-time'>): number {
+  if (!Number.isFinite(duration) || duration <= 0) return 0;
+
+  switch (unit) {
+    case 's': return duration;
+    case 'm': return duration * 60;
+    case 'h': return duration * 3600;
+    case 'd': return duration * 86400;
+    default: return duration;
+  }
+}
+
 export function getDurationOptions(
   contracts: ContractInfo[],
   labels: Record<DurationSelectUnit, string> = getDurationUnitLabels((text) => text)
@@ -68,6 +80,8 @@ export function getDurationOptions(
       const maxSec = parseDurationToSeconds(maxStr);
 
       if (maxSec >= 1 && !optMap.has('s')) {
+        // The selected duration is used as-is. The 15s floor is a minimum rule only;
+        // it is never added on top of the user's chosen duration.
         const sMin = Math.max(15, minSec);
         const sMax = Math.min(59, maxSec);
         if (sMin <= sMax) optMap.set('s', { unit: 's', label: labels.s, min: sMin, max: sMax });
