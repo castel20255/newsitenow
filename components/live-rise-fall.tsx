@@ -44,8 +44,6 @@ export function LiveRiseFall({
   const { ws, isConnected, isExhausted } = useDerivWSContext();
   const siteAuth = useSiteAuth();
   useDemoTradeSettlement({
-    ws,
-    isConnected,
     authState: siteAuth.authState,
     paperTrades: siteAuth.paperTrades,
     refresh: siteAuth.refresh,

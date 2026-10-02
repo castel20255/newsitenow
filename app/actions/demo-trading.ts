@@ -45,6 +45,21 @@ function getProposalRequest(input: DemoTradeInput): Record<string, unknown> | nu
   return { duration: proposalDuration, duration_unit: proposalUnit };
 }
 
+function getTradeDurationSeconds(input: DemoTradeInput): number | null {
+  if (input.durationUnit === 'end-time') {
+    if (!Number.isInteger(input.dateExpiry)) return null;
+    return Math.ceil((input.dateExpiry as number) - Date.now() / 1000);
+  }
+
+  const secondsPerUnit: Record<Exclude<DemoDurationUnit, 'end-time'>, number> = {
+    s: 1,
+    m: 60,
+    h: 3600,
+    d: 86400,
+  };
+  return input.duration * secondsPerUnit[input.durationUnit];
+}
+
 function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
   return new Promise((resolve, reject) => {
     let socket: WebSocket;
@@ -139,8 +154,13 @@ export async function placeDemoTrade(input: DemoTradeInput) {
     ) {
       return { error: 'The market did not return a valid quote for this trade.' };
     }
-    const durationSeconds = Math.ceil(proposal.date_expiry - Date.now() / 1000);
-    if (durationSeconds < MIN_DURATION_SECONDS || durationSeconds > MAX_DURATION_SECONDS) {
+    const durationSeconds = getTradeDurationSeconds(input);
+    if (
+      durationSeconds === null ||
+      !Number.isSafeInteger(durationSeconds) ||
+      durationSeconds < MIN_DURATION_SECONDS ||
+      durationSeconds > MAX_DURATION_SECONDS
+    ) {
       return { error: 'The quoted contract expiry is invalid.' };
     }
 
