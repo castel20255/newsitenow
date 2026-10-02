@@ -7,7 +7,7 @@ import { Header } from '@/components/custom/header';
 import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { placeDemoTrade } from '@/app/actions/demo-trading';
-import { computeEndTimeEpoch } from '@/lib/duration-utils';
+import { computeEndTimeEpoch, resolveTradeExpiryMs } from '@/lib/duration-utils';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { SymbolSelector } from '@/components/custom/symbol-selector';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
@@ -271,8 +271,9 @@ export function RiseFallView({
     ? countdownNow === null
       ? localize('Trade closes in {{time}}', { time: '--:--' })
       : (() => {
-          const remainingSeconds = Math.max(0, Math.ceil((Date.parse(activeOpenTrades[0].expires_at) - countdownNow) / 1000));
-          return remainingSeconds === 0 ? null : localize('Trade closes in {{time}}', {
+          const expiresAtMs = resolveTradeExpiryMs(activeOpenTrades[0]);
+          const remainingSeconds = expiresAtMs === null ? null : Math.max(0, Math.ceil((expiresAtMs - countdownNow) / 1000));
+          return remainingSeconds === null || remainingSeconds === 0 ? null : localize('Trade closes in {{time}}', {
             time: formatTradeCountdown(remainingSeconds),
           });
         })()
@@ -520,9 +521,10 @@ export function RiseFallView({
       {visibleTradePanels.length > 0 && (
         <div className="fixed right-4 top-20 z-50 w-[min(360px,calc(100vw-2rem))] space-y-3">
           {visibleTradePanels.map((trade) => {
-            const remainingSeconds = countdownNow === null
+            const expiresAtMs = resolveTradeExpiryMs(trade);
+            const remainingSeconds = countdownNow === null || expiresAtMs === null
               ? null
-              : Math.max(0, Math.ceil((Date.parse(trade.expires_at) - countdownNow) / 1000));
+              : Math.max(0, Math.ceil((expiresAtMs - countdownNow) / 1000));
             return (
               <div key={trade.id} className="rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur-sm">
                 <div className="mb-2 flex items-start justify-between gap-3">
