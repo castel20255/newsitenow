@@ -4,7 +4,7 @@ A self-hosted Rise/Fall trading app with site-owned accounts, Supabase authentic
 
 ## Requirements
 
-- Node.js 18.18 or later
+- Node.js 20.9.0 or later (required by Next.js 16)
 - A Supabase project
 
 ## Configure Supabase

@@ -5,10 +5,8 @@ import { LiveRiseFall } from '../components/live-rise-fall';
 import { normalizeAppConfig, type RiseFallAppConfig } from '../lib/app-config';
 
 /**
- * Deployed app. Reads the no-code config injected at deploy time
- * (public/app-config.json). When present, the configurable control styles/order
- * are applied; when absent, the standard Rise/Fall app renders unchanged.
- * Either way the app is fully functional (real trading + login).
+ * Deployed app. Reads optional no-code config from public/app-config.json and
+ * applies it after load while rendering the standard app immediately.
  */
 export default function RiseFallPage() {
   const [config, setConfig] = useState<RiseFallAppConfig | null | undefined>(undefined);
@@ -29,6 +27,5 @@ export default function RiseFallPage() {
     };
   }, []);
 
-  if (config === undefined) return <div className="min-h-dvh bg-background" />;
   return <LiveRiseFall appConfig={config ?? undefined} />;
 }
