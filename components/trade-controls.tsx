@@ -225,12 +225,10 @@ export function TradeControls({
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
-          disabled={!isConnected || !proposal || isBuying || !!tradeCountdown}
+          disabled={!isConnected || !proposal || isBuying}
           onClick={onBuy}
         >
-          {tradeCountdown ? (
-            tradeCountdown
-          ) : isBuying ? (
+          {isBuying ? (
             <Localize i18n_default_text="Purchasing..." />
           ) : (
             <span className="flex flex-col items-center leading-tight gap-0.5">

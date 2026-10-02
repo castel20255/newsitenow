@@ -249,13 +249,13 @@ export function RiseFallView({
   const { openAuth, refresh: refreshSiteAuth, paperTrades } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
   const [countdownNow, setCountdownNow] = useState<number | null>(null);
-  const activeOpenTrade = paperTrades
+  const [dismissedTradeIds, setDismissedTradeIds] = useState<string[]>([]);
+  const activeOpenTrades = paperTrades
     .filter(trade => trade.account_id === activeAccount?.id && trade.status === 'open')
-    .sort((first, second) => Date.parse(first.expires_at) - Date.parse(second.expires_at))[0] ?? null;
-  const hasOpenTrade = !!activeOpenTrade;
+    .sort((first, second) => Date.parse(first.expires_at) - Date.parse(second.expires_at));
 
   useEffect(() => {
-    if (!activeOpenTrade) {
+    if (!activeOpenTrades.length) {
       setCountdownNow(null);
       return;
     }
@@ -264,13 +264,14 @@ export function RiseFallView({
     updateCountdown();
     const interval = window.setInterval(updateCountdown, 1000);
     return () => window.clearInterval(interval);
-  }, [activeOpenTrade?.id, activeOpenTrade?.expires_at]);
+  }, [activeOpenTrades.length, activeOpenTrades[0]?.id, activeOpenTrades[0]?.expires_at]);
 
-  const tradeCountdown = activeOpenTrade
+  const visibleTradePanels = activeOpenTrades.filter(trade => !dismissedTradeIds.includes(trade.id));
+  const tradeCountdown = activeOpenTrades[0]
     ? countdownNow === null
       ? localize('Trade closes in {{time}}', { time: '--:--' })
       : (() => {
-          const remainingSeconds = Math.max(0, Math.ceil((Date.parse(activeOpenTrade.expires_at) - countdownNow) / 1000));
+          const remainingSeconds = Math.max(0, Math.ceil((Date.parse(activeOpenTrades[0].expires_at) - countdownNow) / 1000));
           return remainingSeconds === 0 ? null : localize('Trade closes in {{time}}', {
             time: formatTradeCountdown(remainingSeconds),
           });
@@ -283,7 +284,6 @@ export function RiseFallView({
   // editor owns Buy clicks there, and its auth actions are already no-ops.
   const handleBuy = useCallback(async () => {
     if (editMode) return;
-    if (hasOpenTrade) return;
     if (authState !== 'authenticated') {
       openAuth('signup');
       return;
@@ -329,7 +329,6 @@ export function RiseFallView({
     }
   }, [
     editMode,
-    hasOpenTrade,
     authState,
     activeAccount,
     openAuth,
@@ -517,7 +516,46 @@ export function RiseFallView({
     ) : null;
 
   return (
-    <main
+    <>
+      {visibleTradePanels.length > 0 && (
+        <div className="fixed right-4 top-20 z-50 w-[min(360px,calc(100vw-2rem))] space-y-3">
+          {visibleTradePanels.map((trade) => {
+            const remainingSeconds = countdownNow === null
+              ? null
+              : Math.max(0, Math.ceil((Date.parse(trade.expires_at) - countdownNow) / 1000));
+            return (
+              <div key={trade.id} className="rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur-sm">
+                <div className="mb-2 flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Open trade</div>
+                    <div className="text-base font-semibold">{trade.symbol}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setDismissedTradeIds(current => current.includes(trade.id) ? current : [...current, trade.id])}
+                    className="rounded-full border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
+                    aria-label="Close trade details"
+                  >
+                    Close
+                  </button>
+                </div>
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  <div><span className="text-foreground font-medium">Stake:</span> ${Number(trade.stake).toFixed(2)}</div>
+                  <div><span className="text-foreground font-medium">Duration:</span> {trade.duration_seconds}s</div>
+                  <div><span className="text-foreground font-medium">Placed:</span> {new Date(trade.created_at).toLocaleString()}</div>
+                  <div><span className="text-foreground font-medium">Expires:</span> {new Date(trade.expires_at).toLocaleString()}</div>
+                  <div>
+                    <span className="text-foreground font-medium">Countdown:</span>{' '}
+                    {remainingSeconds === null ? '--:--:--' : remainingSeconds <= 0 ? 'Settling...' : formatTradeCountdown(remainingSeconds)}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <main
       className={`flex h-dvh min-h-0 w-full flex-col overflow-hidden ${
         editMode ? 'bg-muted/50' : 'bg-background'
       }`}
@@ -640,5 +678,6 @@ export function RiseFallView({
       )}
 
     </main>
+    </>
   );
 }
