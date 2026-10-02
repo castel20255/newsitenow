@@ -31,6 +31,7 @@ export interface SiteTradingAccount {
 export interface SitePaperTrade {
   id: string;
   user_id: string;
+  account_id: string;
   symbol: string;
   contract_type: 'CALL' | 'PUT' | 'CALLE' | 'PUTE';
   stake: number | string;

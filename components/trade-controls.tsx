@@ -38,6 +38,7 @@ interface TradeControlsProps {
 
   onBuy: () => void;
   isBuying: boolean;
+  tradeCountdown?: string | null;
   buyResult: BuyResult | null;
   buyError: string | null;
   onClearBuyResult: () => void;
@@ -67,6 +68,7 @@ export function TradeControls({
   proposal,
   onBuy,
   isBuying,
+  tradeCountdown,
   buyResult,
   buyError,
   onClearBuyResult,
@@ -223,10 +225,12 @@ export function TradeControls({
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
-          disabled={!isConnected || !proposal || isBuying}
+          disabled={!isConnected || !proposal || isBuying || !!tradeCountdown}
           onClick={onBuy}
         >
-          {isBuying ? (
+          {tradeCountdown ? (
+            tradeCountdown
+          ) : isBuying ? (
             <Localize i18n_default_text="Purchasing..." />
           ) : (
             <span className="flex flex-col items-center leading-tight gap-0.5">

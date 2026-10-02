@@ -14,7 +14,7 @@ import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { useContractMarkers } from '@/hooks/use-contract-markers';
-import { useCallback, useMemo, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
@@ -84,6 +84,15 @@ const RiseFallChart = dynamic(() => import('./rise-fall-chart').then(module => m
 // Edit-mode stand-in for the login prompt's auth handlers — same rule as the
 // header: no OAuth navigation out of the editor.
 const noopAsyncAuth = async () => {};
+
+function formatTradeCountdown(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  return [hours, minutes, remainingSeconds]
+    .map(value => String(value).padStart(2, '0'))
+    .join(':');
+}
 
 export interface RiseFallViewProps {
   // Auth
@@ -237,8 +246,35 @@ export function RiseFallView({
   // 400px column would look detached.
   const pinBuy = !!appConfig?.buy?.pinned && isMobile;
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
-  const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
+  const { openAuth, refresh: refreshSiteAuth, paperTrades } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
+  const [countdownNow, setCountdownNow] = useState<number | null>(null);
+  const activeOpenTrade = paperTrades
+    .filter(trade => trade.account_id === activeAccount?.id && trade.status === 'open')
+    .sort((first, second) => Date.parse(first.expires_at) - Date.parse(second.expires_at))[0] ?? null;
+  const hasOpenTrade = !!activeOpenTrade;
+
+  useEffect(() => {
+    if (!activeOpenTrade) {
+      setCountdownNow(null);
+      return;
+    }
+
+    const updateCountdown = () => setCountdownNow(Date.now());
+    updateCountdown();
+    const interval = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(interval);
+  }, [activeOpenTrade?.id, activeOpenTrade?.expires_at]);
+
+  const tradeCountdown = activeOpenTrade
+    ? countdownNow === null
+      ? localize('Trade closes in {{time}}', { time: '--:--' })
+      : Math.max(0, Math.ceil((Date.parse(activeOpenTrade.expires_at) - countdownNow) / 1000)) === 0
+        ? localize('Trade settling...')
+        : localize('Trade closes in {{time}}', {
+            time: formatTradeCountdown(Math.max(0, Math.ceil((Date.parse(activeOpenTrade.expires_at) - countdownNow) / 1000))),
+          })
+    : null;
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
   // would fail with a "Purchase Failed" toast. One gate covers every Buy
@@ -246,6 +282,7 @@ export function RiseFallView({
   // editor owns Buy clicks there, and its auth actions are already no-ops.
   const handleBuy = useCallback(async () => {
     if (editMode) return;
+    if (hasOpenTrade) return;
     if (authState !== 'authenticated') {
       openAuth('signup');
       return;
@@ -291,6 +328,7 @@ export function RiseFallView({
     }
   }, [
     editMode,
+    hasOpenTrade,
     authState,
     activeAccount,
     openAuth,
@@ -463,6 +501,7 @@ export function RiseFallView({
         proposal={proposal}
         onBuy={handleBuy}
         isBuying={tradeIsPending}
+        tradeCountdown={tradeCountdown}
         buyResult={buyResult}
         buyError={buyError}
         onClearBuyResult={clearBuyResult}
@@ -568,6 +607,7 @@ export function RiseFallView({
                   proposal={proposal}
                   onBuy={handleBuy}
                   isBuying={tradeIsPending}
+                  tradeCountdown={tradeCountdown}
                   buyResult={buyResult}
                   buyError={buyError}
                   onClearBuyResult={clearBuyResult}
@@ -593,6 +633,7 @@ export function RiseFallView({
             proposal={proposal}
             onBuy={handleBuy}
             isBuying={tradeIsPending}
+            tradeCountdown={tradeCountdown}
           />
         </PinnedBuyBar>
       )}

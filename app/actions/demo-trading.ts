@@ -4,7 +4,10 @@ import { WebSocket } from 'undici';
 import { getPublicWsUrl } from '@deriv/core';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-type DemoDurationUnit = 't' | 's' | 'm' | 'h' | 'd' | 'end-time';
+type DemoDurationUnit = 's' | 'm' | 'h' | 'd' | 'end-time';
+
+const MIN_DURATION_SECONDS = 15;
+const MAX_DURATION_SECONDS = 31536000;
 
 export interface DemoTradeInput {
   symbol: string;
@@ -16,24 +19,30 @@ export interface DemoTradeInput {
 }
 
 function getProposalRequest(input: DemoTradeInput): Record<string, unknown> | null {
-  if (!Number.isInteger(input.duration) || input.duration < 1) return null;
   if (input.durationUnit === 'end-time') {
     if (!Number.isInteger(input.dateExpiry)) return null;
     const remaining = (input.dateExpiry as number) - Math.floor(Date.now() / 1000);
-    if (remaining < 1 || remaining > 31536000) return null;
+    if (remaining < MIN_DURATION_SECONDS || remaining > MAX_DURATION_SECONDS) return null;
     return { date_expiry: input.dateExpiry };
   }
 
-  const units: Record<Exclude<DemoDurationUnit, 'end-time'>, string> = {
-    t: 't',
-    s: 's',
-    m: 'm',
-    h: 'm',
-    d: 'd',
+  if (!Number.isInteger(input.duration) || input.duration < 1) return null;
+  const secondsPerUnit: Record<Exclude<DemoDurationUnit, 'end-time'>, number> = {
+    s: 1,
+    m: 60,
+    h: 3600,
+    d: 86400,
   };
-  const duration = input.durationUnit === 'h' ? input.duration * 60 : input.duration;
-  if (!Number.isInteger(duration) || duration < 1) return null;
-  return { duration, duration_unit: units[input.durationUnit] };
+  const durationSeconds = input.duration * secondsPerUnit[input.durationUnit];
+  if (
+    !Number.isSafeInteger(durationSeconds) ||
+    durationSeconds < MIN_DURATION_SECONDS ||
+    durationSeconds > MAX_DURATION_SECONDS
+  ) return null;
+
+  const proposalDuration = input.durationUnit === 'h' ? input.duration * 60 : input.duration;
+  const proposalUnit = input.durationUnit === 'h' ? 'm' : input.durationUnit;
+  return { duration: proposalDuration, duration_unit: proposalUnit };
 }
 
 function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
@@ -131,7 +140,7 @@ export async function placeDemoTrade(input: DemoTradeInput) {
       return { error: 'The market did not return a valid quote for this trade.' };
     }
     const durationSeconds = Math.ceil(proposal.date_expiry - Date.now() / 1000);
-    if (durationSeconds < 1 || durationSeconds > 31536000) {
+    if (durationSeconds < MIN_DURATION_SECONDS || durationSeconds > MAX_DURATION_SECONDS) {
       return { error: 'The quoted contract expiry is invalid.' };
     }
 
