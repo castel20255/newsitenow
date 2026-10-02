@@ -1,7 +1,6 @@
 import type { ContractInfo } from '@deriv/core';
 
-export type DurationApiUnit = 't' | 's' | 'm' | 'd';
-export type DurationSelectUnit = 't' | 's' | 'm' | 'h' | 'd' | 'end-time';
+export type DurationSelectUnit = 's' | 'm' | 'h' | 'd' | 'end-time';
 
 export interface DurationOption {
   unit: DurationSelectUnit;
@@ -26,14 +25,13 @@ export interface TradingSymbolData {
   events: TradingEvent[];
 }
 
-const DURATION_ORDER: DurationSelectUnit[] = ['t', 's', 'm', 'h', 'd', 'end-time'];
+const DURATION_ORDER: DurationSelectUnit[] = ['s', 'm', 'h', 'd', 'end-time'];
 
 export type LocalizeFn = (text: string, values?: Record<string, unknown>) => string;
 
 /** Localised duration unit labels. Call with provider `localize` so language switches update. */
 export function getDurationUnitLabels(localize: LocalizeFn): Record<DurationSelectUnit, string> {
   return {
-    t: localize('Ticks'),
     s: localize('Seconds'),
     m: localize('Minutes'),
     h: localize('Hours'),
@@ -65,16 +63,12 @@ export function getDurationOptions(
     const maxStr = contract.max_contract_duration;
     const expiryType = contract.expiry_type;
 
-    if (expiryType === 'tick') {
-      if (!optMap.has('t')) {
-        optMap.set('t', { unit: 't', label: labels.t, min: parseInt(minStr, 10), max: parseInt(maxStr, 10) });
-      }
-    } else if (expiryType === 'intraday') {
+    if (expiryType === 'intraday') {
       const minSec = parseDurationToSeconds(minStr);
       const maxSec = parseDurationToSeconds(maxStr);
 
       if (maxSec >= 1 && !optMap.has('s')) {
-        const sMin = Math.max(1, minSec);
+        const sMin = Math.max(15, minSec);
         const sMax = Math.min(59, maxSec);
         if (sMin <= sMax) optMap.set('s', { unit: 's', label: labels.s, min: sMin, max: sMax });
       }

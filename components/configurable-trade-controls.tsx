@@ -61,6 +61,7 @@ export interface ConfigurableBuyButtonProps {
   proposal: ProposalInfo | null;
   onBuy: () => void;
   isBuying: boolean;
+  tradeCountdown?: string | null;
 }
 
 export function ConfigurableBuyButton({
@@ -69,11 +70,12 @@ export function ConfigurableBuyButton({
   proposal,
   onBuy,
   isBuying,
+  tradeCountdown,
 }: ConfigurableBuyButtonProps) {
   const { localize } = useAppTranslations();
 
-  const disabled = !isConnected || !proposal || isBuying;
-  const payout = proposal ? proposal.payout.toFixed(2) : null;
+  const disabled = !isConnected || !proposal || isBuying || !!tradeCountdown;
+  const payout = proposal && !tradeCountdown ? proposal.payout.toFixed(2) : null;
 
   const variants: Record<StyleVariant, () => React.ReactNode> = {
     // a — pill (default)
@@ -84,7 +86,9 @@ export function ConfigurableBuyButton({
         disabled={disabled}
         onClick={onBuy}
       >
-        {isBuying ? (
+        {tradeCountdown ? (
+          tradeCountdown
+        ) : isBuying ? (
           <Localize i18n_default_text="Purchasing..." />
         ) : (
           <span className="flex flex-col items-center leading-tight gap-0.5">
@@ -106,7 +110,7 @@ export function ConfigurableBuyButton({
         onClick={onBuy}
       >
         <span className="flex w-full items-center justify-between px-1">
-          <span>{isBuying ? localize('Purchasing...') : localize('Buy')}</span>
+          <span>{tradeCountdown || (isBuying ? localize('Purchasing...') : localize('Buy'))}</span>
           {payout && (
             <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium">
               {payout} USD
@@ -125,7 +129,7 @@ export function ConfigurableBuyButton({
         <span className="flex flex-col items-center leading-tight gap-0.5">
           <span className="flex items-center gap-1.5 font-semibold">
             <TrendingUp className="h-4 w-4" />
-            {isBuying ? localize('Purchasing...') : localize('Buy')}
+            {tradeCountdown || (isBuying ? localize('Purchasing...') : localize('Buy'))}
           </span>
           {payout && (
             <span className="text-xs font-normal opacity-90">
@@ -162,6 +166,7 @@ export interface ConfigurableTradeControlsProps {
   proposal: ProposalInfo | null;
   onBuy: () => void;
   isBuying: boolean;
+  tradeCountdown?: string | null;
   buyResult: BuyResult | null;
   buyError: string | null;
   onClearBuyResult: () => void;
@@ -218,6 +223,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     proposal,
     onBuy,
     isBuying,
+    tradeCountdown,
     buyResult,
     buyError,
     onClearBuyResult,
@@ -563,6 +569,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       proposal={proposal}
       onBuy={onBuy}
       isBuying={isBuying}
+      tradeCountdown={tradeCountdown}
     />
   );
 
