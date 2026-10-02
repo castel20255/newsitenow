@@ -269,11 +269,12 @@ export function RiseFallView({
   const tradeCountdown = activeOpenTrade
     ? countdownNow === null
       ? localize('Trade closes in {{time}}', { time: '--:--' })
-      : Math.max(0, Math.ceil((Date.parse(activeOpenTrade.expires_at) - countdownNow) / 1000)) === 0
-        ? localize('Trade settling...')
-        : localize('Trade closes in {{time}}', {
-            time: formatTradeCountdown(Math.max(0, Math.ceil((Date.parse(activeOpenTrade.expires_at) - countdownNow) / 1000))),
-          })
+      : (() => {
+          const remainingSeconds = Math.max(0, Math.ceil((Date.parse(activeOpenTrade.expires_at) - countdownNow) / 1000));
+          return remainingSeconds === 0 ? null : localize('Trade closes in {{time}}', {
+            time: formatTradeCountdown(remainingSeconds),
+          });
+        })()
     : null;
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
@@ -319,8 +320,8 @@ export function RiseFallView({
         toast.error(result.error);
         return;
       }
-      toast.success('Demo trade placed. Your balance and trade history are updating.');
       await refreshSiteAuth();
+      toast.success('Demo trade placed. Your balance and trade history are updating.');
     } catch {
       toast.error('Could not place the demo trade. Try again.');
     } finally {
