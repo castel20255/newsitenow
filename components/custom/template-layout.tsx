@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { SiteAuthDialog } from './site-auth-dialog';
 import { SiteAuthProvider } from './site-auth-provider';
 import ViewportScaler from './ViewportScaler';
+import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
 
 /**
  * Shared layout wrapper for all template apps.
@@ -26,10 +27,16 @@ import ViewportScaler from './ViewportScaler';
  * - ViewportScaler is mobile-only (active below the `lg` / 1024px breakpoint).
  * - Toaster sits outside ViewportScaler so toasts are never CSS-transformed.
  */
-export function TemplateLayout({ children }: { children: React.ReactNode }) {
+export function TemplateLayout({
+  children,
+  supabaseConfig,
+}: {
+  children: React.ReactNode;
+  supabaseConfig: SupabaseBrowserConfig | null;
+}) {
   return (
     <Providers>
-      <SiteAuthProvider>
+      <SiteAuthProvider supabaseConfig={supabaseConfig}>
         <DerivWSProvider>
           <ViewportScaler>{children}</ViewportScaler>
         </DerivWSProvider>

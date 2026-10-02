@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import { buildFaviconUri } from '@/lib/build-favicon-uri';
 import { getLogoSrc } from '@/lib/get-logo-src';
+import { getSupabaseBrowserConfig } from '@/lib/supabase/config';
 import { inter, FONT_CLASS_MAP } from '@/lib/fonts';
 import { TemplateLayout } from '@/components/custom/template-layout';
 import { LogoSrcProvider } from '@/components/custom/logo-src-provider';
@@ -26,25 +27,26 @@ const ibmPlexSans = IBM_Plex_Sans({
 export function generateMetadata(): Metadata {
   const faviconUri = buildFaviconUri();
   return {
-    title: process.env.NEXT_PUBLIC_DERIV_APP_NAME?.trim() || 'Deriv Rise/Fall Trading App',
-    description: 'A white-label trading application powered by Deriv',
+    title: 'CRYPTO BINARY',
+    description: 'CRYPTO BINARY trading app',
     ...(faviconUri ? { icons: { icon: faviconUri } } : {}),
   };
 }
 
 const fontClass =
-  FONT_CLASS_MAP[process.env.NEXT_PUBLIC_FONT_FAMILY ?? 'Inter'] ??
+  FONT_CLASS_MAP[process.env.FONT_FAMILY ?? 'Inter'] ??
   inter.className;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const logoSrc = getLogoSrc();
+  const supabaseConfig = getSupabaseBrowserConfig();
   return (
     <html lang="en" className="h-full lg:h-auto" suppressHydrationWarning>
       <body
         className={`${fontClass} ${ibmPlexSans.variable} bg-background flex h-dvh min-h-0 flex-col overflow-hidden`}
       >
         <TemplateI18nProvider>
-          <TemplateLayout>
+          <TemplateLayout supabaseConfig={supabaseConfig}>
             <LogoSrcProvider logoSrc={logoSrc}>{children}</LogoSrcProvider>
           </TemplateLayout>
         </TemplateI18nProvider>

@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import { Localize } from '@deriv-com/translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Footer, FooterBar } from '@/components/custom/footer';
 import { Header } from '@/components/custom/header';
 import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
@@ -237,22 +236,6 @@ export function RiseFallView({
   // so the Buy button is never scroll-clipped and a viewport-wide bar under a
   // 400px column would look detached.
   const pinBuy = !!appConfig?.buy?.pinned && isMobile;
-  // With Buy unpinned the footer still has to sit at the end of the mobile
-  // column — and a `fixed` footer makes that column reserve clearance for it.
-  // That reservation was a guess (`pb-28`, 112px) for a footer that measures
-  // 40px, leaving 72px of dead space under the Buy button at the bottom of the
-  // scroll. Rendering it in flow, exactly as PinnedBuyBar does, ends the column
-  // where the footer begins and removes the number to guess.
-  //
-  // Note what this does NOT depend on: `buy.pinned`. Every no-code mobile
-  // render gets the in-flow band, so an existing unpinned project also moves
-  // off the translucent `fixed` footer on its next redeploy. That is deliberate
-  // — it is the dead-space fix — but it means the backward-compatibility rule
-  // covers Buy's PLACEMENT, not the footer treatment: a pre-existing project
-  // keeps Buy scrolling in the column, while its footer becomes the opaque
-  // bordered band. A footer that moved after a redeploy is expected here, not a
-  // regression.
-  const inFlowFooter = !!appConfig && isMobile;
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
   const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
@@ -603,7 +586,7 @@ export function RiseFallView({
         </div>
       )}
 
-      {pinBuy ? (
+      {pinBuy && (
         <PinnedBuyBar
           editMode={editMode}
           rearrangeMode={rearrangeMode}
@@ -619,18 +602,6 @@ export function RiseFallView({
             isBuying={tradeIsPending}
           />
         </PinnedBuyBar>
-      ) : inFlowFooter ? (
-        /* Unpinned mobile: the same band the pinned bar ends in, minus the Buy
-           button — in flow at the end of the h-dvh column, so the scroll area
-           ends where it begins and nothing reserves clearance for it. Sharing
-           the band is what keeps the footer from moving when the pin toggles. */
-        <FooterBar />
-      ) : (
-        /* Fixed footer — desktop and the standard layout, which scroll the
-           document rather than an inner column. */
-        <div className="w-full shrink-0 border-t border-border py-2 text-center bg-background">
-          <Footer />
-        </div>
       )}
 
     </main>

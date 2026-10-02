@@ -15,13 +15,12 @@ A self-hosted Rise/Fall trading app with site-owned accounts, Supabase authentic
 4. Copy `.env.example` to `.env.local` and fill in the values from **Project Settings → API**:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
-NEXT_PUBLIC_DERIV_ENV=production
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` is server-only. Never rename it with a `NEXT_PUBLIC_` prefix or expose it in client code. It is used for private username-to-email lookup; passwords are handled by Supabase Auth and are never stored by this app.
+`SUPABASE_SERVICE_ROLE_KEY` is server-only. Never expose it in client code. `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` are passed from the server to the browser auth client; the publishable key is intended for browser use and is not a secret. The service-role key is used for private username-to-email lookup; passwords are handled by Supabase Auth and are never stored by this app.
 
 Without the Supabase URL and anon key, the site's account forms still open but submission is disabled. The username login lookup also requires the service-role key.
 
@@ -29,7 +28,7 @@ Without the Supabase URL and anon key, the site's account forms still open but s
 
 Import this repository into Vercel with the repository root as the Root Directory and `main` as the Production Branch. Vercel detects Next.js automatically; the build command is `npm run build` and the install command is `npm install`.
 
-Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in the Vercel project's **Production** Environment Variables, then redeploy. Add the same values to Preview if preview deployments need account functionality. Never upload or commit `.env.production`; `.env.example` lists the supported variables. The service-role key must remain server-only.
+Add `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in the Vercel project's **Production** Environment Variables, then redeploy. Add the same values to Preview if preview deployments need account functionality. Never upload or commit `.env.production`; `.env.example` lists the supported variables. The service-role key must remain server-only.
 
 In Supabase **Authentication → URL Configuration**, set the Site URL to the production deployment's domain. A successful build without Supabase variables can still deploy, but account form submissions and username login lookup will not work.
 

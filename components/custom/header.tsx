@@ -26,14 +26,9 @@ interface HeaderProps {
   /** Logo source URL or data URL. When omitted, a placeholder badge is shown until
    *  the user provides a logo via the app builder (passed as a data URL via PREVIEW_BRANDING). */
   logoSrc?: string;
-  /** App name used for the header text and the fallback logo letter when no logoSrc
-   *  is provided. Prefers the live preview / Customise name, then
-   *  NEXT_PUBLIC_DERIV_APP_NAME, then 'Deriv Trading'. */
+  /** App name used for the header text and fallback logo letter. */
   appName?: string;
-  /**
-   * When false, hide the name text next to the logo. Defaults to the
-   * NEXT_PUBLIC_DERIV_SHOW_APP_NAME env var (true when unset).
-   */
+  /** When false, hide the name text next to the logo. */
   showAppName?: boolean;
   /** Optional controls rendered to the left of the login/logout button (e.g. a theme toggle). */
   actions?: React.ReactNode;
@@ -64,13 +59,11 @@ function AccountLabel({ type }: { type: 'demo' | 'real' }) {
 }
 
 function resolveHeaderAppName(appName?: string): string {
-  const fromEnv = process.env.NEXT_PUBLIC_DERIV_APP_NAME?.trim();
-  return appName?.trim() || fromEnv || 'Deriv Trading';
+  return appName?.trim() || 'CRYPTO BINARY';
 }
 
 function resolveShowAppName(showAppName?: boolean): boolean {
-  if (typeof showAppName === 'boolean') return showAppName;
-  return process.env.NEXT_PUBLIC_DERIV_SHOW_APP_NAME !== 'false';
+  return showAppName ?? true;
 }
 
 function AuthButtons({

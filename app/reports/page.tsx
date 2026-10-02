@@ -6,7 +6,6 @@ import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/custom/header';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
-import { Footer } from '@/components/custom/footer';
 import { useLogoSrc } from '@/components/custom/logo-src-provider';
 import { useSiteAuth, type SitePaperTrade } from '@/components/custom/site-auth-provider';
 import { useDerivWSContext } from '@/components/custom/deriv-ws-provider';
@@ -145,7 +144,6 @@ export default function ReportsPage() {
           </>
         )}
       </div>
-      <div className="shrink-0 border-t border-border py-2 text-center"><Footer /></div>
     </main>
   );
 }
