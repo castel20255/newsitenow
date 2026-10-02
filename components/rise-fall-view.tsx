@@ -254,25 +254,18 @@ export function RiseFallView({
       toast.error('Real-money trading is unavailable until an execution provider is connected.');
       return;
     }
-    const currentQuote = prices?.[prices.length - 1];
-    if (!proposal || !activeSymbol || !currentQuote || !Number.isFinite(currentQuote)) {
+    if (!proposal || !activeSymbol) {
       toast.error('Market pricing is not ready. Try again in a moment.');
       return;
     }
 
-    const expiryEpoch = proposal.dateExpiry ?? (
-      durationUnit === 'end-time' ? computeEndTimeEpoch(endDate, endTime) ?? undefined : undefined
-    );
-    const unitSeconds: Partial<Record<DurationSelectUnit, number>> = {
-      t: 1,
-      s: 1,
-      m: 60,
-      h: 3600,
-      d: 86400,
-    };
-    const durationSeconds = expiryEpoch
-      ? Math.ceil(expiryEpoch - Date.now() / 1000)
-      : Math.round(duration * (unitSeconds[durationUnit] ?? 1));
+    const dateExpiry = durationUnit === 'end-time'
+      ? computeEndTimeEpoch(endDate, endTime) ?? undefined
+      : undefined;
+    if (durationUnit === 'end-time' && !dateExpiry) {
+      toast.error('Choose a valid future end time.');
+      return;
+    }
     const contractType = allowEquals ? `${direction}E` as const : direction;
 
     setIsPlacingDemoTrade(true);
@@ -281,9 +274,9 @@ export function RiseFallView({
         symbol: activeSymbol.underlying_symbol,
         contractType,
         stake: Number(stake),
-        duration: durationSeconds,
-        durationUnit: 's',
-        dateExpiry: expiryEpoch,
+        duration,
+        durationUnit,
+        dateExpiry,
       });
       if (result.error) {
         toast.error(result.error);
