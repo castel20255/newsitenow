@@ -8,7 +8,6 @@ import { Header } from '@/components/custom/header';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { useLogoSrc } from '@/components/custom/logo-src-provider';
 import { useSiteAuth, type SitePaperTrade } from '@/components/custom/site-auth-provider';
-import { useDerivWSContext } from '@/components/custom/deriv-ws-provider';
 import { useDemoTradeSettlement } from '@/hooks/use-demo-trade-settlement';
 
 type TradeFilter = 'all' | 'open' | 'settled';
@@ -45,10 +44,7 @@ function TradeRow({ trade }: { trade: SitePaperTrade }) {
 export default function ReportsPage() {
   const logoSrc = useLogoSrc();
   const auth = useSiteAuth();
-  const { ws, isConnected } = useDerivWSContext();
   useDemoTradeSettlement({
-    ws,
-    isConnected,
     authState: auth.authState,
     paperTrades: auth.paperTrades,
     refresh: auth.refresh,
