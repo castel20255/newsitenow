@@ -148,8 +148,8 @@ export interface ConfigurableTradeControlsProps {
   isConnected: boolean;
   stake: string;
   onStakeChange: (value: string) => void;
-  duration: number;
-  onDurationChange: (value: number) => void;
+  duration: string;
+  onDurationChange: (value: string) => void;
   durationOptions: DurationOption[];
   durationUnit: DurationSelectUnit;
   onDurationUnitChange: (unit: DurationSelectUnit) => void;
@@ -490,22 +490,30 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     if (variant === 'b') {
       // stepper
       const clamp = (amount: number) => Math.min(activeOption?.max ?? amount, Math.max(activeOption?.min ?? 1, amount));
+      const currentDuration = /^\d+$/.test(duration) ? Number(duration) : activeOption?.min ?? 1;
       return (
         <div className="flex items-center justify-between rounded-lg border border-border p-1">
-          <Button variant="ghost" size="icon" onClick={() => onDurationChange(clamp(duration - 1))}>−</Button>
-          <span className="font-semibold">{duration}</span>
-          <Button variant="ghost" size="icon" onClick={() => onDurationChange(clamp(duration + 1))}>+</Button>
+          <Button variant="ghost" size="icon" onClick={() => onDurationChange(String(clamp(currentDuration - 1)))}>−</Button>
+          <Input
+            type="text"
+            inputMode="numeric"
+            value={duration}
+            onChange={(event) => onDurationChange(event.target.value)}
+            aria-label={localize('Duration')}
+            className="w-20 text-center font-semibold"
+          />
+          <Button variant="ghost" size="icon" onClick={() => onDurationChange(String(clamp(currentDuration + 1)))}>+</Button>
         </div>
       );
     }
     return (
       <Input
-        type="number"
+        type="text"
+        inputMode="numeric"
         value={duration}
-        onChange={(event) => { const val = parseInt(event.target.value, 10); if (!isNaN(val)) onDurationChange(val); }}
-        min={activeOption?.min}
-        max={activeOption?.max}
-        step={1}
+        onChange={(event) => onDurationChange(event.target.value)}
+        aria-label={localize('Duration')}
+        placeholder={activeOption ? `${activeOption.min}-${activeOption.max}` : undefined}
       />
     );
   };

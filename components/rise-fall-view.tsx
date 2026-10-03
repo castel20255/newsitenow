@@ -117,8 +117,8 @@ export interface RiseFallViewProps {
   setAllowEquals: (value: boolean) => void;
   stake: string;
   setStake: (value: string) => void;
-  duration: number;
-  setDuration: (value: number) => void;
+  duration: string;
+  setDuration: (value: string) => void;
   durationOptions: DurationOption[];
   durationUnit: DurationSelectUnit;
   setDurationUnit: (unit: DurationSelectUnit) => void;
@@ -254,6 +254,20 @@ export function RiseFallView({
       toast.error('Real-money trading is unavailable until an execution provider is connected.');
       return;
     }
+    if (durationUnit !== 'end-time') {
+      const durationOption = durationOptions.find(option => option.unit === durationUnit);
+      const selectedDuration = Number(duration);
+      if (
+        !durationOption ||
+        !/^\d+$/.test(duration) ||
+        !Number.isSafeInteger(selectedDuration) ||
+        selectedDuration < durationOption.min ||
+        selectedDuration > durationOption.max
+      ) {
+        toast.error('Enter a valid duration for this contract.');
+        return;
+      }
+    }
     if (!proposal || !activeSymbol) {
       toast.error('Market pricing is not ready. Try again in a moment.');
       return;
@@ -274,7 +288,7 @@ export function RiseFallView({
         symbol: activeSymbol.underlying_symbol,
         contractType,
         stake: Number(stake),
-        duration,
+        duration: durationUnit === 'end-time' ? 0 : Number(duration),
         durationUnit,
         dateExpiry,
       });
@@ -298,6 +312,7 @@ export function RiseFallView({
     proposal,
     activeSymbol,
     durationUnit,
+    durationOptions,
     endDate,
     endTime,
     duration,
