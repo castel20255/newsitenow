@@ -7,7 +7,7 @@ import { Header } from '@/components/custom/header';
 import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { placeDemoTrade } from '@/app/actions/demo-trading';
-import { computeEndTimeEpoch, resolveTradeExpiryMs } from '@/lib/duration-utils';
+import { computeEndTimeEpoch } from '@/lib/duration-utils';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { SymbolSelector } from '@/components/custom/symbol-selector';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
@@ -237,14 +237,8 @@ export function RiseFallView({
   // 400px column would look detached.
   const pinBuy = !!appConfig?.buy?.pinned && isMobile;
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
-  const { openAuth, refresh: refreshSiteAuth, paperTrades } = useSiteAuth();
+  const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
-  const [dismissedTradeIds, setDismissedTradeIds] = useState<string[]>([]);
-  const activeOpenTrades = paperTrades
-    .filter(trade => trade.account_id === activeAccount?.id && trade.status === 'open')
-    .sort((first, second) => Date.parse(first.expires_at) - Date.parse(second.expires_at));
-
-  const visibleTradePanels = activeOpenTrades.filter(trade => !dismissedTradeIds.includes(trade.id));
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
   // would fail with a "Purchase Failed" toast. One gate covers every Buy
@@ -484,40 +478,6 @@ export function RiseFallView({
 
   return (
     <>
-      {visibleTradePanels.length > 0 && (
-        <div className="fixed right-4 top-20 z-50 w-[min(360px,calc(100vw-2rem))] space-y-3">
-          {visibleTradePanels.map((trade) => {
-            return (
-              <div key={trade.id} className="rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur-sm">
-                <div className="mb-2 flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Open trade</div>
-                    <div className="text-base font-semibold">{trade.symbol}</div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setDismissedTradeIds(current => current.includes(trade.id) ? current : [...current, trade.id])}
-                    className="rounded-full border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground"
-                    aria-label="Close trade details"
-                  >
-                    Close
-                  </button>
-                </div>
-                <div className="space-y-1 text-sm text-muted-foreground">
-                  <div><span className="text-foreground font-medium">Stake:</span> ${Number(trade.stake).toFixed(2)}</div>
-                  <div><span className="text-foreground font-medium">Duration:</span> {trade.duration_seconds}s</div>
-                  <div><span className="text-foreground font-medium">Placed:</span> {new Date(trade.created_at).toLocaleString()}</div>
-                  <div><span className="text-foreground font-medium">Expires:</span> {(() => {
-                    const expiryMs = resolveTradeExpiryMs(trade);
-                    return expiryMs === null ? '—' : new Date(expiryMs).toLocaleString();
-                  })()}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
       <main
       className={`flex h-dvh min-h-0 w-full flex-col overflow-hidden ${
         editMode ? 'bg-muted/50' : 'bg-background'
