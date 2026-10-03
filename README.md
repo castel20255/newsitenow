@@ -11,7 +11,7 @@ A self-hosted Rise/Fall trading app with site-owned accounts, Supabase authentic
 
 1. Create a Supabase project and enable email/password authentication.
 2. In **Authentication → URL Configuration**, set the Site URL to your deployment URL. For local development, use `http://localhost:3000`.
-3. Apply [`supabase/migrations/202609300001_site_accounts.sql`](supabase/migrations/202609300001_site_accounts.sql) and then [`supabase/migrations/202610020001_trade_duration_min_15_seconds.sql`](supabase/migrations/202610020001_trade_duration_min_15_seconds.sql) in the Supabase SQL Editor, or deploy the migrations with the Supabase CLI.
+3. Apply the SQL files in [`supabase/migrations/`](supabase/migrations/) in filename order in the Supabase SQL Editor, or deploy the migrations with the Supabase CLI. The latest migration ensures each demo trade uses the duration submitted for that trade.
 4. Copy `.env.example` to `.env.local` and fill in the values from **Project Settings → API**:
 
 ```env
@@ -45,7 +45,7 @@ The app is available at `http://localhost:3000`.
 
 New site accounts receive a virtual USD 10,000 demo wallet. Demo trades use public market quotes and are recorded in the user's Supabase-backed paper-trade history. The real account is a placeholder and remains unavailable until a regulated funding and execution provider is integrated. Supabase balance records are not real-money funds.
 
-Demo trades have a minimum duration of 15 seconds; tick-duration contracts are not offered. While an account has an open trade, the Buy button shows the time remaining until its expiry. At settlement, a winning trade credits the quoted gross payout (including the returned stake); a losing trade receives no payout and its stake remains deducted.
+Demo trades use the editable duration selected for that trade (minimum 15 seconds); tick-duration contracts are not offered. Each trade stores its own `duration_seconds` and expiry in Supabase, so changing the duration for a later trade does not alter existing trades. At settlement, a winning trade credits the quoted gross payout (including the returned stake); a losing trade receives no payout and its stake remains deducted.
 
 Deriv's public WebSocket is used for market symbols, quotes, and chart data only. No Deriv App ID, API token, or OAuth redirect URI is required for site login.
 

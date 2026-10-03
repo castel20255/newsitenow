@@ -23,8 +23,8 @@ interface TradeControlsProps {
   isConnected: boolean;
   stake: string;
   onStakeChange: (value: string) => void;
-  duration: number;
-  onDurationChange: (value: number) => void;
+  duration: string;
+  onDurationChange: (value: string) => void;
   durationOptions: DurationOption[];
   durationUnit: DurationSelectUnit;
   onDurationUnitChange: (unit: DurationSelectUnit) => void;
@@ -191,15 +191,12 @@ export function TradeControls({
 
         {durationUnit !== 'end-time' && (
           <Input
-            type="number"
+            type="text"
+            inputMode="numeric"
             value={duration}
-            onChange={(e) => {
-              const val = parseInt(e.target.value, 10);
-              if (!isNaN(val)) onDurationChange(val);
-            }}
-            min={activeOption?.min}
-            max={activeOption?.max}
-            step={1}
+            onChange={(e) => onDurationChange(e.target.value)}
+            aria-label={localize('Duration')}
+            placeholder={activeOption ? `${activeOption.min}-${activeOption.max}` : undefined}
           />
         )}
 

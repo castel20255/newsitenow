@@ -35,8 +35,8 @@ interface UseRiseFallTradingReturn {
   setAllowEquals: (value: boolean) => void;
   stake: string;
   setStake: (value: string) => void;
-  duration: number;
-  setDuration: (value: number) => void;
+  duration: string;
+  setDuration: (value: string) => void;
   durationOptions: DurationOption[];
   durationUnit: DurationSelectUnit;
   setDurationUnit: (unit: DurationSelectUnit) => void;
@@ -90,7 +90,7 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
   const [direction, setDirection] = useState<Direction>('CALL');
   const [allowEquals, setAllowEquals] = useState<boolean>(false);
   const [stake, setStake] = useState<string>('10');
-  const [duration, setDurationRaw] = useState<number>(0);
+  const [duration, setDurationRaw] = useState<string>('');
   const [durationUnit, setDurationUnitRaw] = useState<DurationSelectUnit>('s');
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [endTime, setEndTime] = useState<string>('');
@@ -123,23 +123,22 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
     if (!currentOpt) {
       const first = durationOptions[0];
       setDurationUnitRaw(first.unit);
-      if (first.unit !== 'end-time') setDurationRaw(first.min);
+      if (first.unit !== 'end-time') setDurationRaw(String(first.min));
     } else if (currentOpt.unit !== 'end-time') {
-      setDurationRaw(prev => clampDuration(prev, currentOpt));
+      setDurationRaw(prev => String(clampDuration(Number(prev), currentOpt)));
     }
   }, [durationOptions]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const setDuration = useCallback((value: number) => {
+  const setDuration = useCallback((value: string) => {
     if (durationUnit === 'end-time') return;
-    const option = durationOptions.find(o => o.unit === durationUnit);
-    if (option) setDurationRaw(clampDuration(value, option));
-  }, [durationUnit, durationOptions]);
+    if (value === '' || /^\d+$/.test(value)) setDurationRaw(value);
+  }, [durationUnit]);
 
   const setDurationUnit = useCallback((unit: DurationSelectUnit) => {
     setDurationUnitRaw(unit);
     const opt = durationOptions.find(o => o.unit === unit);
-    if (opt && unit !== 'end-time') setDurationRaw(opt.min);
+    if (opt && unit !== 'end-time') setDurationRaw(String(opt.min));
   }, [durationOptions]);
 
   const { buyContract: buyWithProposal, isBuying, buyResult, buyError, clearBuyResult } =
@@ -166,13 +165,20 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
     }
 
     const opt = durationOptions.find(o => o.unit === durationUnit);
-    if (!opt || duration < opt.min || duration > opt.max) return null;
+    const selectedDuration = Number(duration);
+    if (
+      !opt ||
+      !/^\d+$/.test(duration) ||
+      !Number.isSafeInteger(selectedDuration) ||
+      selectedDuration < opt.min ||
+      selectedDuration > opt.max
+    ) return null;
 
     if (durationUnit === 'h') {
-      return { ...base, duration: duration * 60, durationUnit: 'm' };
+      return { ...base, duration: selectedDuration * 60, durationUnit: 'm' };
     }
 
-    return { ...base, duration, durationUnit };
+    return { ...base, duration: selectedDuration, durationUnit };
   }, [activeSymbol, direction, allowEquals, stake, duration, durationUnit, endDate, endTime, isBuying, durationOptions, durationOptionsSymbol]);
 
   const { proposal } = useProposal(tradingWs, tradingIsConnected, proposalParams);

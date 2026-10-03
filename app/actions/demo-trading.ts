@@ -27,6 +27,7 @@ function getProposalRequest(input: DemoTradeInput): Record<string, unknown> | nu
     return { date_expiry: input.dateExpiry };
   }
 
+  if (!['s', 'm', 'h', 'd'].includes(input.durationUnit)) return null;
   if (!Number.isInteger(input.duration) || input.duration < 1) return null;
   const durationSeconds = getDurationSeconds(input.duration, input.durationUnit);
   if (
