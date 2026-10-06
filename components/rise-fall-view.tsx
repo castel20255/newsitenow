@@ -246,81 +246,21 @@ export function RiseFallView({
   // editor owns Buy clicks there, and its auth actions are already no-ops.
   const handleBuy = useCallback(async () => {
     if (editMode) return;
-    if (authState !== 'authenticated') {
-      openAuth('signup');
-      return;
-    }
-    if (activeAccount?.account_type !== 'demo' || activeAccount.status !== 'active') {
-      toast.error('Real-money trading is unavailable until an execution provider is connected.');
-      return;
-    }
-    if (durationUnit !== 'end-time') {
-      const durationOption = durationOptions.find(option => option.unit === durationUnit);
-      const selectedDuration = Number(duration);
-      if (
-        !durationOption ||
-        !/^\d+$/.test(duration) ||
-        !Number.isSafeInteger(selectedDuration) ||
-        selectedDuration < durationOption.min ||
-        selectedDuration > durationOption.max
-      ) {
-        toast.error('Enter a valid duration for this contract.');
-        return;
-      }
-    }
-    if (!proposal || !activeSymbol) {
-      toast.error('Market pricing is not ready. Try again in a moment.');
+
+    if (durationUnit !== 's') {
+      toast.error('Only tick durations are supported for this market.');
       return;
     }
 
-    const dateExpiry = durationUnit === 'end-time'
-      ? computeEndTimeEpoch(endDate, endTime) ?? undefined
-      : undefined;
-    if (durationUnit === 'end-time' && !dateExpiry) {
-      toast.error('Choose a valid future end time.');
+    const selectedDuration = Number(duration);
+    if (!/^\d+$/.test(duration) || !Number.isSafeInteger(selectedDuration) || selectedDuration < 1) {
+      toast.error('Enter a valid tick count for the expiry.');
       return;
     }
-    const contractType = allowEquals ? `${direction}E` as const : direction;
 
-    setIsPlacingDemoTrade(true);
-    try {
-      const result = await placeDemoTrade({
-        symbol: activeSymbol.underlying_symbol,
-        contractType,
-        stake: Number(stake),
-        duration: durationUnit === 'end-time' ? 0 : Number(duration),
-        durationUnit,
-        dateExpiry,
-      });
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
-      await refreshSiteAuth();
-      toast.success('Demo trade placed. Your balance and trade history are updating.');
-    } catch {
-      toast.error('Could not place the demo trade. Try again.');
-    } finally {
-      setIsPlacingDemoTrade(false);
-    }
-  }, [
-    editMode,
-    authState,
-    activeAccount,
-    openAuth,
-    prices,
-    proposal,
-    activeSymbol,
-    durationUnit,
-    durationOptions,
-    endDate,
-    endTime,
-    duration,
-    allowEquals,
-    direction,
-    stake,
-    refreshSiteAuth,
-  ]);
+    toast.error('Legacy rise/fall contracts are disabled. This market now uses the digit contract types only.');
+    return;
+  }, [editMode, duration, durationUnit]);
 
   const tradeIsPending = isBuying || isPlacingDemoTrade;
 
