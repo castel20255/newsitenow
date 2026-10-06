@@ -24,7 +24,13 @@ function TradeRow({ trade }: { trade: SitePaperTrade }) {
   const profit = trade.status === 'open' ? null : payout - stake;
   const contract = trade.contract_type === 'CALL' ? 'Rise'
     : trade.contract_type === 'PUT' ? 'Fall'
-      : trade.contract_type === 'CALLE' ? 'Rise (Equal)' : 'Fall (Equal)';
+      : trade.contract_type === 'CALLE' ? 'Rise (Equal)'
+        : trade.contract_type === 'PUTE' ? 'Fall (Equal)'
+          : trade.contract_type === 'OVER' ? 'Over'
+            : trade.contract_type === 'UNDER' ? 'Under'
+              : trade.contract_type === 'EVEN' ? 'Even'
+                : trade.contract_type === 'ODD' ? 'Odd'
+                  : trade.contract_type === 'MATCH' ? 'Matches' : 'Differs';
 
   return (
     <tr className="border-t border-border">
@@ -50,7 +56,8 @@ export default function ReportsPage() {
     refresh: auth.refresh,
   });
   const [filter, setFilter] = useState<TradeFilter>('all');
-  const visibleTrades = auth.paperTrades.filter(trade =>
+  const combinedTrades = [...auth.paperTrades, ...auth.digitTrades].sort((a, b) => new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf());
+  const visibleTrades = combinedTrades.filter(trade =>
     filter === 'all' || (filter === 'open' ? trade.status === 'open' : trade.status !== 'open')
   );
   const header = (

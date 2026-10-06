@@ -12,7 +12,11 @@ create table if not exists public.digit_market_trades (
   payout numeric(12,2) not null check (payout >= 0),
   profit numeric(12,2) not null,
   win boolean not null default false,
-  created_at timestamptz not null default now()
+  duration_ticks integer not null check (duration_ticks > 0),
+  expires_at timestamptz not null,
+  status text not null default 'open' check (status in ('open', 'won', 'lost')),
+  created_at timestamptz not null default now(),
+  settled_at timestamptz
 );
 
 alter table public.digit_market_trades enable row level security;
