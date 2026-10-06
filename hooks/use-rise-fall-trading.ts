@@ -1,20 +1,17 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { useProposal, useBuy } from '@deriv/core';
 import type {
   DerivWS,
   ActiveSymbol,
   Tick,
   ProposalInfo,
-  ProposalParams,
   BuyResult,
 } from '@deriv/core';
 import { useBaseTrading } from '@/hooks/use-base-trading';
 import type { UseBaseTradingParams } from '@/hooks/use-base-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import type { Direction, DurationSelectUnit, DurationOption, OpenPosition, ClosedPosition } from '../lib/types';
-import { getDurationOptions, getDurationUnitLabels, computeEndTimeEpoch } from '@/lib/duration-utils';
 
 const CONTRACT_TYPES = ['CALL', 'PUT'];
 
@@ -96,9 +93,9 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
   const [endTime, setEndTime] = useState<string>('');
   const [durationOptionsSymbol, setDurationOptionsSymbol] = useState<string | null>(null);
 
-  const durationOptions = useMemo(
-    () => getDurationOptions(contracts, getDurationUnitLabels(localize)),
-    [contracts, localize]
+  const durationOptions = useMemo<DurationOption[]>(
+    () => [{ unit: 's', label: 'Ticks', min: 1, max: 300 }],
+    []
   );
 
   // Track durationUnit and activeSymbol in refs so the duration-options effect doesn't list them in deps
@@ -141,51 +138,18 @@ export function useRiseFallTrading({ ws, isConnected, isExhausted, isAuthenticat
     if (opt && unit !== 'end-time') setDurationRaw(String(opt.min));
   }, [durationOptions]);
 
-  const { buyContract: buyWithProposal, isBuying, buyResult, buyError, clearBuyResult } =
-    useBuy(tradingWs, tradingIsConnected);
+  const { isBuying, buyResult, buyError, clearBuyResult } = {
+    isBuying: false,
+    buyResult: null,
+    buyError: null,
+    clearBuyResult: () => undefined,
+  };
 
-  const proposalParams: ProposalParams | null = useMemo(() => {
-    if (isBuying || !activeSymbol || !durationOptions.length) return null;
-    if (durationOptionsSymbol !== activeSymbol.underlying_symbol) return null;
-    const stakeNum = parseFloat(stake);
-    if (!stakeNum || stakeNum <= 0) return null;
-
-    const base = {
-      contractType: allowEquals ? `${direction}E` : direction,
-      symbol: activeSymbol.underlying_symbol,
-      amount: stakeNum,
-      basis: 'stake' as const,
-      currency: 'USD',
-    };
-
-    if (durationUnit === 'end-time') {
-      const dateExpiry = computeEndTimeEpoch(endDate, endTime);
-      if (!dateExpiry) return null;
-      return { ...base, duration: 0, durationUnit: 'd', dateExpiry };
-    }
-
-    const opt = durationOptions.find(o => o.unit === durationUnit);
-    const selectedDuration = Number(duration);
-    if (
-      !opt ||
-      !/^\d+$/.test(duration) ||
-      !Number.isSafeInteger(selectedDuration) ||
-      selectedDuration < opt.min ||
-      selectedDuration > opt.max
-    ) return null;
-
-    if (durationUnit === 'h') {
-      return { ...base, duration: selectedDuration * 60, durationUnit: 'm' };
-    }
-
-    return { ...base, duration: selectedDuration, durationUnit };
-  }, [activeSymbol, direction, allowEquals, stake, duration, durationUnit, endDate, endTime, isBuying, durationOptions, durationOptionsSymbol]);
-
-  const { proposal } = useProposal(tradingWs, tradingIsConnected, proposalParams);
+  const proposal: ProposalInfo | null = null;
 
   const buyContract = useCallback(async () => {
-    if (proposal) await buyWithProposal(proposal);
-  }, [proposal, buyWithProposal]);
+    throw new Error('Legacy rise/fall contract execution is disabled. This market now uses digit contract pricing only.');
+  }, []);
 
   return {
     ws: tradingWs,
