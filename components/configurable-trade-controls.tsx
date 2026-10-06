@@ -39,10 +39,10 @@ function getBlockLabels(
 ): Record<BlockKey, string> {
   return {
     chart: localize('Chart + symbol'),
-    riseFall: localize('Rise / Fall'),
-    allowEquals: localize('Allow equals'),
+    riseFall: localize('Contract type'),
+    allowEquals: localize('Digit prediction'),
     stake: localize('Stake'),
-    duration: localize('Duration'),
+    duration: localize('Duration (ticks)'),
     buy: localize('Buy button'),
   };
 }
@@ -59,21 +59,72 @@ export interface ConfigurableBuyButtonProps {
   variant: StyleVariant;
   isConnected: boolean;
   proposal: ProposalInfo | null;
+  stake?: string;
+  contractType?: string;
+  selectedDigit?: number;
   onBuy: () => void;
   isBuying: boolean;
+}
+
+function getDigitPayoutMultiplier(contractType: string, selectedDigit: number): number {
+  const overPayouts: Record<number, number> = {
+    0: 22,
+    1: 33,
+    2: 43,
+    3: 54,
+    4: 65,
+    5: 76,
+    6: 93,
+    7: 148,
+    8: 297,
+  };
+
+  const underPayouts: Record<number, number> = {
+    9: 22,
+    8: 33,
+    7: 43,
+    6: 54,
+    5: 65,
+    4: 76,
+    3: 93,
+    2: 148,
+    1: 297,
+  };
+
+  switch (contractType) {
+    case 'EVEN':
+    case 'ODD':
+      return 1 + 87 / 100;
+    case 'MATCH':
+    case 'DIFFER':
+      return 1 + 347.765 / 100;
+    case 'OVER':
+      return 1 + (overPayouts[selectedDigit] ?? 0) / 100;
+    case 'UNDER':
+      return 1 + (underPayouts[selectedDigit] ?? 0) / 100;
+    default:
+      return 1;
+  }
 }
 
 export function ConfigurableBuyButton({
   variant,
   isConnected,
   proposal,
+  stake,
+  contractType,
+  selectedDigit,
   onBuy,
   isBuying,
 }: ConfigurableBuyButtonProps) {
   const { localize } = useAppTranslations();
 
-  const disabled = !isConnected || !proposal || isBuying;
-  const payout = proposal ? proposal.payout.toFixed(2) : null;
+  const numericStake = Number(stake ?? '0') || 0;
+  const computedPayout = contractType && selectedDigit !== undefined && numericStake > 0
+    ? numericStake * getDigitPayoutMultiplier(contractType, selectedDigit)
+    : proposal ? proposal.payout : 0;
+  const disabled = !isConnected || (!proposal && !stake) || isBuying;
+  const payout = Number.isFinite(computedPayout) ? computedPayout.toFixed(2) : null;
 
   const variants: Record<StyleVariant, () => React.ReactNode> = {
     // a — pill (default)
@@ -289,130 +340,72 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     };
   }, [endTimeOption]);
 
-  // ── Rise / Fall (3 styles) ──────────────────────────────────────────────
-  const renderRiseFall = () => {
-    const isRise = direction === 'CALL';
-    const isFall = direction === 'PUT';
+  // ── Digit contract type + prediction selection ──────────────────────────
+  const contractOptions = [
+    { key: 'OVER', label: 'Over' },
+    { key: 'UNDER', label: 'Under' },
+    { key: 'EVEN', label: 'Even' },
+    { key: 'ODD', label: 'Odd' },
+    { key: 'MATCH', label: 'Matches' },
+    { key: 'DIFFER', label: 'Differs' },
+  ] as const;
 
-    const variants: Record<StyleVariant, () => React.ReactNode> = {
-      // a — segmented toggle (default)
-      a: () => (
-        <ToggleGroup
-          type="single"
-          value={direction}
-          onValueChange={(value) => { if (value === 'CALL' || value === 'PUT') onDirectionChange(value); }}
-          className="w-full gap-0 rounded-full bg-muted p-1"
-        >
-          <ToggleGroupItem value="CALL" className="flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-emerald-600 data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground">
-            <Localize i18n_default_text="Rise" />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="PUT" className="flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-rose-600 data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground">
-            <Localize i18n_default_text="Fall" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-      ),
-      // Side-by-side solid buttons — the active direction is filled (Rise green,
-      // Fall red), the other stays muted.
-      b: () => (
-        <div className="flex gap-2">
-          <Button
-            size="lg"
-            variant="secondary"
-            className={cn('flex-1 rounded-xl font-semibold', isRise && 'bg-emerald-500 text-white hover:bg-emerald-600')}
-            onClick={() => onDirectionChange('CALL')}
-          >
-            <Localize i18n_default_text="Rise ↑" />
-          </Button>
-          <Button
-            size="lg"
-            variant="secondary"
-            className={cn('flex-1 rounded-xl font-semibold', isFall && 'bg-rose-500 text-white hover:bg-rose-600')}
-            onClick={() => onDirectionChange('PUT')}
-          >
-            <Localize i18n_default_text="Fall ↓" />
-          </Button>
-        </div>
-      ),
-      // Isolated chips — outline when unselected, filled colour when selected.
-      c: () => (
-        <div className="flex gap-3">
-          <Button
-            size="lg"
-            variant="outline"
-            className={cn(
-              'flex-1 rounded-full font-semibold',
-              isRise && 'border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-600 hover:text-white'
-            )}
-            onClick={() => onDirectionChange('CALL')}
-          >
-            <Localize i18n_default_text="Rise ↑" />
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className={cn(
-              'flex-1 rounded-full font-semibold',
-              isFall && 'border-rose-500 bg-rose-500 text-white hover:bg-rose-600 hover:text-white'
-            )}
-            onClick={() => onDirectionChange('PUT')}
-          >
-            <Localize i18n_default_text="Fall ↓" />
-          </Button>
-        </div>
-      ),
-    };
-    return (variants[config.styles.riseFall] ?? variants.a)();
-  };
+  const [selectedContract, setSelectedContract] = useState<typeof contractOptions[number]['key']>('OVER');
+  const [selectedDigit, setSelectedDigit] = useState<number>(0);
+  const digitOptions = Array.from({ length: 10 }, (_, value) => value);
+  const contractDisabledForDigits = selectedContract === 'EVEN' || selectedContract === 'ODD';
 
-  // ── Allow equals (3 styles) ─────────────────────────────────────────────
-  const renderAllowEquals = () => {
-    const variants: Record<StyleVariant, () => React.ReactNode> = {
-      // a — switch (default)
-      a: () => (
-        <div className="flex items-center justify-between">
-          <Label htmlFor="allow-equals" className="text-sm cursor-pointer">
-            <Localize i18n_default_text="Allow equals" />
-          </Label>
-          <Switch id="allow-equals" checked={allowEquals} onCheckedChange={onAllowEqualsChange} />
+  const renderRiseFall = () => (
+    <div className="space-y-3">
+      <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+        <Localize i18n_default_text="Contract type" />
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {contractOptions.map((option) => {
+          const isSelected = selectedContract === option.key;
+          return (
+            <Button
+              key={option.key}
+              type="button"
+              variant={isSelected ? 'default' : 'outline'}
+              className="h-auto min-h-[44px] rounded-xl px-2 py-2 text-sm font-medium"
+              onClick={() => setSelectedContract(option.key)}
+            >
+              {option.label}
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderAllowEquals = () => (
+    <div className="space-y-2">
+      <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+        <Localize i18n_default_text="Digit prediction" />
+      </div>
+
+      {contractDisabledForDigits ? (
+        <div className="rounded-xl border border-dashed border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+          <Localize i18n_default_text="Select even or odd to evaluate the last digit parity." />
         </div>
-      ),
-      // Checkbox + label
-      b: () => (
-        <div className="flex items-center gap-2.5">
-          <Checkbox
-            id="allow-equals"
-            checked={allowEquals}
-            onCheckedChange={(checked) => onAllowEqualsChange(checked === true)}
-          />
-          <Label htmlFor="allow-equals" className="text-sm cursor-pointer">
-            <Localize i18n_default_text="Allow equals" />
-          </Label>
+      ) : (
+        <div className="grid grid-cols-5 gap-2">
+          {digitOptions.map((digit) => (
+            <Button
+              key={digit}
+              type="button"
+              variant={selectedDigit === digit ? 'default' : 'outline'}
+              className="h-10 rounded-xl text-sm font-medium"
+              onClick={() => setSelectedDigit(digit)}
+            >
+              {digit}
+            </Button>
+          ))}
         </div>
-      ),
-      // Segmented Off / On
-      c: () => (
-        <div className="flex items-center justify-between gap-3">
-          <Label className="text-sm">
-            <Localize i18n_default_text="Allow equals" />
-          </Label>
-          <ToggleGroup
-            type="single"
-            value={allowEquals ? 'on' : 'off'}
-            onValueChange={(val) => { if (val) onAllowEqualsChange(val === 'on'); }}
-            className="gap-0 rounded-full bg-muted p-1"
-          >
-            <ToggleGroupItem value="off" className="rounded-full px-4 text-xs text-muted-foreground data-[state=on]:bg-background data-[state=on]:font-semibold data-[state=on]:shadow-sm">
-              <Localize i18n_default_text="Off" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="on" className="rounded-full px-4 text-xs text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-primary data-[state=on]:font-semibold data-[state=on]:shadow-sm">
-              <Localize i18n_default_text="On" />
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </div>
-      ),
-    };
-    return (variants[config.styles.allowEquals] ?? variants.a)();
-  };
+      )}
+    </div>
+  );
 
   // ── Stake (3 styles) ────────────────────────────────────────────────────
   const renderStake = () => {
@@ -470,98 +463,27 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     return (variants[config.styles.stake] ?? variants.a)();
   };
 
-  // ── Duration (3 styles) ─────────────────────────────────────────────────
-  const renderDurationValue = (variant: RiseFallAppConfig['styles']['duration']) => {
-    if (durationUnit === 'end-time') {
-      return (
-        <EndTimePicker
-          ws={ws}
-          isConnected={isConnected}
-          activeSymbol={activeSymbol}
-          endDate={endDate}
-          onEndDateChange={onEndDateChange}
-          endTime={endTime}
-          onEndTimeChange={onEndTimeChange}
-          minDate={endTimeMinDate}
-          maxDate={endTimeMaxDate}
-        />
-      );
-    }
-    if (variant === 'b') {
-      // stepper
-      const clamp = (amount: number) => Math.min(activeOption?.max ?? amount, Math.max(activeOption?.min ?? 1, amount));
-      const currentDuration = /^\d+$/.test(duration) ? Number(duration) : activeOption?.min ?? 1;
-      return (
-        <div className="flex items-center justify-between rounded-lg border border-border p-1">
-          <Button variant="ghost" size="icon" onClick={() => onDurationChange(String(clamp(currentDuration - 1)))}>−</Button>
-          <Input
-            type="text"
-            inputMode="numeric"
-            value={duration}
-            onChange={(event) => onDurationChange(event.target.value)}
-            aria-label={localize('Duration')}
-            className="w-20 text-center font-semibold"
-          />
-          <Button variant="ghost" size="icon" onClick={() => onDurationChange(String(clamp(currentDuration + 1)))}>+</Button>
-        </div>
-      );
-    }
-    return (
+  const renderDuration = () => (
+    <div className="space-y-1.5">
+      <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
+        <Localize i18n_default_text="Duration (ticks)" />
+      </Label>
       <Input
-        type="text"
+        id="duration-ticks"
+        type="number"
         inputMode="numeric"
         value={duration}
         onChange={(event) => onDurationChange(event.target.value)}
-        aria-label={localize('Duration')}
-        placeholder={activeOption ? `${activeOption.min}-${activeOption.max}` : undefined}
+        onKeyDown={(event) => {
+          if (['e', 'E', '+', '-', '.'].includes(event.key)) event.preventDefault();
+        }}
+        min={1}
+        step={1}
+        placeholder="1"
+        className="rounded-xl"
       />
-    );
-  };
-  const renderDuration = () => {
-    const variant = config.styles.duration;
-    const unitControl =
-      variant === 'c' ? (
-        <ToggleGroup
-          type="single"
-          value={durationUnit}
-          onValueChange={(value) => {
-            const opt = durationOptions.find((option) => option.unit === value);
-            if (opt) onDurationUnitChange(opt.unit);
-          }}
-          className="w-full gap-1 rounded-lg bg-muted p-1"
-        >
-          {durationOptions.map((opt) => (
-            <ToggleGroupItem key={opt.unit} value={opt.unit} className="flex-1 rounded-md text-xs data-[state=on]:bg-background data-[state=on]:text-primary data-[state=on]:font-semibold">
-              {opt.label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      ) : (
-        <Select
-          value={durationUnit}
-          onValueChange={(value) => {
-            const opt = durationOptions.find((option) => option.unit === value);
-            if (opt) onDurationUnitChange(opt.unit);
-          }}
-        >
-          <SelectTrigger><SelectValue /></SelectTrigger>
-          <SelectContent>
-            {durationOptions.map((opt) => (
-              <SelectItem key={opt.unit} value={opt.unit}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      );
-    return (
-      <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">
-          <Localize i18n_default_text="Duration" />
-        </Label>
-        {unitControl}
-        {renderDurationValue(variant)}
-      </div>
-    );
-  };
+    </div>
+  );
 
   // ── Buy (3 styles, themed) ──────────────────────────────────────────────
   const renderBuy = () => (
@@ -569,6 +491,9 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       variant={config.styles.buy}
       isConnected={isConnected}
       proposal={proposal}
+      stake={stake}
+      contractType={selectedContract}
+      selectedDigit={selectedDigit}
       onBuy={onBuy}
       isBuying={isBuying}
     />

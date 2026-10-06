@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
@@ -97,58 +97,115 @@ export function TradeControls({
     }
   }, [buyResult, onClearBuyResult, localize]);
 
-  const activeOption = durationOptions.find(o => o.unit === durationUnit);
+  const contractOptions = [
+    { key: 'OVER', label: 'Over' },
+    { key: 'UNDER', label: 'Under' },
+    { key: 'EVEN', label: 'Even' },
+    { key: 'ODD', label: 'Odd' },
+    { key: 'MATCH', label: 'Matches' },
+    { key: 'DIFFER', label: 'Differs' },
+  ] as const;
 
-  const endTimeOption = durationOptions.find(o => o.unit === 'end-time');
-  const { endTimeMinDate, endTimeMaxDate } = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return {
-      endTimeMinDate: today,
-      endTimeMaxDate: endTimeOption
-        ? new Date(today.getTime() + endTimeOption.max * 86400000)
-        : new Date(today.getTime() + 365 * 86400000),
+  const [selectedContract, setSelectedContract] = useState<'OVER' | 'UNDER' | 'EVEN' | 'ODD' | 'MATCH' | 'DIFFER'>('OVER');
+  const [selectedDigit, setSelectedDigit] = useState<number>(0);
+
+  const contractDisabledForDigits = selectedContract === 'EVEN' || selectedContract === 'ODD';
+  const digitOptions = Array.from({ length: 10 }, (_, value) => value);
+  const payoutMultiplier = useMemo(() => {
+    const overPayouts: Record<number, number> = {
+      0: 22,
+      1: 33,
+      2: 43,
+      3: 54,
+      4: 65,
+      5: 76,
+      6: 93,
+      7: 148,
+      8: 297,
     };
-  }, [endTimeOption]);
+    const underPayouts: Record<number, number> = {
+      9: 22,
+      8: 33,
+      7: 43,
+      6: 54,
+      5: 65,
+      4: 76,
+      3: 93,
+      2: 148,
+      1: 297,
+    };
+
+    switch (selectedContract) {
+      case 'EVEN':
+      case 'ODD':
+        return 1 + 87 / 100;
+      case 'MATCH':
+      case 'DIFFER':
+        return 1 + 347.765 / 100;
+      case 'OVER':
+        return 1 + (overPayouts[selectedDigit] ?? 0) / 100;
+      case 'UNDER':
+        return 1 + (underPayouts[selectedDigit] ?? 0) / 100;
+      default:
+        return 1;
+    }
+  }, [selectedContract, selectedDigit]);
+
+  const payoutPreview = useMemo(() => {
+    const numericStake = Number(stake) || 0;
+    return numericStake > 0 ? numericStake * payoutMultiplier : 0;
+  }, [payoutMultiplier, stake]);
 
   return (
-    <div className="w-full space-y-2 lg:space-y-4">
-      {/* Rise / Fall direction segmented control */}
-      <ToggleGroup
-        type="single"
-        value={direction}
-        onValueChange={(value) => {
-          if (value === 'CALL' || value === 'PUT') onDirectionChange(value);
-        }}
-        className="w-full gap-0 rounded-full bg-muted p-1"
-      >
-        <ToggleGroupItem
-          value="CALL"
-          className="flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-green-600 data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground"
-        >
-          <Localize i18n_default_text="Rise" />
-        </ToggleGroupItem>
-        <ToggleGroupItem
-          value="PUT"
-          className="flex-1 rounded-full text-sm font-medium text-muted-foreground data-[state=on]:bg-background data-[state=on]:text-destructive data-[state=on]:font-bold data-[state=on]:shadow-sm hover:text-foreground"
-        >
-          <Localize i18n_default_text="Fall" />
-        </ToggleGroupItem>
-      </ToggleGroup>
-
-      {/* Allow equals */}
-      <div className="flex items-center justify-between">
-        <Label htmlFor="allow-equals" className="text-sm cursor-pointer">
-          <Localize i18n_default_text="Allow equals" />
-        </Label>
-        <Switch
-          id="allow-equals"
-          checked={allowEquals}
-          onCheckedChange={onAllowEqualsChange}
-        />
+    <div className="w-full space-y-3 lg:space-y-4">
+      <div className="rounded-2xl border border-border bg-muted/25 p-2.5">
+        <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+          <Localize i18n_default_text="Contract type" />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {contractOptions.map((option) => {
+            const isSelected = selectedContract === option.key;
+            return (
+              <Button
+                key={option.key}
+                type="button"
+                variant={isSelected ? 'default' : 'outline'}
+                className="h-auto min-h-[44px] rounded-xl px-2 py-2 text-sm font-medium"
+                onClick={() => setSelectedContract(option.key)}
+              >
+                {option.label}
+              </Button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Stake */}
+      <div className="space-y-2">
+        <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
+          <Localize i18n_default_text="Digit prediction" />
+        </div>
+
+        {contractDisabledForDigits ? (
+          <div className="rounded-xl border border-dashed border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+            Select even or odd to evaluate the last digit parity.
+          </div>
+        ) : (
+          <div className="grid grid-cols-5 gap-2">
+            {digitOptions.map((digit) => (
+              <Button
+                key={digit}
+                type="button"
+                variant={selectedDigit === digit ? 'default' : 'outline'}
+                className="h-10 rounded-xl text-sm font-medium"
+                onClick={() => setSelectedDigit(digit)}
+              >
+                {digit}
+              </Button>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="space-y-1.5">
         <Label htmlFor="stake" className="text-xs text-muted-foreground">
           <Localize i18n_default_text="Stake" />
@@ -163,59 +220,37 @@ export function TradeControls({
           }}
           min={0}
           step="0.01"
-          labelRight="USD"
+          className="rounded-xl"
         />
       </div>
 
-      {/* Duration */}
       <div className="space-y-1.5">
-        <Label className="text-xs text-muted-foreground">
-          <Localize i18n_default_text="Duration" />
+        <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
+          <Localize i18n_default_text="Duration (ticks)" />
         </Label>
-        <Select
-          value={durationUnit}
-          onValueChange={(v) => {
-            const opt = durationOptions.find(o => o.unit === v);
-            if (opt) onDurationUnitChange(opt.unit);
+        <Input
+          id="duration-ticks"
+          type="number"
+          inputMode="numeric"
+          value={duration}
+          onChange={(e) => onDurationChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
           }}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {durationOptions.map(opt => (
-              <SelectItem key={opt.unit} value={opt.unit}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {durationUnit !== 'end-time' && (
-          <Input
-            type="text"
-            inputMode="numeric"
-            value={duration}
-            onChange={(e) => onDurationChange(e.target.value)}
-            aria-label={localize('Duration')}
-            placeholder={activeOption ? `${activeOption.min}-${activeOption.max}` : undefined}
-          />
-        )}
-
-        {durationUnit === 'end-time' && (
-          <EndTimePicker
-            ws={ws}
-            isConnected={isConnected}
-            activeSymbol={activeSymbol}
-            endDate={endDate}
-            onEndDateChange={onEndDateChange}
-            endTime={endTime}
-            onEndTimeChange={onEndTimeChange}
-            minDate={endTimeMinDate}
-            maxDate={endTimeMaxDate}
-          />
-        )}
+          min={1}
+          step={1}
+          placeholder="1"
+          className="rounded-xl"
+        />
       </div>
 
-      {/* Buy button — inline on desktop, fixed above the bottom safe area on mobile */}
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between">
+          <span>Prediction</span>
+          <span className="font-medium text-foreground">{contractDisabledForDigits ? selectedContract : `${selectedContract} ${selectedDigit}`}</span>
+        </div>
+      </div>
+
       <div className="max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] max-lg:left-3 max-lg:right-3 lg:static">
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -228,20 +263,17 @@ export function TradeControls({
           ) : (
             <span className="flex flex-col items-center leading-tight gap-0.5">
               <span><Localize i18n_default_text="Buy" /></span>
-              {proposal && (
-                <span className="text-xs font-normal opacity-90">
-                  <Localize
-                    i18n_default_text="Payout {{payout}} USD"
-                    values={{ payout: proposal.payout.toFixed(2) }}
-                  />
-                </span>
-              )}
+              <span className="text-xs font-normal opacity-90">
+                <Localize
+                  i18n_default_text="Payout {{payout}} USD"
+                  values={{ payout: payoutPreview.toFixed(2) }}
+                />
+              </span>
             </span>
           )}
         </Button>
       </div>
 
-      {/* View your positions — shown when authenticated */}
       {isAuthenticated && (
         <Button
           asChild
