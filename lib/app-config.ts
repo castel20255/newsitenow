@@ -88,9 +88,12 @@ export function normalizeAppConfig(value: unknown): RiseFallAppConfig {
     stake: isStyleVariant(raw.styles?.stake) ? raw.styles!.stake : 'a',
     buy: isStyleVariant(raw.styles?.buy) ? raw.styles!.buy : 'a',
   };
-  const order = normalizeBlockOrder(raw.order, ALL_BLOCK_KEYS);
-  // A stored config with no `buy` key predates the pin option: keep that app
-  // unpinned rather than adopting the new default on its owner's behalf.
+
+  const filteredOrder = Array.isArray(raw.order)
+    ? raw.order.filter((key) => key === 'chart' || key === 'riseFall' || key === 'allowEquals' || key === 'stake' || key === 'duration' || key === 'buy')
+    : DEFAULT_APP_CONFIG.order;
+
+  const order = filteredOrder.length ? filteredOrder : DEFAULT_APP_CONFIG.order;
   return {
     styles,
     order,
