@@ -193,6 +193,7 @@ export function TradeControls({
       payout: Number(payout.toFixed(2)),
       profit: Number(profit.toFixed(2)),
       win,
+      duration_ticks: Number(duration) || 1,
     };
 
     try {

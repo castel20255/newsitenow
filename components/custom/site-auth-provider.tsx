@@ -28,12 +28,16 @@ export interface SiteTradingAccount {
   status: 'active' | 'provider_required';
 }
 
+export type SiteTradeContractType =
+  | 'CALL' | 'PUT' | 'CALLE' | 'PUTE'
+  | 'OVER' | 'UNDER' | 'EVEN' | 'ODD' | 'MATCH' | 'DIFFER';
+
 export interface SitePaperTrade {
   id: string;
   user_id: string;
   account_id: string;
   symbol: string;
-  contract_type: 'CALL' | 'PUT' | 'CALLE' | 'PUTE';
+  contract_type: SiteTradeContractType;
   stake: number | string;
   entry_quote: number | string;
   expected_payout: number | string;
@@ -52,6 +56,7 @@ interface SiteAuthContextValue {
   profile: SiteProfile | null;
   accounts: SiteTradingAccount[];
   paperTrades: SitePaperTrade[];
+  digitTrades: SitePaperTrade[];
   activeAccount: SiteTradingAccount | null;
   isConfigured: boolean;
   authDialogOpen: boolean;
@@ -79,6 +84,7 @@ export function SiteAuthProvider({
   const [profile, setProfile] = useState<SiteProfile | null>(null);
   const [accounts, setAccounts] = useState<SiteTradingAccount[]>([]);
   const [paperTrades, setPaperTrades] = useState<SitePaperTrade[]>([]);
+  const [digitTrades, setDigitTrades] = useState<SitePaperTrade[]>([]);
   const [activeAccountId, setActiveAccountId] = useState<string | null>(null);
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const [authDialogMode, setAuthDialogMode] = useState<'login' | 'signup'>('signup');
@@ -91,6 +97,7 @@ export function SiteAuthProvider({
       setProfile(null);
       setAccounts([]);
       setPaperTrades([]);
+      setDigitTrades([]);
       return;
     }
 
@@ -101,27 +108,47 @@ export function SiteAuthProvider({
         setProfile(null);
         setAccounts([]);
         setPaperTrades([]);
+        setDigitTrades([]);
         setActiveAccountId(null);
         setAuthState('unauthenticated');
         return;
       }
 
-      const [profileResult, accountsResult, tradesResult] = await Promise.all([
+      const [profileResult, accountsResult, tradesResult, digitTradesResult] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', userData.user.id).maybeSingle(),
         supabase.from('trading_accounts').select('*').eq('user_id', userData.user.id),
         supabase.from('paper_trades').select('*').eq('user_id', userData.user.id).order('created_at', { ascending: false }).limit(100),
+        supabase.from('digit_market_trades').select('*').eq('user_id', userData.user.id).order('created_at', { ascending: false }).limit(100),
       ]);
-      if (profileResult.error || accountsResult.error || tradesResult.error || !profileResult.data) {
+      if (profileResult.error || accountsResult.error || tradesResult.error || digitTradesResult.error || !profileResult.data) {
         setAuthState('error');
         return;
       }
 
       const nextAccounts = (accountsResult.data ?? []) as unknown as SiteTradingAccount[];
       const nextTrades = (tradesResult.data ?? []) as unknown as SitePaperTrade[];
+      const nextDigitTrades = ((digitTradesResult.data ?? []) as unknown[]).map((trade) => ({
+        id: String((trade as Record<string, unknown>).id),
+        user_id: String((trade as Record<string, unknown>).user_id),
+        account_id: String((trade as Record<string, unknown>).account_id ?? ''),
+        symbol: String((trade as Record<string, unknown>).market_symbol ?? ''),
+        contract_type: String((trade as Record<string, unknown>).contract_type ?? 'OVER'),
+        stake: Number((trade as Record<string, unknown>).stake ?? 0),
+        entry_quote: Number((trade as Record<string, unknown>).outcome_digit ?? 0),
+        expected_payout: Number((trade as Record<string, unknown>).payout ?? 0),
+        duration_seconds: Number((trade as Record<string, unknown>).duration_ticks ?? 1) * 5,
+        expires_at: String((trade as Record<string, unknown>).expires_at ?? new Date().toISOString()),
+        status: String((trade as Record<string, unknown>).status ?? 'open'),
+        exit_quote: null,
+        payout: Number((trade as Record<string, unknown>).payout ?? 0),
+        created_at: String((trade as Record<string, unknown>).created_at ?? new Date().toISOString()),
+        settled_at: (trade as Record<string, unknown>).settled_at ? String((trade as Record<string, unknown>).settled_at) : null,
+      })) as SitePaperTrade[];
       setUser(userData.user);
       setProfile(profileResult.data as unknown as SiteProfile);
       setAccounts(nextAccounts);
       setPaperTrades(nextTrades);
+      setDigitTrades(nextDigitTrades);
       setActiveAccountId(current => {
         const preferred = current ?? window.localStorage.getItem(ACTIVE_ACCOUNT_KEY);
         const selected = nextAccounts.find(account => account.id === preferred)
@@ -151,6 +178,7 @@ export function SiteAuthProvider({
         setProfile(null);
         setAccounts([]);
         setPaperTrades([]);
+        setDigitTrades([]);
         setActiveAccountId(null);
         setAuthState('unauthenticated');
       } else if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
@@ -179,6 +207,7 @@ export function SiteAuthProvider({
       setProfile(null);
       setAccounts([]);
       setPaperTrades([]);
+      setDigitTrades([]);
       setActiveAccountId(null);
       setAuthState('unauthenticated');
     }
@@ -190,6 +219,7 @@ export function SiteAuthProvider({
     profile,
     accounts,
     paperTrades,
+    digitTrades,
     activeAccount,
     isConfigured,
     authDialogOpen,
@@ -205,6 +235,7 @@ export function SiteAuthProvider({
     profile,
     accounts,
     paperTrades,
+    digitTrades,
     activeAccount,
     isConfigured,
     authDialogOpen,
