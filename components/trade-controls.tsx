@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
+import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -156,6 +157,62 @@ export function TradeControls({
     return numericStake > 0 ? numericStake * payoutMultiplier : 0;
   }, [payoutMultiplier, stake]);
 
+  const getLastDigit = (value: number): number => {
+    if (!Number.isFinite(value)) return 0;
+    const text = String(value);
+    const lastChar = text.includes('.') ? (text.split('.')[1] ?? '0').trim().slice(-1) || '0' : text.slice(-1) || '0';
+    return Number.parseInt(lastChar, 10) || 0;
+  };
+
+  const handleDigitBuy = async () => {
+    const numericStake = Number(stake);
+    if (!Number.isFinite(numericStake) || numericStake <= 0) {
+      toast.error('Enter a valid stake before placing the trade.');
+      return;
+    }
+
+    const outcomeDigit = Math.floor(Math.random() * 10);
+    const win =
+      selectedContract === 'EVEN' ? outcomeDigit % 2 === 0 :
+      selectedContract === 'ODD' ? outcomeDigit % 2 !== 0 :
+      selectedContract === 'MATCH' ? outcomeDigit === selectedDigit :
+      selectedContract === 'DIFFER' ? outcomeDigit !== selectedDigit :
+      selectedContract === 'OVER' ? outcomeDigit > selectedDigit :
+      outcomeDigit < selectedDigit;
+
+    const payout = win ? numericStake * payoutMultiplier : 0;
+    const profit = win ? payout - numericStake : -numericStake;
+
+    const payload = {
+      market_symbol: activeSymbol?.underlying_symbol ?? 'UNKNOWN',
+      market_name: activeSymbol?.underlying_symbol_name ?? activeSymbol?.underlying_symbol ?? 'Digit market',
+      contract_type: selectedContract,
+      prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
+      outcome_digit: outcomeDigit,
+      stake: Number(numericStake.toFixed(2)),
+      payout: Number(payout.toFixed(2)),
+      profit: Number(profit.toFixed(2)),
+      win,
+    };
+
+    try {
+      const result = await recordDigitTrade(payload);
+      if (result?.error) {
+        toast.error(result.error);
+      } else {
+        toast.success(`${selectedContract} trade ${win ? 'won' : 'lost'} — payout $${payout.toFixed(2)}.`);
+      }
+    } catch {
+      toast.error('Could not record the digit-market trade.');
+    }
+
+    if (typeof window !== 'undefined') {
+      const history = JSON.parse(window.localStorage.getItem('digit-market-history') ?? '[]');
+      const entry = { ...payload, created_at: new Date().toISOString() };
+      window.localStorage.setItem('digit-market-history', JSON.stringify([entry, ...history].slice(0, 20)));
+    }
+  };
+
   return (
     <div className="w-full space-y-3 lg:space-y-4">
       <div className="rounded-2xl border border-border bg-muted/25 p-2.5">
@@ -256,7 +313,7 @@ export function TradeControls({
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
           disabled={!isConnected || !proposal || isBuying}
-          onClick={onBuy}
+          onClick={handleDigitBuy}
         >
           {isBuying ? (
             <Localize i18n_default_text="Purchasing..." />
