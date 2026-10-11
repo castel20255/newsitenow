@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
 import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
+import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -74,6 +75,7 @@ export function TradeControls({
   isAuthenticated,
 }: TradeControlsProps) {
   const { localize } = useAppTranslations();
+  const { refresh: refreshSiteAuth } = useSiteAuth();
 
   useEffect(() => {
     if (buyError) {
@@ -200,11 +202,17 @@ export function TradeControls({
       const result = await recordDigitTrade(payload);
       if (result?.error) {
         toast.error(result.error);
-      } else {
-        toast.success(`${selectedContract} trade ${win ? 'won' : 'lost'} — payout $${payout.toFixed(2)}.`);
+        return;
       }
+      if (result?.skipped || !result?.success) {
+        toast.error('Sign in to save digit trades to your demo balance.');
+        return;
+      }
+      await refreshSiteAuth();
+      toast.success(`${selectedContract} trade ${win ? 'won' : 'lost'} — payout $${payout.toFixed(2)}.`);
     } catch {
       toast.error('Could not record the digit-market trade.');
+      return;
     }
 
     if (typeof window !== 'undefined') {

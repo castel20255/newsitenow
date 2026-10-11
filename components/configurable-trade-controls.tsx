@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
 import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
+import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { useRearrangeDrag } from '@/hooks/use-rearrange-drag';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -284,6 +285,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   } = props;
 
   const { localize } = useAppTranslations();
+  const { refresh: refreshSiteAuth } = useSiteAuth();
   const blockLabels = getBlockLabels(localize);
 
   const rearrange = useRearrangeDrag<BlockKey>(config.order, (next) => onReorder?.(next));
@@ -550,11 +552,17 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       const result = await recordDigitTrade(payload);
       if (result?.error) {
         toast.error(result.error);
-      } else {
-        toast.success(`${selectedContract} trade ${win ? 'won' : 'lost'} — payout $${payout.toFixed(2)}.`);
+        return;
       }
+      if (result?.skipped || !result?.success) {
+        toast.error('Sign in to save digit trades to your demo balance.');
+        return;
+      }
+      await refreshSiteAuth();
+      toast.success(`${selectedContract} trade ${win ? 'won' : 'lost'} — payout $${payout.toFixed(2)}.`);
     } catch {
       toast.error('Could not record the digit-market trade.');
+      return;
     }
 
     if (typeof window !== 'undefined') {
