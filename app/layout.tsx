@@ -8,6 +8,7 @@ import { TemplateLayout } from '@/components/custom/template-layout';
 import { LogoSrcProvider } from '@/components/custom/logo-src-provider';
 import { TemplateI18nProvider } from '../lib/i18n/provider';
 import '@/app/globals.css';
+import './landing.css';
 import './globals.css';
 import '@deriv-com/smartcharts-champion/dist/smartcharts.css';
 import './custom.css';
@@ -27,8 +28,8 @@ const ibmPlexSans = IBM_Plex_Sans({
 export function generateMetadata(): Metadata {
   const faviconUri = buildFaviconUri();
   return {
-    title: 'CRYPTO BINARY',
-    description: 'CRYPTO BINARY trading app',
+    title: 'Crypto Binary',
+    description: 'Crypto Binary market analysis and demo trading workspace.',
     ...(faviconUri ? { icons: { icon: faviconUri } } : {}),
   };
 }
