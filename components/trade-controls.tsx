@@ -317,7 +317,7 @@ export function TradeControls({
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
-          disabled={!isConnected || !proposal || isBuying}
+          disabled={!isConnected || !Number.isFinite(Number(stake)) || Number(stake) <= 0 || isBuying}
           onClick={handleDigitBuy}
         >
           {isBuying ? (

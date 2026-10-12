@@ -6,6 +6,7 @@ import type { ActiveSymbol, ContractsForResponse, ContractInfo, DurationLimits }
 import { pickDefaultSymbol } from '../utils/pick-default-symbol';
 
 const SYMBOL_PARAM = 'symbol';
+const SELECTABLE_SUBMARKETS = new Set(['random_index', 'major_pairs', 'minor_pairs']);
 
 function readSymbolFromUrl(): string | undefined {
   if (typeof window === 'undefined') return undefined;
@@ -91,13 +92,14 @@ export function useActiveSymbols(
         });
         if (disposed) return;
 
-        const allSymbols = response.active_symbols;
-        if (!allSymbols || allSymbols.length === 0) {
+        const allSymbols = response.active_symbols ?? [];
+        const selectableSymbols = allSymbols.filter(symbol => SELECTABLE_SUBMARKETS.has(symbol.submarket));
+        if (selectableSymbols.length === 0) {
           throw new Error('No symbols available');
         }
 
-        setSymbols(allSymbols);
-        const chosen = pickDefaultSymbol(allSymbols, readSymbolFromUrl());
+        setSymbols(selectableSymbols);
+        const chosen = pickDefaultSymbol(selectableSymbols, readSymbolFromUrl());
         setActiveSymbol(chosen);
         writeSymbolToUrl(chosen.underlying_symbol);
 
