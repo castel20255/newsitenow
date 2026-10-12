@@ -39,7 +39,8 @@ export interface SitePaperTrade {
   symbol: string;
   contract_type: SiteTradeContractType;
   stake: number | string;
-  entry_quote: number | string;
+  entry_quote: number | string | null;
+  price_precision?: number;
   expected_payout: number | string;
   duration_seconds: number;
   expires_at: string;
@@ -134,12 +135,13 @@ export function SiteAuthProvider({
         symbol: String((trade as Record<string, unknown>).market_symbol ?? ''),
         contract_type: String((trade as Record<string, unknown>).contract_type ?? 'OVER'),
         stake: Number((trade as Record<string, unknown>).stake ?? 0),
-        entry_quote: Number((trade as Record<string, unknown>).outcome_digit ?? 0),
+        entry_quote: (trade as Record<string, unknown>).entry_price as number | string | null ?? null,
+        price_precision: Number((trade as Record<string, unknown>).price_precision ?? 5),
         expected_payout: Number((trade as Record<string, unknown>).payout ?? 0),
         duration_seconds: Number((trade as Record<string, unknown>).duration_ticks ?? 1) * 3,
         expires_at: String((trade as Record<string, unknown>).expires_at ?? new Date().toISOString()),
         status: String((trade as Record<string, unknown>).status ?? 'open'),
-        exit_quote: null,
+        exit_quote: (trade as Record<string, unknown>).exit_price as number | string | null ?? null,
         payout: Number((trade as Record<string, unknown>).payout ?? 0),
         created_at: String((trade as Record<string, unknown>).created_at ?? new Date().toISOString()),
         settled_at: (trade as Record<string, unknown>).settled_at ? String((trade as Record<string, unknown>).settled_at) : null,

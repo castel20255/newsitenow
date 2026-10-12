@@ -11,7 +11,13 @@ interface MarketTickMessage {
   };
 }
 
-function getLastDisplayedDigit(quote: number, pipSize: number): number {
+export interface MarketTickSnapshot {
+  price: number;
+  precision: number;
+  digit: number;
+}
+
+export function getLastDisplayedDigit(quote: number, pipSize: number): number {
   const precision = Math.max(0, Math.min(10, Math.trunc(pipSize)));
   const formattedQuote = quote.toFixed(precision);
   return Number(formattedQuote.replace('.', '').slice(-1)) || 0;
@@ -21,12 +27,12 @@ export function waitForMarketTicks(
   ws: DerivWS,
   symbol: string,
   tickCount: number
-): Promise<number> {
+): Promise<MarketTickSnapshot> {
   if (!Number.isSafeInteger(tickCount) || tickCount < 1) {
     return Promise.reject(new Error('Enter a valid tick duration.'));
   }
 
-  return new Promise<number>((resolve) => {
+  return new Promise<MarketTickSnapshot>((resolve) => {
     let receivedTicks = 0;
     const seenTickIds = new Set<string>();
     const unsubscribe = ws.onMessage(message => {
@@ -43,7 +49,12 @@ export function waitForMarketTicks(
       if (receivedTicks < tickCount) return;
 
       unsubscribe();
-      resolve(getLastDisplayedDigit(tick.quote, tick.pip_size ?? 2));
+      const precision = tick.pip_size ?? 2;
+      resolve({
+        price: tick.quote,
+        precision,
+        digit: getLastDisplayedDigit(tick.quote, precision),
+      });
     });
   });
 }
