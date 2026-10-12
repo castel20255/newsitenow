@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { recordDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 
 type Market = {
@@ -106,18 +106,40 @@ export function DigitMarket() {
   const [tradeState, setTradeState] = useState<TradeState | null>(null);
   const [isPlacingTrade, setIsPlacingTrade] = useState(false);
   const [tradeMessage, setTradeMessage] = useState('');
+  const marketPricesRef = useRef(markets);
+  const tickListenersRef = useRef(new Map<string, Set<(price: number) => void>>());
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setMarkets((current) => current.map((market) => {
+      const nextMarkets = marketPricesRef.current.map((market) => {
         const drift = (Math.random() - 0.5) * market.volatility;
         const nextPrice = Number(Math.max(market.price + drift, 0.0001).toFixed(4));
         return { ...market, price: nextPrice };
-      }));
+      });
+      marketPricesRef.current = nextMarkets;
+      setMarkets(nextMarkets);
+      for (const market of nextMarkets) {
+        const listeners = tickListenersRef.current.get(market.symbol);
+        listeners?.forEach(listener => listener(market.price));
+      }
     }, 2200);
 
     return () => window.clearInterval(timer);
   }, []);
+
+  const waitForMarketTicks = (symbol: string, tickCount: number) => new Promise<number>((resolve) => {
+    let receivedTicks = 0;
+    const listeners = tickListenersRef.current.get(symbol) ?? new Set<(price: number) => void>();
+    const onTick = (price: number) => {
+      receivedTicks += 1;
+      if (receivedTicks < tickCount) return;
+      listeners.delete(onTick);
+      if (listeners.size === 0) tickListenersRef.current.delete(symbol);
+      resolve(getLastDigit(price));
+    };
+    listeners.add(onTick);
+    tickListenersRef.current.set(symbol, listeners);
+  });
 
   const selectedMarket = useMemo(
     () => markets.find((market) => market.id === selectedMarketId) ?? markets[0],
@@ -181,85 +203,64 @@ export function DigitMarket() {
     setIsPlacingTrade(true);
     setTradeMessage('');
 
-    const outcomeDigit = currentLastDigit;
-    let win = false;
-
-    if (selectedContract === 'EVEN') {
-      win = outcomeDigit % 2 === 0;
-    } else if (selectedContract === 'ODD') {
-      win = outcomeDigit % 2 !== 0;
-    } else if (selectedContract === 'MATCH') {
-      win = outcomeDigit === selectedDigit;
-    } else if (selectedContract === 'DIFFER') {
-      win = outcomeDigit !== selectedDigit;
-    } else if (selectedContract === 'OVER') {
-      win = outcomeDigit > selectedDigit;
-    } else if (selectedContract === 'UNDER') {
-      win = outcomeDigit < selectedDigit;
-    }
-
-    const totalPayout = win ? numericStake * payoutMultiplier : 0;
-    const netProfit = win ? totalPayout - numericStake : -numericStake;
-
-    const payload = {
-      market_symbol: selectedMarket.symbol,
-      market_name: selectedMarket.name,
-      contract_type: selectedContract,
-      prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
-      outcome_digit: outcomeDigit,
-      stake: Number(numericStake.toFixed(2)),
-      payout: Number(totalPayout.toFixed(2)),
-      profit: Number(netProfit.toFixed(2)),
-      win,
-    };
-
     try {
-      const result = await recordDigitTrade(payload);
-      if (result?.error) {
-        setTradeMessage(`Trade logged locally. Database note: ${result.error}`);
-      } else if (result?.skipped) {
-        setTradeMessage('Trade logged locally. Configure Supabase to store it in the database.');
-      } else if (!result?.success || !result.tradeId) {
-        setTradeMessage('The trade could not be placed.');
-      } else {
-        await refreshSiteAuth();
-        setTradeMessage('');
+      const result = await recordDigitTrade({
+        market_symbol: selectedMarket.symbol,
+        market_name: selectedMarket.name,
+        contract_type: selectedContract,
+        prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
+        start_digit: currentLastDigit,
+        stake: Number(numericStake.toFixed(2)),
+        duration_ticks: 1,
+      });
+      if (result?.error) throw new Error(result.error);
+      if (result?.skipped || !result?.success || !result.tradeId) {
+        throw new Error('Sign in to save digit trades to your demo balance.');
       }
+
+      await refreshSiteAuth();
+      const outcomeDigit = await waitForMarketTicks(selectedMarket.symbol, 1);
+      const settlement = await settleDigitTrade(result.tradeId, outcomeDigit);
+      if (settlement.error) throw new Error(settlement.error);
+      await refreshSiteAuth();
+
+      const win = settlement.status === 'won';
+      const totalPayout = Number(settlement.payout ?? 0);
+      const netProfit = win ? totalPayout - numericStake : -numericStake;
+      const payload = {
+        market_symbol: selectedMarket.symbol,
+        market_name: selectedMarket.name,
+        contract_type: selectedContract,
+        prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
+        outcome_digit: outcomeDigit,
+        stake: Number(numericStake.toFixed(2)),
+        payout: totalPayout,
+        profit: Number(netProfit.toFixed(2)),
+        win,
+      };
+
+      const localTrades = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('digit-market-history') ?? '[]') : [];
+      const entry = { ...payload, created_at: new Date().toISOString() };
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('digit-market-history', JSON.stringify([entry, ...localTrades].slice(0, 20)));
+      }
+
+      setTradeState({
+        outcomeDigit,
+        win,
+        payout: totalPayout,
+        profit: Number(netProfit.toFixed(2)),
+        contractType: selectedContract,
+        predictionDigit: ['EVEN', 'ODD'].includes(selectedContract) ? outcomeDigit % 2 === 0 ? 0 : 1 : selectedDigit,
+        marketName: selectedMarket.name,
+        marketSymbol: selectedMarket.symbol,
+      });
+      setTradeMessage('');
     } catch {
-      setTradeMessage('Trade logged locally. The database sync is unavailable right now.');
+      setTradeMessage('Trade could not be completed.');
+    } finally {
+      setIsPlacingTrade(false);
     }
-
-    const localTrades = typeof window !== 'undefined' ? JSON.parse(window.localStorage.getItem('digit-market-history') ?? '[]') : [];
-    const entry = {
-      ...payload,
-      created_at: new Date().toISOString(),
-      win,
-      total_payout: Number(totalPayout.toFixed(2)),
-      net_profit: Number(netProfit.toFixed(2)),
-    };
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('digit-market-history', JSON.stringify([entry, ...localTrades].slice(0, 20)));
-    }
-
-    setTradeState({
-      outcomeDigit,
-      win,
-      payout: Number(totalPayout.toFixed(2)),
-      profit: Number(netProfit.toFixed(2)),
-      contractType: selectedContract,
-      predictionDigit: ['EVEN', 'ODD'].includes(selectedContract) ? outcomeDigit % 2 === 0 ? 0 : 1 : selectedDigit,
-      marketName: selectedMarket.name,
-      marketSymbol: selectedMarket.symbol,
-    });
-
-    setTradeMessage(
-      win
-        ? `Winning trade: last digit ${outcomeDigit} matched your ${selectedContract.toLowerCase()} prediction.`
-        : `Losing trade: last digit ${outcomeDigit} did not match your ${selectedContract.toLowerCase()} prediction.`
-    );
-
-    setIsPlacingTrade(false);
   };
 
   return (

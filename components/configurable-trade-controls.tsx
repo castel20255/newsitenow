@@ -18,9 +18,10 @@ import Link from 'next/link';
 import { GripVertical, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
-import { recordDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
+import { waitForMarketTicks } from '@/lib/digit-market-ticks';
 import { useRearrangeDrag } from '@/hooks/use-rearrange-drag';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -495,57 +496,18 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       toast.error('Enter a valid stake before placing the trade.');
       return;
     }
-
-    const getLastDigit = (value: number): number => {
-      if (!Number.isFinite(value)) return 0;
-      const text = String(value);
-      const lastChar = text.includes('.') ? (text.split('.')[1] ?? '0').trim().slice(-1) || '0' : text.slice(-1) || '0';
-      return Number.parseInt(lastChar, 10) || 0;
-    };
-
-    const getPayoutMultiplier = (contractType: typeof selectedContract, digit: number): number => {
-      const overPayouts: Record<number, number> = { 0: 22, 1: 33, 2: 43, 3: 54, 4: 65, 5: 76, 6: 93, 7: 148, 8: 297 };
-      const underPayouts: Record<number, number> = { 9: 22, 8: 33, 7: 43, 6: 54, 5: 65, 4: 76, 3: 93, 2: 148, 1: 297 };
-
-      switch (contractType) {
-        case 'EVEN':
-        case 'ODD':
-          return 1 + 87 / 100;
-        case 'MATCH':
-        case 'DIFFER':
-          return 1 + 347.765 / 100;
-        case 'OVER':
-          return 1 + (overPayouts[digit] ?? 0) / 100;
-        case 'UNDER':
-          return 1 + (underPayouts[digit] ?? 0) / 100;
-        default:
-          return 1;
-      }
-    };
-
-    const outcomeDigit = Math.floor(Math.random() * 10);
-    const win =
-      selectedContract === 'EVEN' ? outcomeDigit % 2 === 0 :
-      selectedContract === 'ODD' ? outcomeDigit % 2 !== 0 :
-      selectedContract === 'MATCH' ? outcomeDigit === selectedDigit :
-      selectedContract === 'DIFFER' ? outcomeDigit !== selectedDigit :
-      selectedContract === 'OVER' ? outcomeDigit > selectedDigit :
-      outcomeDigit < selectedDigit;
-
-    const payoutMultiplier = getPayoutMultiplier(selectedContract, selectedDigit);
-    const payout = win ? numericStake * payoutMultiplier : 0;
-    const profit = win ? payout - numericStake : -numericStake;
+    if (!ws || !isConnected || !activeSymbol) {
+      toast.error('Connect to a market before placing a digit trade.');
+      return;
+    }
 
     const payload = {
-      market_symbol: activeSymbol?.underlying_symbol ?? 'UNKNOWN',
-      market_name: activeSymbol?.underlying_symbol_name ?? activeSymbol?.underlying_symbol ?? 'Digit market',
+      market_symbol: activeSymbol.underlying_symbol,
+      market_name: activeSymbol.underlying_symbol_name ?? activeSymbol.underlying_symbol,
       contract_type: selectedContract,
       prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
-      outcome_digit: outcomeDigit,
+      start_digit: selectedDigit,
       stake: Number(numericStake.toFixed(2)),
-      payout: Number(payout.toFixed(2)),
-      profit: Number(profit.toFixed(2)),
-      win,
       duration_ticks: Math.max(1, Number(duration) || 1),
     };
 
@@ -560,15 +522,20 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         return;
       }
       await refreshSiteAuth();
+      const outcomeDigit = await waitForMarketTicks(
+        ws,
+        activeSymbol.underlying_symbol,
+        Math.max(1, Number(duration) || 1)
+      );
+      const settlement = await settleDigitTrade(result.tradeId, outcomeDigit);
+      if (settlement.error) {
+        toast.error(settlement.error);
+        return;
+      }
+      await refreshSiteAuth();
     } catch {
       toast.error('Could not record the digit-market trade.');
       return;
-    }
-
-    if (typeof window !== 'undefined') {
-      const history = JSON.parse(window.localStorage.getItem('digit-market-history') ?? '[]');
-      const entry = { ...payload, created_at: new Date().toISOString() };
-      window.localStorage.setItem('digit-market-history', JSON.stringify([entry, ...history].slice(0, 20)));
     }
   };
 

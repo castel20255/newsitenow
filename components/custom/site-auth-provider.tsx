@@ -5,7 +5,6 @@ import type { User } from '@supabase/supabase-js';
 import { signOutAccount } from '@/app/actions/account-auth';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser';
 import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
-import { useDigitTradeSettlement } from '@/hooks/use-digit-trade-settlement';
 
 export type SiteAccountType = 'demo' | 'real';
 export type SiteAuthState = 'loading' | 'unauthenticated' | 'authenticated' | 'unconfigured' | 'error';
@@ -164,8 +163,6 @@ export function SiteAuthProvider({
       setAuthState('error');
     }
   }, [supabaseConfig]);
-
-  useDigitTradeSettlement({ authState, digitTrades, refresh });
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient(supabaseConfig);
