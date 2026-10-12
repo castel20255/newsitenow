@@ -132,7 +132,7 @@ export function SiteAuthProvider({
         id: String((trade as Record<string, unknown>).id),
         user_id: String((trade as Record<string, unknown>).user_id),
         account_id: String((trade as Record<string, unknown>).account_id ?? ''),
-        symbol: String((trade as Record<string, unknown>).market_symbol ?? ''),
+        symbol: String((trade as Record<string, unknown>).market_name ?? (trade as Record<string, unknown>).market_symbol ?? ''),
         contract_type: String((trade as Record<string, unknown>).contract_type ?? 'OVER'),
         stake: Number((trade as Record<string, unknown>).stake ?? 0),
         entry_quote: (trade as Record<string, unknown>).entry_price as number | string | null ?? null,

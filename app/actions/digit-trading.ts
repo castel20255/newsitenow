@@ -30,7 +30,7 @@ export async function recordDigitTrade(input: DigitTradeRecordInput) {
     }
 
     const { data, error } = await supabase.rpc('open_digit_market_trade', {
-      p_market_symbol: input.market_symbol,
+      p_market_symbol: input.market_symbol.toUpperCase(),
       p_market_name: input.market_name,
       p_contract_type: input.contract_type,
       p_prediction_digit: input.prediction_digit,
