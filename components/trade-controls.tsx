@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
-import { recordDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { Button } from '@/components/ui/button';
@@ -209,7 +209,16 @@ export function TradeControls({
         return;
       }
       await refreshSiteAuth();
-      toast.success(`${selectedContract} trade ${win ? 'won' : 'lost'} — payout $${payout.toFixed(2)}.`);
+      const pendingToast = toast.loading(`${selectedContract} trade placed; stake deducted from demo balance.`);
+      await new Promise(resolve => window.setTimeout(resolve, Math.max(1, Number(duration) || 1) * 3000));
+      const settlement = await settleDigitTrade(result.tradeId);
+      if (settlement?.error || !settlement?.success) {
+        await refreshSiteAuth();
+        toast.error(settlement?.error ?? 'Trade settlement is still pending.', { id: pendingToast });
+        return;
+      }
+      await refreshSiteAuth();
+      toast.success(`${selectedContract} trade ${settlement.status} — payout $${settlement.payout.toFixed(2)}.`, { id: pendingToast });
     } catch {
       toast.error('Could not record the digit-market trade.');
       return;
