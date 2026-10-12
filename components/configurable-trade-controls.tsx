@@ -22,6 +22,7 @@ import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading'
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { waitForMarketTicks } from '@/lib/digit-market-ticks';
+import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 import { useRearrangeDrag } from '@/hooks/use-rearrange-drag';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -113,7 +114,6 @@ function getDigitPayoutMultiplier(contractType: string, selectedDigit: number): 
 
 export function ConfigurableBuyButton({
   variant,
-  isConnected,
   proposal,
   stake,
   contractType,
@@ -127,7 +127,8 @@ export function ConfigurableBuyButton({
   const computedPayout = contractType && selectedDigit !== undefined && numericStake > 0
     ? numericStake * getDigitPayoutMultiplier(contractType, selectedDigit)
     : proposal ? proposal.payout : 0;
-  const disabled = !isConnected || (!proposal && !stake) || isBuying;
+  const hasValidStake = Number.isFinite(numericStake) && numericStake >= MIN_TRADE_STAKE;
+  const disabled = (contractType ? !hasValidStake : !proposal && !stake) || isBuying;
   const payout = Number.isFinite(computedPayout) ? computedPayout.toFixed(2) : null;
 
   const variants: Record<StyleVariant, () => React.ReactNode> = {
@@ -299,6 +300,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   // Flash the draggable blocks once — the first time the layout is unlocked in
   // this session — so the user notices the components can be dragged.
   const [hasFlashed, setHasFlashed] = useState(false);
+  const [isSubmittingDigitTrade, setIsSubmittingDigitTrade] = useState(false);
+  const digitTradeLock = useRef(false);
   useEffect(() => {
     if (!rearrangeMode || hasFlashed) return;
     const timer = window.setTimeout(() => setHasFlashed(true), 2000);
@@ -418,7 +421,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   // ── Stake (3 styles) ────────────────────────────────────────────────────
   const renderStake = () => {
-    const setStakeNum = (amount: number) => onStakeChange(String(Math.max(0, amount)));
+    const setStakeNum = (amount: number) => onStakeChange(String(Math.max(MIN_TRADE_STAKE, amount)));
     const current = parseFloat(stake) || 0;
     const variants: Record<StyleVariant, () => React.ReactNode> = {
       // a — plain input (original)
@@ -433,7 +436,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
             value={stake}
             onChange={(event) => onStakeChange(event.target.value)}
             onKeyDown={(event) => { if (['e', 'E', '+', '-'].includes(event.key)) event.preventDefault(); }}
-            min={0}
+            min={MIN_TRADE_STAKE}
             step="0.01"
             labelRight="USD"
           />
@@ -447,7 +450,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
           </Label>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" onClick={() => setStakeNum(current - 1)}>−</Button>
-            <Input type="number" value={stake} onChange={(event) => onStakeChange(event.target.value)} min={0} step="0.01" labelRight="USD" className="text-center" />
+            <Input type="number" value={stake} onChange={(event) => onStakeChange(event.target.value)} min={MIN_TRADE_STAKE} step="0.01" labelRight="USD" className="text-center" />
             <Button variant="outline" size="icon" onClick={() => setStakeNum(current + 1)}>+</Button>
           </div>
         </div>
@@ -465,7 +468,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
               </Button>
             ))}
           </div>
-          <Input type="number" value={stake} onChange={(event) => onStakeChange(event.target.value)} min={0} step="0.01" labelRight="USD" />
+          <Input type="number" value={stake} onChange={(event) => onStakeChange(event.target.value)} min={MIN_TRADE_STAKE} step="0.01" labelRight="USD" />
         </div>
       ),
     };
@@ -496,9 +499,10 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   // ── Buy (3 styles, themed) ──────────────────────────────────────────────
   const handleDigitBuy = async () => {
+    if (digitTradeLock.current) return;
     const numericStake = Number(stake);
-    if (!Number.isFinite(numericStake) || numericStake <= 0) {
-      toast.error('Enter a valid stake before placing the trade.');
+    if (!Number.isFinite(numericStake) || numericStake < MIN_TRADE_STAKE) {
+      toast.error(`Minimum stake is $${MIN_TRADE_STAKE.toFixed(2)}.`);
       return;
     }
     if (!ws || !isConnected || !activeSymbol) {
@@ -521,6 +525,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       duration_ticks: Math.max(1, Number(duration) || 1),
     };
 
+    digitTradeLock.current = true;
+    setIsSubmittingDigitTrade(true);
     try {
       const result = await recordDigitTrade(payload);
       if (result?.error) {
@@ -546,6 +552,9 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     } catch {
       toast.error('Could not record the digit-market trade.');
       return;
+    } finally {
+      digitTradeLock.current = false;
+      setIsSubmittingDigitTrade(false);
     }
   };
 
@@ -558,7 +567,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       contractType={selectedContract}
       selectedDigit={selectedDigit}
       onBuy={handleDigitBuy}
-      isBuying={isBuying}
+      isBuying={isBuying || isSubmittingDigitTrade}
     />
   );
 

@@ -2,6 +2,7 @@
 
 import { getSupabaseConfig } from '@/lib/supabase/config';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 
 export interface DigitTradeRecordInput {
   market_symbol: string;
@@ -15,6 +16,10 @@ export interface DigitTradeRecordInput {
 }
 
 export async function recordDigitTrade(input: DigitTradeRecordInput) {
+  if (!Number.isFinite(input.stake) || input.stake < MIN_TRADE_STAKE) {
+    return { error: `Minimum stake is $${MIN_TRADE_STAKE.toFixed(2)}.` };
+  }
+
   const config = getSupabaseConfig();
 
   if (!config.isBrowserConfigured || !config.isServerConfigured) {

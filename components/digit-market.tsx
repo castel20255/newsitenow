@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
+import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 
 type Market = {
   id: string;
@@ -197,8 +198,8 @@ export function DigitMarket() {
 
   const handlePlaceTrade = async () => {
     const numericStake = Number(stake);
-    if (!Number.isFinite(numericStake) || numericStake <= 0) {
-      setTradeMessage('Stake must be greater than zero.');
+    if (!Number.isFinite(numericStake) || numericStake < MIN_TRADE_STAKE) {
+      setTradeMessage(`Minimum stake is $${MIN_TRADE_STAKE.toFixed(2)}.`);
       return;
     }
 
@@ -445,7 +446,7 @@ export function DigitMarket() {
                 <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Stake</div>
                 <Input
                   type="number"
-                  min={0.01}
+                  min={MIN_TRADE_STAKE}
                   step={0.01}
                   value={stake}
                   onChange={(event) => setStake(event.target.value)}

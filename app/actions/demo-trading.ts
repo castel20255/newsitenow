@@ -4,6 +4,7 @@ import { WebSocket } from 'undici';
 import { getPublicWsUrl } from '@deriv/core';
 import { getDurationSeconds } from '@/lib/duration-utils';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 
 type DemoDurationUnit = 's' | 'm' | 'h' | 'd' | 'end-time';
 
@@ -112,11 +113,15 @@ export async function placeDemoTrade(input: DemoTradeInput) {
     !/^[A-Z0-9_]{2,32}$/.test(input.symbol) ||
     !['CALL', 'PUT', 'CALLE', 'PUTE'].includes(input.contractType) ||
     !Number.isFinite(input.stake) ||
-    input.stake <= 0 ||
+    input.stake < MIN_TRADE_STAKE ||
     input.stake > 10000 ||
     !duration
   ) {
-    return { error: 'Trade details are invalid.' };
+    return {
+      error: input.stake < MIN_TRADE_STAKE
+        ? `Minimum stake is $${MIN_TRADE_STAKE.toFixed(2)}.`
+        : 'Trade details are invalid.',
+    };
   }
 
   try {
