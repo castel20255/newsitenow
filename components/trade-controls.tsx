@@ -148,8 +148,9 @@ export function TradeControls({
       case 'ODD':
         return 1 + 87 / 100;
       case 'MATCH':
-      case 'DIFFER':
         return 1 + 347.765 / 100;
+      case 'DIFFER':
+        return 1 + 19 / 100;
       case 'OVER':
         return 1 + (overPayouts[selectedDigit] ?? 0) / 100;
       case 'UNDER':

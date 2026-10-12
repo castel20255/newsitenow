@@ -41,7 +41,8 @@ const UNDER_PAYOUTS: Record<number, number> = {
   1: 297,
 };
 
-const MATCH_DIFFER_PAYOUT = 347.765;
+const MATCH_PAYOUT = 347.765;
+const DIFFER_PAYOUT = 19;
 const EVEN_ODD_PAYOUT = 87;
 
 function getLastDigit(value: number): number {
@@ -62,8 +63,9 @@ function getPayoutMultiplier(contractType: ContractType, selectedDigit: number):
     case 'ODD':
       return 1 + EVEN_ODD_PAYOUT / 100;
     case 'MATCH':
+      return 1 + MATCH_PAYOUT / 100;
     case 'DIFFER':
-      return 1 + MATCH_DIFFER_PAYOUT / 100;
+      return 1 + DIFFER_PAYOUT / 100;
     case 'OVER':
       return 1 + (OVER_PAYOUTS[selectedDigit] ?? 0) / 100;
     case 'UNDER':
