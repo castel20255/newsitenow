@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 
 type Market = {
@@ -223,16 +223,7 @@ export function DigitMarket() {
         setTradeMessage('The trade could not be placed.');
       } else {
         await refreshSiteAuth();
-        setTradeMessage('Trade placed. Stake deducted; waiting for settlement.');
-        await new Promise(resolve => window.setTimeout(resolve, 3000));
-        const settlement = await settleDigitTrade(result.tradeId);
-        if (settlement?.error || !settlement?.success) {
-          await refreshSiteAuth();
-          setTradeMessage(settlement?.error ?? 'Trade settlement is still pending.');
-        } else {
-          await refreshSiteAuth();
-          setTradeMessage(`Trade settled: ${settlement.status}. Payout: $${settlement.payout.toFixed(2)}.`);
-        }
+        setTradeMessage('');
       }
     } catch {
       setTradeMessage('Trade logged locally. The database sync is unavailable right now.');
