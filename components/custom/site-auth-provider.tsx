@@ -5,6 +5,7 @@ import type { User } from '@supabase/supabase-js';
 import { signOutAccount } from '@/app/actions/account-auth';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser';
 import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
+import { useDigitTradeSettlement } from '@/hooks/use-digit-trade-settlement';
 
 export type SiteAccountType = 'demo' | 'real';
 export type SiteAuthState = 'loading' | 'unauthenticated' | 'authenticated' | 'unconfigured' | 'error';
@@ -136,7 +137,7 @@ export function SiteAuthProvider({
         stake: Number((trade as Record<string, unknown>).stake ?? 0),
         entry_quote: Number((trade as Record<string, unknown>).outcome_digit ?? 0),
         expected_payout: Number((trade as Record<string, unknown>).payout ?? 0),
-        duration_seconds: Number((trade as Record<string, unknown>).duration_ticks ?? 1) * 5,
+        duration_seconds: Number((trade as Record<string, unknown>).duration_ticks ?? 1) * 3,
         expires_at: String((trade as Record<string, unknown>).expires_at ?? new Date().toISOString()),
         status: String((trade as Record<string, unknown>).status ?? 'open'),
         exit_quote: null,
@@ -163,6 +164,8 @@ export function SiteAuthProvider({
       setAuthState('error');
     }
   }, [supabaseConfig]);
+
+  useDigitTradeSettlement({ authState, digitTrades, refresh });
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient(supabaseConfig);
