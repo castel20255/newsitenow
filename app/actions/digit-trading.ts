@@ -8,7 +8,8 @@ export interface DigitTradeRecordInput {
   market_name: string;
   contract_type: string;
   prediction_digit: number | null;
-  start_digit: number;
+  entry_price: number;
+  price_precision: number;
   stake: number;
   duration_ticks?: number;
 }
@@ -33,7 +34,8 @@ export async function recordDigitTrade(input: DigitTradeRecordInput) {
       p_market_name: input.market_name,
       p_contract_type: input.contract_type,
       p_prediction_digit: input.prediction_digit,
-      p_start_digit: input.start_digit,
+      p_entry_price: input.entry_price,
+      p_price_precision: input.price_precision,
       p_stake: input.stake,
       p_duration_ticks: input.duration_ticks ?? 1,
     });
@@ -63,8 +65,11 @@ export async function recordDigitTrade(input: DigitTradeRecordInput) {
   }
 }
 
-export async function settleDigitTrade(tradeId: string, outcomeDigit: number) {
-  if (!/^[0-9a-f-]{36}$/i.test(tradeId) || !Number.isInteger(outcomeDigit) || outcomeDigit < 0 || outcomeDigit > 9) {
+export async function settleDigitTrade(tradeId: string, exitPrice: number) {
+  if (
+    !/^[0-9a-f-]{36}$/i.test(tradeId) ||
+    !Number.isFinite(exitPrice) || exitPrice <= 0
+  ) {
     return { error: 'Trade details are invalid.' };
   }
 
@@ -77,7 +82,7 @@ export async function settleDigitTrade(tradeId: string, outcomeDigit: number) {
 
     const { data, error } = await supabase.rpc('settle_digit_market_trade', {
       p_trade_id: tradeId,
-      p_outcome_digit: outcomeDigit,
+      p_exit_price: exitPrice,
     });
     if (error) return { error: error.message };
 

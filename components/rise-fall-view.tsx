@@ -415,6 +415,8 @@ export function RiseFallView({
         onEndTimeChange={setEndTime}
         ws={ws}
         activeSymbol={activeSymbol}
+        marketPrice={prices?.at(-1) ?? null}
+        marketPrecision={pipSize ?? 2}
         proposal={proposal}
         onBuy={handleBuy}
         isBuying={tradeIsPending}
@@ -521,6 +523,8 @@ export function RiseFallView({
                   onEndTimeChange={setEndTime}
                   ws={ws}
                   activeSymbol={activeSymbol}
+                  marketPrice={prices?.at(-1) ?? null}
+                  marketPrecision={pipSize ?? 2}
                   proposal={proposal}
                   onBuy={handleBuy}
                   isBuying={tradeIsPending}

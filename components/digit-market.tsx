@@ -127,7 +127,7 @@ export function DigitMarket() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const waitForMarketTicks = (symbol: string, tickCount: number) => new Promise<number>((resolve) => {
+  const waitForMarketTicks = (symbol: string, tickCount: number) => new Promise<{ price: number; digit: number }>((resolve) => {
     let receivedTicks = 0;
     const listeners = tickListenersRef.current.get(symbol) ?? new Set<(price: number) => void>();
     const onTick = (price: number) => {
@@ -135,7 +135,7 @@ export function DigitMarket() {
       if (receivedTicks < tickCount) return;
       listeners.delete(onTick);
       if (listeners.size === 0) tickListenersRef.current.delete(symbol);
-      resolve(getLastDigit(price));
+      resolve({ price, digit: getLastDigit(price) });
     };
     listeners.add(onTick);
     tickListenersRef.current.set(symbol, listeners);
@@ -209,8 +209,9 @@ export function DigitMarket() {
         market_name: selectedMarket.name,
         contract_type: selectedContract,
         prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
-        start_digit: currentLastDigit,
         stake: Number(numericStake.toFixed(2)),
+        entry_price: Number(selectedMarket.price.toFixed(4)),
+        price_precision: 4,
         duration_ticks: 1,
       });
       if (result?.error) throw new Error(result.error);
@@ -219,12 +220,13 @@ export function DigitMarket() {
       }
 
       await refreshSiteAuth();
-      const outcomeDigit = await waitForMarketTicks(selectedMarket.symbol, 1);
-      const settlement = await settleDigitTrade(result.tradeId, outcomeDigit);
+      const outcome = await waitForMarketTicks(selectedMarket.symbol, 1);
+      const settlement = await settleDigitTrade(result.tradeId, outcome.price);
       if (settlement.error) throw new Error(settlement.error);
       await refreshSiteAuth();
 
       const win = settlement.status === 'won';
+      const outcomeDigit = outcome.digit;
       const totalPayout = Number(settlement.payout ?? 0);
       const netProfit = win ? totalPayout - numericStake : -numericStake;
       const payload = {

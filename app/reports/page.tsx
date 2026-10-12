@@ -18,6 +18,16 @@ function formatTradeDate(value: string) {
   return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
 }
 
+function formatMarketPrice(value: number | string | null, precision?: number) {
+  if (value === null) return '—';
+  const price = Number(value);
+  if (!Number.isFinite(price)) return '—';
+
+  const inferredPrecision = String(value).split('.')[1]?.replace(/0+$/, '').length ?? 0;
+  const digits = Math.max(0, Math.min(10, precision ?? inferredPrecision));
+  return price.toFixed(digits);
+}
+
 function TradeRow({ trade }: { trade: SitePaperTrade }) {
   const stake = Number(trade.stake);
   const payout = Number(trade.payout);
@@ -37,7 +47,8 @@ function TradeRow({ trade }: { trade: SitePaperTrade }) {
       <td className="px-4 py-3 font-medium">{contract}</td>
       <td className="px-4 py-3">{trade.symbol}</td>
       <td className="px-4 py-3 text-right tabular-nums">{money.format(stake)}</td>
-      <td className="px-4 py-3 text-right tabular-nums">{money.format(Number(trade.entry_quote))}</td>
+      <td className="px-4 py-3 text-right tabular-nums">{formatMarketPrice(trade.entry_quote, trade.price_precision)}</td>
+      <td className="px-4 py-3 text-right tabular-nums">{formatMarketPrice(trade.exit_quote, trade.price_precision)}</td>
       <td className="px-4 py-3 text-right capitalize">{trade.status}</td>
       <td className={`px-4 py-3 text-right tabular-nums ${profit === null ? 'text-muted-foreground' : profit >= 0 ? 'text-emerald-600' : 'text-destructive'}`}>
         {profit === null ? '—' : money.format(profit)}
@@ -120,13 +131,14 @@ export default function ReportsPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[52rem] text-sm">
+              <table className="w-full min-w-[58rem] text-sm">
                 <thead>
                   <tr className="text-left text-xs text-muted-foreground">
                     <th className="px-4 py-2 font-medium">Contract</th>
                     <th className="px-4 py-2 font-medium">Market</th>
                     <th className="px-4 py-2 text-right font-medium">Stake</th>
-                    <th className="px-4 py-2 text-right font-medium">Entry</th>
+                    <th className="px-4 py-2 text-right font-medium">Entry price</th>
+                    <th className="px-4 py-2 text-right font-medium">Exit price</th>
                     <th className="px-4 py-2 text-right font-medium">Status</th>
                     <th className="px-4 py-2 text-right font-medium">P&amp;L</th>
                     <th className="px-4 py-2 text-right font-medium">Placed</th>
@@ -136,7 +148,7 @@ export default function ReportsPage() {
                   {visibleTrades.map(trade => <TradeRow key={trade.id} trade={trade} />)}
                   {visibleTrades.length === 0 && (
                     <tr className="border-t border-border">
-                      <td colSpan={7} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                      <td colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
                         No paper trades to show.
                       </td>
                     </tr>

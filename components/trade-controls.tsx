@@ -37,6 +37,8 @@ interface TradeControlsProps {
   onEndTimeChange: (time: string) => void;
   ws: DerivWS | null;
   activeSymbol: ActiveSymbol | null;
+  marketPrice: number | null;
+  marketPrecision: number;
   proposal: ProposalInfo | null;
 
   onBuy: () => void;
@@ -67,6 +69,8 @@ export function TradeControls({
   onEndTimeChange,
   ws,
   activeSymbol,
+  marketPrice,
+  marketPrecision,
   proposal,
   onBuy,
   isBuying,
@@ -170,13 +174,18 @@ export function TradeControls({
       toast.error('Connect to a market before placing a digit trade.');
       return;
     }
+    if (marketPrice === null || !Number.isFinite(marketPrice) || marketPrice <= 0) {
+      toast.error('Waiting for the selected market price.');
+      return;
+    }
 
     const payload = {
       market_symbol: activeSymbol.underlying_symbol,
       market_name: activeSymbol.underlying_symbol_name ?? activeSymbol.underlying_symbol,
       contract_type: selectedContract,
       prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
-      start_digit: selectedDigit,
+      entry_price: Number(marketPrice.toFixed(marketPrecision)),
+      price_precision: marketPrecision,
       stake: Number(numericStake.toFixed(2)),
       duration_ticks: Number(duration) || 1,
     };
@@ -192,12 +201,12 @@ export function TradeControls({
         return;
       }
       await refreshSiteAuth();
-      const outcomeDigit = await waitForMarketTicks(
+      const outcome = await waitForMarketTicks(
         ws,
         activeSymbol.underlying_symbol,
         Math.max(1, Number(duration) || 1)
       );
-      const settlement = await settleDigitTrade(result.tradeId, outcomeDigit);
+      const settlement = await settleDigitTrade(result.tradeId, outcome.price);
       if (settlement.error) {
         toast.error(settlement.error);
         return;
