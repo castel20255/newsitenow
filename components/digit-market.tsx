@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { recordDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
+import { useSiteAuth } from '@/components/custom/site-auth-provider';
 
 type Market = {
   id: string;
@@ -91,6 +92,7 @@ type TradeState = {
 };
 
 export function DigitMarket() {
+  const { refresh: refreshSiteAuth } = useSiteAuth();
   const [markets, setMarkets] = useState<Market[]>([
     { id: 'eurusd', name: 'EUR/USD', symbol: 'EURUSD', price: 1.2047, volatility: 0.0005 },
     { id: 'gold', name: 'Gold', symbol: 'XAUUSD', price: 2137.682, volatility: 0.85 },
@@ -217,8 +219,20 @@ export function DigitMarket() {
         setTradeMessage(`Trade logged locally. Database note: ${result.error}`);
       } else if (result?.skipped) {
         setTradeMessage('Trade logged locally. Configure Supabase to store it in the database.');
+      } else if (!result?.success || !result.tradeId) {
+        setTradeMessage('The trade could not be placed.');
       } else {
-        setTradeMessage('Trade recorded successfully.');
+        await refreshSiteAuth();
+        setTradeMessage('Trade placed. Stake deducted; waiting for settlement.');
+        await new Promise(resolve => window.setTimeout(resolve, 3000));
+        const settlement = await settleDigitTrade(result.tradeId);
+        if (settlement?.error || !settlement?.success) {
+          await refreshSiteAuth();
+          setTradeMessage(settlement?.error ?? 'Trade settlement is still pending.');
+        } else {
+          await refreshSiteAuth();
+          setTradeMessage(`Trade settled: ${settlement.status}. Payout: $${settlement.payout.toFixed(2)}.`);
+        }
       }
     } catch {
       setTradeMessage('Trade logged locally. The database sync is unavailable right now.');

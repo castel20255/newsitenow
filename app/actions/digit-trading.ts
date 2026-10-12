@@ -53,8 +53,45 @@ export async function recordDigitTrade(input: DigitTradeRecordInput) {
     }
 
     const trade = Array.isArray(data) ? data[0] : data;
-    return { success: true, balance: Number(trade?.updated_balance) };
+    if (!trade?.digit_market_trade_id) {
+      return { error: 'The digit trade was not created.' };
+    }
+
+    return {
+      success: true,
+      tradeId: String(trade.digit_market_trade_id),
+      balance: Number(trade.updated_balance),
+    };
   } catch (error) {
     return { error: error instanceof Error ? error.message : 'Trade could not be saved.' };
+  }
+}
+
+export async function settleDigitTrade(tradeId: string) {
+  if (!/^[0-9a-f-]{36}$/i.test(tradeId)) {
+    return { error: 'Trade details are invalid.' };
+  }
+
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData.user) {
+      return { error: 'Sign in to settle this digit trade.' };
+    }
+
+    const { data, error } = await supabase.rpc('settle_digit_market_trade', {
+      p_trade_id: tradeId,
+    });
+    if (error) return { error: error.message };
+
+    const settlement = Array.isArray(data) ? data[0] : data;
+    return {
+      success: true,
+      status: settlement?.settled_status,
+      payout: Number(settlement?.credited_payout ?? 0),
+      balance: Number(settlement?.updated_balance),
+    };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Trade could not be settled.' };
   }
 }
