@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
@@ -8,6 +8,7 @@ import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading'
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { waitForMarketTicks } from '@/lib/digit-market-ticks';
+import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -116,6 +117,8 @@ export function TradeControls({
 
   const [selectedContract, setSelectedContract] = useState<'OVER' | 'UNDER' | 'EVEN' | 'ODD' | 'MATCH' | 'DIFFER'>('OVER');
   const [selectedDigit, setSelectedDigit] = useState<number>(0);
+  const [isSubmittingDigitTrade, setIsSubmittingDigitTrade] = useState(false);
+  const digitTradeLock = useRef(false);
 
   const contractDisabledForDigits = selectedContract === 'EVEN' || selectedContract === 'ODD';
   const digitOptions = Array.from({ length: 10 }, (_, value) => value);
@@ -166,9 +169,10 @@ export function TradeControls({
   }, [payoutMultiplier, stake]);
 
   const handleDigitBuy = async () => {
+    if (digitTradeLock.current) return;
     const numericStake = Number(stake);
-    if (!Number.isFinite(numericStake) || numericStake <= 0) {
-      toast.error('Enter a valid stake before placing the trade.');
+    if (!Number.isFinite(numericStake) || numericStake < MIN_TRADE_STAKE) {
+      toast.error(`Minimum stake is $${MIN_TRADE_STAKE.toFixed(2)}.`);
       return;
     }
     if (!ws || !isConnected || !activeSymbol) {
@@ -191,6 +195,8 @@ export function TradeControls({
       duration_ticks: Number(duration) || 1,
     };
 
+    digitTradeLock.current = true;
+    setIsSubmittingDigitTrade(true);
     try {
       const result = await recordDigitTrade(payload);
       if (result?.error) {
@@ -216,6 +222,9 @@ export function TradeControls({
     } catch {
       toast.error('Could not record the digit-market trade.');
       return;
+    } finally {
+      digitTradeLock.current = false;
+      setIsSubmittingDigitTrade(false);
     }
   };
 
@@ -281,7 +290,7 @@ export function TradeControls({
           onKeyDown={(e) => {
             if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
           }}
-          min={0}
+          min={MIN_TRADE_STAKE}
           step="0.01"
           className="rounded-xl"
         />
@@ -318,10 +327,10 @@ export function TradeControls({
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
-          disabled={!isConnected || !Number.isFinite(Number(stake)) || Number(stake) <= 0 || isBuying}
+          disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
           onClick={handleDigitBuy}
         >
-          {isBuying ? (
+          {isBuying || isSubmittingDigitTrade ? (
             <Localize i18n_default_text="Purchasing..." />
           ) : (
             <span className="flex flex-col items-center leading-tight gap-0.5">

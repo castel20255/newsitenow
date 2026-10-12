@@ -1,0 +1,1 @@
+export const MIN_TRADE_STAKE = 0.25;
