@@ -6,7 +6,7 @@ import { signOutAccount } from '@/app/actions/account-auth';
 import { getSupabaseBrowserClient } from '@/lib/supabase/browser';
 import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
 
-export type SiteAccountType = 'demo' | 'real';
+export type SiteAccountType = 'demo' | 'real' | 'app_wallet';
 export type SiteAuthState = 'loading' | 'unauthenticated' | 'authenticated' | 'unconfigured' | 'error';
 
 export interface SiteProfile {
@@ -35,7 +35,8 @@ export type SiteTradeContractType =
 export interface SitePaperTrade {
   id: string;
   user_id: string;
-  account_id: string;
+  account_id: string | null;
+  funding_source?: 'demo' | 'app_wallet';
   symbol: string;
   contract_type: SiteTradeContractType;
   stake: number | string;
@@ -119,24 +120,38 @@ export function SiteAuthProvider({
         return;
       }
 
-      const [profileResult, accountsResult, tradesResult, digitTradesResult, adminResult] = await Promise.all([
+      const [profileResult, accountsResult, tradesResult, digitTradesResult, adminResult, walletResult] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', userData.user.id).maybeSingle(),
         supabase.from('trading_accounts').select('*').eq('user_id', userData.user.id),
         supabase.from('paper_trades').select('*').eq('user_id', userData.user.id).order('created_at', { ascending: false }).limit(100),
         supabase.from('digit_market_trades').select('*').eq('user_id', userData.user.id).order('created_at', { ascending: false }).limit(100),
         supabase.from('site_admins').select('email').eq('email', userData.user.email?.toLowerCase() ?? '').maybeSingle(),
+        supabase.from('app_wallets').select('balance_usd').eq('user_id', userData.user.id).maybeSingle(),
       ]);
-      if (profileResult.error || accountsResult.error || tradesResult.error || digitTradesResult.error || !profileResult.data) {
+      if (profileResult.error || accountsResult.error || tradesResult.error || digitTradesResult.error || walletResult.error || !profileResult.data) {
         setAuthState('error');
         return;
       }
 
-      const nextAccounts = (accountsResult.data ?? []) as unknown as SiteTradingAccount[];
+      const nextAccounts = [
+        ...((accountsResult.data ?? []) as unknown as SiteTradingAccount[]),
+        {
+          id: 'app-wallet',
+          user_id: userData.user.id,
+          account_type: 'app_wallet' as const,
+          currency: 'USD',
+          balance: Number(walletResult.data?.balance_usd ?? 0),
+          status: 'active' as const,
+        },
+      ];
       const nextTrades = (tradesResult.data ?? []) as unknown as SitePaperTrade[];
       const nextDigitTrades = ((digitTradesResult.data ?? []) as unknown[]).map((trade) => ({
         id: String((trade as Record<string, unknown>).id),
         user_id: String((trade as Record<string, unknown>).user_id),
-        account_id: String((trade as Record<string, unknown>).account_id ?? ''),
+        account_id: typeof (trade as Record<string, unknown>).account_id === 'string'
+          ? String((trade as Record<string, unknown>).account_id)
+          : null,
+        funding_source: String((trade as Record<string, unknown>).funding_source ?? 'demo') as 'demo' | 'app_wallet',
         symbol: String((trade as Record<string, unknown>).market_name ?? (trade as Record<string, unknown>).market_symbol ?? ''),
         contract_type: String((trade as Record<string, unknown>).contract_type ?? 'OVER'),
         stake: Number((trade as Record<string, unknown>).stake ?? 0),
@@ -159,7 +174,7 @@ export function SiteAuthProvider({
       setDigitTrades(nextDigitTrades);
       setActiveAccountId(current => {
         const preferred = current ?? window.localStorage.getItem(ACTIVE_ACCOUNT_KEY);
-        const selected = nextAccounts.find(account => account.id === preferred && account.account_type === 'demo')
+        const selected = nextAccounts.find(account => account.id === preferred && account.account_type !== 'real')
           ?? nextAccounts.find(account => account.account_type === 'demo')
           ?? null;
         if (selected) window.localStorage.setItem(ACTIVE_ACCOUNT_KEY, selected.id);
@@ -203,7 +218,7 @@ export function SiteAuthProvider({
   }, []);
   const closeAuth = useCallback(() => setAuthDialogOpen(false), []);
   const switchAccount = useCallback((accountId: string) => {
-    if (!accounts.some(account => account.id === accountId && account.account_type === 'demo')) return;
+    if (!accounts.some(account => account.id === accountId && account.account_type !== 'real')) return;
     setActiveAccountId(accountId);
     window.localStorage.setItem(ACTIVE_ACCOUNT_KEY, accountId);
   }, [accounts]);

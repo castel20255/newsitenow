@@ -46,6 +46,7 @@ export function LiveRiseFall({
   useDemoTradeSettlement({
     authState: siteAuth.authState,
     paperTrades: siteAuth.paperTrades,
+    digitTrades: siteAuth.digitTrades,
     refresh: siteAuth.refresh,
   });
 

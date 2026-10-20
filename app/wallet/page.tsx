@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
+  ArrowRight,
   ArrowDownToLine,
   ArrowUpFromLine,
   Bitcoin,
@@ -217,6 +219,7 @@ export default function WalletPage() {
         throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not submit withdrawal request.');
       }
       setBalanceUsd(Number(data.balanceUsd));
+      await auth.refresh();
       setWithdrawals(current => [{
         id: String(data.withdrawalId),
         full_name: withdrawalName.trim(),
@@ -263,6 +266,8 @@ export default function WalletPage() {
         nextStatus = 'completed';
         nextCreditedUsd = Number(data.creditedUsd ?? 0);
         if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
+        await auth.refresh();
+        auth.switchAccount('app-wallet');
         setMessage('Payment confirmed and App Wallet credited. Opening the trading workspace.');
         setIsRedirecting(true);
         window.setTimeout(() => router.push('/'), 1200);
@@ -283,7 +288,7 @@ export default function WalletPage() {
     } finally {
       setIsChecking(false);
     }
-  }, [router]);
+  }, [auth.refresh, auth.switchAccount, router]);
 
   useEffect(() => {
     if (
@@ -360,8 +365,16 @@ export default function WalletPage() {
                 {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(balanceUsd ?? 0)}
               </p>
             </div>
+            <Link
+              href="/"
+              onClick={() => auth.switchAccount('app-wallet')}
+              className="inline-flex min-h-10 items-center gap-2 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Trade now
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
             <p className="max-w-lg text-sm leading-6 text-muted-foreground">
-              Deposits use M-Pesa in KES and are credited to this app wallet in USD at $1 = KES {USD_TO_KES.toFixed(2)}. The wallet is not connected to Deriv.
+              Deposits use M-Pesa in KES and are credited in USD at $1 = KES {USD_TO_KES.toFixed(2)}. The balance can fund simulated trades; it does not fund a Deriv real account.
             </p>
           </div>
 

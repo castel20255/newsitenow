@@ -292,7 +292,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   } = props;
 
   const { localize } = useAppTranslations();
-  const { refresh: refreshSiteAuth } = useSiteAuth();
+  const { activeAccount, refresh: refreshSiteAuth } = useSiteAuth();
   const blockLabels = getBlockLabels(localize);
 
   const rearrange = useRearrangeDrag<BlockKey>(config.order, (next) => onReorder?.(next));
@@ -523,6 +523,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       price_precision: marketPrecision,
       stake: Number(numericStake.toFixed(2)),
       duration_ticks: Math.max(1, Number(duration) || 1),
+      fundingSource: activeAccount?.account_type === 'app_wallet' ? 'app_wallet' as const : 'demo' as const,
     };
 
     digitTradeLock.current = true;
@@ -534,17 +535,17 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         return;
       }
       if (result?.skipped || !result?.success) {
-        toast.error('Sign in to save digit trades to your demo balance.');
+        toast.error('Sign in to save digit trades to your selected account.');
         return;
       }
       await refreshSiteAuth();
-      const outcome = await waitForMarketTicks(
-        ws,
-        activeSymbol.underlying_symbol,
-        Math.max(1, Number(duration) || 1)
-      );
-      const settlement = await settleDigitTrade(result.tradeId, outcome.price);
-      if (settlement.error) {
+      await waitForMarketTicks(ws, activeSymbol.underlying_symbol, Math.max(1, Number(duration) || 1));
+      let settlement = await settleDigitTrade(result.tradeId);
+      while ('pending' in settlement && settlement.pending) {
+        await new Promise(resolve => window.setTimeout(resolve, settlement.retryAfterMs));
+        settlement = await settleDigitTrade(result.tradeId);
+      }
+      if ('error' in settlement) {
         toast.error(settlement.error);
         return;
       }

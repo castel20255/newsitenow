@@ -4,8 +4,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
-import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 
 type Market = {
@@ -95,7 +93,6 @@ type TradeState = {
 };
 
 export function DigitMarket() {
-  const { refresh: refreshSiteAuth } = useSiteAuth();
   const [markets, setMarkets] = useState<Market[]>([
     { id: 'eurusd', name: 'EUR/USD', symbol: 'EURUSD', price: 1.2047, volatility: 0.0005 },
     { id: 'gold', name: 'Gold', symbol: 'XAUUSD', price: 2137.682, volatility: 0.85 },
@@ -207,30 +204,19 @@ export function DigitMarket() {
     setTradeMessage('');
 
     try {
-      const result = await recordDigitTrade({
-        market_symbol: selectedMarket.symbol,
-        market_name: selectedMarket.name,
-        contract_type: selectedContract,
-        prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
-        stake: Number(numericStake.toFixed(2)),
-        entry_price: Number(selectedMarket.price.toFixed(4)),
-        price_precision: 4,
-        duration_ticks: 1,
-      });
-      if (result?.error) throw new Error(result.error);
-      if (result?.skipped || !result?.success || !result.tradeId) {
-        throw new Error('Sign in to save digit trades to your demo balance.');
-      }
-
-      await refreshSiteAuth();
       const outcome = await waitForMarketTicks(selectedMarket.symbol, 1);
-      const settlement = await settleDigitTrade(result.tradeId, outcome.price);
-      if (settlement.error) throw new Error(settlement.error);
-      await refreshSiteAuth();
-
-      const win = settlement.status === 'won';
+      const win = (() => {
+        switch (selectedContract) {
+          case 'OVER': return outcome.digit > selectedDigit;
+          case 'UNDER': return outcome.digit < selectedDigit;
+          case 'EVEN': return outcome.digit % 2 === 0;
+          case 'ODD': return outcome.digit % 2 === 1;
+          case 'MATCH': return outcome.digit === selectedDigit;
+          case 'DIFFER': return outcome.digit !== selectedDigit;
+        }
+      })();
       const outcomeDigit = outcome.digit;
-      const totalPayout = Number(settlement.payout ?? 0);
+      const totalPayout = win ? Number((numericStake * getPayoutMultiplier(selectedContract, selectedDigit)).toFixed(2)) : 0;
       const netProfit = win ? totalPayout - numericStake : -numericStake;
       const payload = {
         market_symbol: selectedMarket.symbol,

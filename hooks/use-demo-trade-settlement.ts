@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { settleDemoTrade } from '@/app/actions/demo-trading';
+import { settleDigitTrade } from '@/app/actions/digit-trading';
 import type { SiteAuthState, SitePaperTrade } from '@/components/custom/site-auth-provider';
 import { resolveTradeExpiryMs } from '@/lib/duration-utils';
 
@@ -11,10 +12,12 @@ const RETRY_DELAY_MS = 5000;
 export function useDemoTradeSettlement({
   authState,
   paperTrades,
+  digitTrades,
   refresh,
 }: {
   authState: SiteAuthState;
   paperTrades: SitePaperTrade[];
+  digitTrades: SitePaperTrade[];
   refresh: () => Promise<void>;
 }) {
   const inFlight = useRef(new Set<string>());
@@ -25,6 +28,7 @@ export function useDemoTradeSettlement({
 
     let active = true;
     const openTrades = paperTrades.filter(trade => trade.status === 'open');
+    const openDigitTrades = digitTrades.filter(trade => trade.status === 'open');
 
     const settleIfDue = async (trade: SitePaperTrade) => {
       if (!active || inFlight.current.has(trade.id)) return;
@@ -58,10 +62,37 @@ export function useDemoTradeSettlement({
       }
     };
 
+    const settleDigitIfDue = async (trade: SitePaperTrade) => {
+      if (!active || inFlight.current.has(trade.id)) return;
+      const expiresAtMs = Date.parse(trade.expires_at);
+      if (!Number.isFinite(expiresAtMs) || expiresAtMs > Date.now()) return;
+
+      inFlight.current.add(trade.id);
+      try {
+        const result = await settleDigitTrade(trade.id);
+        if ('pending' in result && result.pending) return;
+        if ('error' in result) throw new Error(result.error);
+        await refresh();
+      } catch {
+        if (!active) return;
+        const timer = retryTimers.current.get(trade.id);
+        if (timer) clearTimeout(timer);
+        retryTimers.current.set(trade.id, setTimeout(() => {
+          retryTimers.current.delete(trade.id);
+          void settleDigitIfDue(trade);
+        }, RETRY_DELAY_MS));
+      } finally {
+        inFlight.current.delete(trade.id);
+      }
+    };
+
     const tick = () => {
       if (!active) return;
       for (const trade of openTrades) {
         void settleIfDue(trade);
+      }
+      for (const trade of openDigitTrades) {
+        void settleDigitIfDue(trade);
       }
     };
 
@@ -73,5 +104,5 @@ export function useDemoTradeSettlement({
       for (const timer of retryTimers.current.values()) clearTimeout(timer);
       clearInterval(interval);
     };
-  }, [authState, paperTrades, refresh]);
+  }, [authState, paperTrades, digitTrades, refresh]);
 }

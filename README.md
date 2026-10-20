@@ -59,7 +59,7 @@ The app is available at `http://localhost:3000`.
 
 ## Account and Trading Model
 
-New site accounts receive a virtual USD 10,000 demo wallet. Demo trades use public market quotes and are recorded in the user's Supabase-backed paper-trade history. The Deriv real account is a placeholder and remains unavailable until a regulated funding and execution provider is integrated. MegaPay deposits credit only the separate app wallet described above; they do not change the Deriv balance or enable real trading.
+New site accounts receive a virtual USD 10,000 demo account. Users can also select App Wallet to fund simulated trades from their deposited USD balance; stakes are reserved at placement and simulated payouts return to App Wallet. These trades use public market quotes and are recorded in the user's Supabase-backed paper-trade history. The Deriv real account is a placeholder and remains unavailable until a regulated funding and execution provider is integrated. App Wallet funds do not change the Deriv balance and cannot place real trades.
 
 Demo trades use the editable duration selected for that trade (minimum 15 seconds); tick-duration contracts are not offered. Each trade stores its own `duration_seconds` and expiry in Supabase, so changing the duration for a later trade does not alter existing trades. At settlement, a winning trade credits the quoted gross payout (including the returned stake); a losing trade receives no payout and its stake remains deducted.
 
