@@ -406,8 +406,11 @@ export function Header({
                   </Link>
                 )}
                 <Link
-                  href="/wallet"
-                  onClick={() => setAccountSwitcherOpen(false)}
+                  href={pathname === '/reports' ? '/reports' : '/wallet'}
+                  onClick={() => {
+                    void onSwitchAccount('app-wallet');
+                    setAccountSwitcherOpen(false);
+                  }}
                   className={cn(
                     'block w-full rounded-lg px-3 py-2.5 text-left',
                     isAppWalletSelected ? 'bg-muted' : 'hover:bg-muted/50'
@@ -421,7 +424,7 @@ export function Header({
                 {accounts.filter(account => account.account_type === 'demo' || account.account_type === 'app_wallet').map((account) => (
                   <Link
                     key={account.id}
-                    href="/"
+                    href={pathname === '/reports' ? '/reports' : '/'}
                     onClick={() => {
                       void onSwitchAccount(account.id);
                       setAccountSwitcherOpen(false);
