@@ -3,7 +3,8 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { FocusScope } from '@radix-ui/react-focus-scope';
-import { LogOut, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { LogOut, Menu, Wallet, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
@@ -313,6 +314,12 @@ export function Header({
           {actions}
           <LanguageSwitcher />
         </div>
+        <Button asChild variant="outline" size="sm" className="shrink-0">
+          <Link href="/wallet">
+            <Wallet className="mr-2 h-4 w-4" />
+            Wallet
+          </Link>
+        </Button>
         {isAuthenticated && activeAccount && (
           <Popover open={accountSwitcherOpen} onOpenChange={setAccountSwitcherOpen}>
             <PopoverTrigger asChild>
@@ -320,7 +327,9 @@ export function Header({
                 <div className="min-w-0 text-left">
                   <AccountLabel type={activeAccount.account_type} />
                   <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
-                    {formatBalance(activeAccount.balance, numberLocale)} {activeAccount.currency}
+                    {activeAccount.account_type === 'real'
+                      ? 'Not connected'
+                      : `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`}
                   </p>
                 </div>
                 <svg
@@ -355,10 +364,12 @@ export function Header({
                   >
                     <AccountLabel type={account.account_type} />
                     <p className="text-base font-bold text-foreground">
-                      {formatBalance(account.balance, numberLocale)} {account.currency}
+                      {account.account_type === 'real'
+                        ? 'Not connected'
+                        : `${formatBalance(account.balance, numberLocale)} ${account.currency}`}
                     </p>
                     {account.status === 'provider_required' && (
-                      <p className="text-xs text-muted-foreground">Real trading is not available yet</p>
+                      <p className="text-xs text-muted-foreground">Real account connection is not available yet</p>
                     )}
                   </button>
                 ))}
