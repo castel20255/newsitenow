@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
@@ -55,6 +56,7 @@ function isValidKenyanMobile(value: string): boolean {
 export default function WalletPage() {
   const auth = useSiteAuth();
   const logoSrc = useLogoSrc();
+  const router = useRouter();
   const [action, setAction] = useState<WalletAction>('deposit');
   const [method, setMethod] = useState<PaymentMethod>('mpesa');
   const [amountUsd, setAmountUsd] = useState('2.00');
@@ -65,6 +67,7 @@ export default function WalletPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [message, setMessage] = useState('');
   const [messageIsError, setMessageIsError] = useState(false);
   const amountNumber = Number(amountUsd);
@@ -179,7 +182,7 @@ export default function WalletPage() {
     }
   };
 
-  const checkDeposit = async (target: WalletDeposit) => {
+  const checkDeposit = useCallback(async (target: WalletDeposit) => {
     setIsChecking(true);
     setMessage('');
     setMessageIsError(false);
@@ -196,7 +199,9 @@ export default function WalletPage() {
         nextStatus = 'completed';
         nextCreditedUsd = Number(data.creditedUsd ?? 0);
         if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
-        setMessage('Payment confirmed and credited to your app wallet.');
+        setMessage('Payment confirmed and App Wallet credited. Opening the trading workspace.');
+        setIsRedirecting(true);
+        window.setTimeout(() => router.push('/'), 1200);
       } else if (data.status === 'failed' || data.status === 'expired') {
         nextStatus = data.status;
         setMessage(data.status === 'expired' ? 'This payment request expired. Start a new deposit to try again.' : 'The payment was not completed. Start a new deposit to try again.');
@@ -213,7 +218,20 @@ export default function WalletPage() {
     } finally {
       setIsChecking(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    if (
+      !deposit ||
+      deposit.status !== 'pending' ||
+      isStarting ||
+      isChecking ||
+      Date.now() - new Date(deposit.created_at).getTime() >= 60_000
+    ) return;
+
+    const timeout = window.setTimeout(() => void checkDeposit(deposit), 3_000);
+    return () => window.clearTimeout(timeout);
+  }, [deposit, isStarting, isChecking, checkDeposit]);
 
   const header = (
     <Header
@@ -230,9 +248,34 @@ export default function WalletPage() {
     />
   );
 
+  const isProcessingPayment = isStarting || isChecking || isRedirecting || (
+    deposit?.status === 'pending' && Date.now() - new Date(deposit.created_at).getTime() < 60_000
+  );
+
   return (
     <main className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
       {header}
+      {isProcessingPayment && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-background/60 px-4 backdrop-blur-[2px]">
+          <div className="flex w-full max-w-sm items-center gap-4 border border-border bg-background p-5 shadow-xl" role="status" aria-live="polite">
+            {isRedirecting ? (
+              <CircleCheck className="h-7 w-7 shrink-0 text-emerald-600" />
+            ) : (
+              <LoaderCircle className="h-7 w-7 shrink-0 animate-spin text-primary" />
+            )}
+            <div>
+              <p className="font-semibold">{isRedirecting ? 'Payment confirmed' : 'Processing payment'}</p>
+              <p className="mt-1 text-sm leading-5 text-muted-foreground">
+                {isRedirecting
+                  ? 'App Wallet has been updated. Opening the trading workspace.'
+                  : isStarting
+                    ? 'Sending the STK request. Approve it on your phone.'
+                    : 'Waiting for MegaPay to confirm your payment.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
