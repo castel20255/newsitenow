@@ -30,6 +30,17 @@ interface WalletDeposit {
   credited_usd?: number | string | null;
 }
 
+interface WalletWithdrawal {
+  id: string;
+  full_name: string;
+  amount_usd: number | string;
+  msisdn: string;
+  status: 'pending' | 'approved' | 'rejected' | 'paid';
+  admin_note?: string | null;
+  payout_reference?: string | null;
+  created_at: string;
+}
+
 const USD_TO_KES = 131.21;
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
@@ -61,11 +72,16 @@ export default function WalletPage() {
   const [method, setMethod] = useState<PaymentMethod>('mpesa');
   const [amountUsd, setAmountUsd] = useState('2.00');
   const [msisdn, setMsisdn] = useState('');
+  const [withdrawalName, setWithdrawalName] = useState('');
+  const [withdrawalMsisdn, setWithdrawalMsisdn] = useState('');
+  const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
   const [deposit, setDeposit] = useState<WalletDeposit | null>(null);
   const [deposits, setDeposits] = useState<WalletDeposit[]>([]);
+  const [withdrawals, setWithdrawals] = useState<WalletWithdrawal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
+  const [isSubmittingWithdrawal, setIsSubmittingWithdrawal] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [message, setMessage] = useState('');
@@ -97,6 +113,7 @@ export default function WalletPage() {
             : [];
         setDeposits(recentDeposits);
         setDeposit(recentDeposits[0] ?? null);
+        setWithdrawals(Array.isArray(data.withdrawals) ? data.withdrawals.filter(isRecord) as unknown as WalletWithdrawal[] : []);
       })
       .catch(error => {
         if (!cancelled) {
@@ -116,8 +133,10 @@ export default function WalletPage() {
   useEffect(() => {
     if (auth.profile?.phone_e164) {
       setMsisdn(current => current || auth.profile!.phone_e164);
+      setWithdrawalMsisdn(current => current || auth.profile!.phone_e164);
     }
-  }, [auth.profile?.phone_e164]);
+    if (auth.profile?.full_name) setWithdrawalName(current => current || auth.profile!.full_name);
+  }, [auth.profile?.phone_e164, auth.profile?.full_name]);
 
   useEffect(() => {
     if (!deposit || !['pending', 'initiating'].includes(deposit.status)) return;
@@ -179,6 +198,40 @@ export default function WalletPage() {
       setMessageIsError(true);
     } finally {
       setIsStarting(false);
+    }
+  };
+
+  const requestWithdrawal = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setMessage('');
+    setMessageIsError(false);
+    setIsSubmittingWithdrawal(true);
+    try {
+      const response = await fetch('/api/wallet/withdrawals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName: withdrawalName, amountUsd: withdrawalAmount, msisdn: withdrawalMsisdn }),
+      });
+      const data: unknown = await response.json().catch(() => null);
+      if (!response.ok || !isRecord(data)) {
+        throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not submit withdrawal request.');
+      }
+      setBalanceUsd(Number(data.balanceUsd));
+      setWithdrawals(current => [{
+        id: String(data.withdrawalId),
+        full_name: withdrawalName.trim(),
+        amount_usd: Number(withdrawalAmount),
+        msisdn: withdrawalMsisdn,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      }, ...current]);
+      setWithdrawalAmount('');
+      setMessage('Withdrawal request submitted. The amount is reserved while the admin reviews it.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not submit withdrawal request.');
+      setMessageIsError(true);
+    } finally {
+      setIsSubmittingWithdrawal(false);
     }
   };
 
@@ -426,12 +479,84 @@ export default function WalletPage() {
                   </form>
                 </>
               ) : (
-                <div className="max-w-lg border-l-2 border-amber-500 py-1 pl-4">
-                  <h2 id="wallet-action-heading" className="text-lg font-semibold">Withdrawals are not available yet</h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    MegaPay’s published API documents M-Pesa deposit initiation and transaction status only. Its wallet section says wallet-operation APIs are not yet available, so this app cannot safely submit withdrawals through MegaPay.
+                <>
+                  <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Request an M-Pesa withdrawal</h2>
+                  <p className="mb-5 max-w-lg text-sm leading-6 text-muted-foreground">
+                    Requests are reviewed by an administrator and paid manually. The requested amount is reserved from your available App Wallet balance. You’ll see a payout reference when it is marked paid.
                   </p>
-                </div>
+                  <form className="max-w-sm space-y-4" onSubmit={requestWithdrawal}>
+                    <div>
+                      <label htmlFor="withdrawal-full-name" className="mb-2 block text-sm font-medium">Full names</label>
+                      <input
+                        id="withdrawal-full-name"
+                        type="text"
+                        autoComplete="name"
+                        minLength={2}
+                        maxLength={120}
+                        required
+                        value={withdrawalName}
+                        onChange={event => setWithdrawalName(event.target.value)}
+                        className="h-11 w-full border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="withdrawal-amount" className="mb-2 block text-sm font-medium">Amount (USD)</label>
+                      <input
+                        id="withdrawal-amount"
+                        type="number"
+                        min="0.01"
+                        step="0.01"
+                        inputMode="decimal"
+                        required
+                        value={withdrawalAmount}
+                        onChange={event => setWithdrawalAmount(event.target.value)}
+                        className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="withdrawal-msisdn" className="mb-2 block text-sm font-medium">M-Pesa phone number</label>
+                      <input
+                        id="withdrawal-msisdn"
+                        type="tel"
+                        autoComplete="tel"
+                        inputMode="tel"
+                        required
+                        value={withdrawalMsisdn}
+                        onChange={event => setWithdrawalMsisdn(event.target.value)}
+                        placeholder="0712 345 678"
+                        className="h-11 w-full border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmittingWithdrawal || isLoading || auth.authState !== 'authenticated'}
+                      className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
+                    >
+                      {isSubmittingWithdrawal && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                      {isSubmittingWithdrawal ? 'Submitting…' : 'Submit withdrawal'}
+                    </button>
+                  </form>
+                  {withdrawals.length > 0 && (
+                    <div className="mt-8 max-w-xl border-t border-border pt-5">
+                      <h3 className="text-sm font-semibold">Your withdrawal requests</h3>
+                      <ul className="mt-3 space-y-3">
+                        {withdrawals.map(item => (
+                          <li key={item.id} className="flex items-start justify-between gap-4 border-b border-border pb-3 text-sm">
+                            <span>
+                              <span className="block font-medium">{money.format(Number(item.amount_usd))} · {item.msisdn}</span>
+                              <span className="mt-1 block capitalize text-muted-foreground">{item.status}</span>
+                              {item.payout_reference && <span className="mt-1 block text-xs text-muted-foreground">Payout ref: {item.payout_reference}</span>}
+                              {item.admin_note && <span className="mt-1 block text-xs text-muted-foreground">Note: {item.admin_note}</span>}
+                            </span>
+                            <time className="shrink-0 text-xs text-muted-foreground" dateTime={item.created_at}>
+                              {new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(item.created_at))}
+                            </time>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
               )}
 
               {message && (

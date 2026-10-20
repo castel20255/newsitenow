@@ -53,7 +53,7 @@ export async function GET() {
     if (!user) return Response.json({ error: 'Sign in to access your wallet.' }, { status: 401 });
 
     const admin = createSupabaseAdminClient();
-    const [walletResult, depositResult] = await Promise.all([
+    const [walletResult, depositResult, withdrawalResult] = await Promise.all([
       admin.from('app_wallets').select('balance_usd').eq('user_id', user.id).maybeSingle(),
       admin
         .from('wallet_deposits')
@@ -61,9 +61,15 @@ export async function GET() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(10),
+      admin
+        .from('wallet_withdrawals')
+        .select('id, full_name, amount_usd, msisdn, status, admin_note, payout_reference, created_at, reviewed_at, paid_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20),
     ]);
 
-    if (walletResult.error || depositResult.error) {
+    if (walletResult.error || depositResult.error || withdrawalResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     }
 
@@ -72,6 +78,7 @@ export async function GET() {
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
       latestDeposit: deposits[0] ?? null,
       deposits,
+      withdrawals: withdrawalResult.data ?? [],
     });
   } catch {
     return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });

@@ -56,6 +56,7 @@ interface SiteAuthContextValue {
   user: User | null;
   profile: SiteProfile | null;
   accounts: SiteTradingAccount[];
+  isAdmin: boolean;
   paperTrades: SitePaperTrade[];
   digitTrades: SitePaperTrade[];
   activeAccount: SiteTradingAccount | null;
@@ -84,6 +85,7 @@ export function SiteAuthProvider({
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<SiteProfile | null>(null);
   const [accounts, setAccounts] = useState<SiteTradingAccount[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [paperTrades, setPaperTrades] = useState<SitePaperTrade[]>([]);
   const [digitTrades, setDigitTrades] = useState<SitePaperTrade[]>([]);
   const [activeAccountId, setActiveAccountId] = useState<string | null>(null);
@@ -97,6 +99,7 @@ export function SiteAuthProvider({
       setUser(null);
       setProfile(null);
       setAccounts([]);
+      setIsAdmin(false);
       setPaperTrades([]);
       setDigitTrades([]);
       return;
@@ -108,6 +111,7 @@ export function SiteAuthProvider({
         setUser(null);
         setProfile(null);
         setAccounts([]);
+        setIsAdmin(false);
         setPaperTrades([]);
         setDigitTrades([]);
         setActiveAccountId(null);
@@ -115,11 +119,12 @@ export function SiteAuthProvider({
         return;
       }
 
-      const [profileResult, accountsResult, tradesResult, digitTradesResult] = await Promise.all([
+      const [profileResult, accountsResult, tradesResult, digitTradesResult, adminResult] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', userData.user.id).maybeSingle(),
         supabase.from('trading_accounts').select('*').eq('user_id', userData.user.id),
         supabase.from('paper_trades').select('*').eq('user_id', userData.user.id).order('created_at', { ascending: false }).limit(100),
         supabase.from('digit_market_trades').select('*').eq('user_id', userData.user.id).order('created_at', { ascending: false }).limit(100),
+        supabase.from('site_admins').select('email').eq('email', userData.user.email?.toLowerCase() ?? '').maybeSingle(),
       ]);
       if (profileResult.error || accountsResult.error || tradesResult.error || digitTradesResult.error || !profileResult.data) {
         setAuthState('error');
@@ -147,6 +152,7 @@ export function SiteAuthProvider({
         settled_at: (trade as Record<string, unknown>).settled_at ? String((trade as Record<string, unknown>).settled_at) : null,
       })) as SitePaperTrade[];
       setUser(userData.user);
+      setIsAdmin(Boolean(adminResult.data) && !adminResult.error);
       setProfile(profileResult.data as unknown as SiteProfile);
       setAccounts(nextAccounts);
       setPaperTrades(nextTrades);
@@ -178,6 +184,7 @@ export function SiteAuthProvider({
         setUser(null);
         setProfile(null);
         setAccounts([]);
+        setIsAdmin(false);
         setPaperTrades([]);
         setDigitTrades([]);
         setActiveAccountId(null);
@@ -208,6 +215,7 @@ export function SiteAuthProvider({
       setUser(null);
       setProfile(null);
       setAccounts([]);
+      setIsAdmin(false);
       setPaperTrades([]);
       setDigitTrades([]);
       setActiveAccountId(null);
@@ -220,6 +228,7 @@ export function SiteAuthProvider({
     user,
     profile,
     accounts,
+    isAdmin,
     paperTrades,
     digitTrades,
     activeAccount,
@@ -236,6 +245,7 @@ export function SiteAuthProvider({
     user,
     profile,
     accounts,
+    isAdmin,
     paperTrades,
     digitTrades,
     activeAccount,
