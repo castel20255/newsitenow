@@ -153,9 +153,8 @@ export function SiteAuthProvider({
       setDigitTrades(nextDigitTrades);
       setActiveAccountId(current => {
         const preferred = current ?? window.localStorage.getItem(ACTIVE_ACCOUNT_KEY);
-        const selected = nextAccounts.find(account => account.id === preferred)
+        const selected = nextAccounts.find(account => account.id === preferred && account.account_type === 'demo')
           ?? nextAccounts.find(account => account.account_type === 'demo')
-          ?? nextAccounts[0]
           ?? null;
         if (selected) window.localStorage.setItem(ACTIVE_ACCOUNT_KEY, selected.id);
         return selected?.id ?? null;
@@ -197,9 +196,10 @@ export function SiteAuthProvider({
   }, []);
   const closeAuth = useCallback(() => setAuthDialogOpen(false), []);
   const switchAccount = useCallback((accountId: string) => {
+    if (!accounts.some(account => account.id === accountId && account.account_type === 'demo')) return;
     setActiveAccountId(accountId);
     window.localStorage.setItem(ACTIVE_ACCOUNT_KEY, accountId);
-  }, []);
+  }, [accounts]);
   const logout = useCallback(async () => {
     try {
       await signOutAccount();

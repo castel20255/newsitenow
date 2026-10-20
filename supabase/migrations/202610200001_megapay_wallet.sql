@@ -80,7 +80,7 @@ begin
     return;
   end if;
 
-  if v_deposit.status <> 'pending' then
+  if v_deposit.status not in ('pending', 'expired') then
     raise exception 'Wallet deposit is not pending';
   end if;
 

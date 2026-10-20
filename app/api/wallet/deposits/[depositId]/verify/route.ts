@@ -25,7 +25,7 @@ export async function POST(
     const admin = createSupabaseAdminClient();
     const { data: deposit, error: depositError } = await admin
       .from('wallet_deposits')
-      .select('id, amount_kes, msisdn, reference, provider_request_id, status')
+      .select('id, amount_kes, msisdn, reference, provider_request_id, status, created_at')
       .eq('id', depositId)
       .eq('user_id', auth.user.id)
       .maybeSingle();
@@ -41,7 +41,7 @@ export async function POST(
         .maybeSingle();
       return Response.json({ status: 'completed', balanceUsd: Number(wallet?.balance_usd ?? 0) });
     }
-    if (deposit.status !== 'pending' || !deposit.provider_request_id) {
+    if (!['pending', 'expired'].includes(deposit.status) || !deposit.provider_request_id) {
       return Response.json({ status: deposit.status });
     }
 
@@ -77,11 +77,21 @@ export async function POST(
           .from('wallet_deposits')
           .update({ status: 'failed', updated_at: new Date().toISOString() })
           .eq('id', deposit.id)
-          .eq('status', 'pending');
+          .in('status', ['pending', 'expired']);
         if (error) return Response.json({ error: 'Could not update the deposit status.' }, { status: 503 });
         return Response.json({ status: 'failed' });
       }
-      return Response.json({ status: 'pending' });
+      const timedOut = Date.now() - new Date(deposit.created_at).getTime() >= 60_000;
+      if (timedOut && deposit.status === 'pending') {
+        const { error } = await admin
+          .from('wallet_deposits')
+          .update({ status: 'expired', updated_at: new Date().toISOString() })
+          .eq('id', deposit.id)
+          .eq('status', 'pending');
+        if (error) return Response.json({ error: 'Could not update the deposit status.' }, { status: 503 });
+        return Response.json({ status: 'expired' });
+      }
+      return Response.json({ status: timedOut ? 'expired' : 'pending' });
     }
 
     const transactionId = providerResponse.TransactionID;
