@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import Link from 'next/link';
@@ -263,10 +263,37 @@ export function Header({
   const logoLetter = resolvedName.charAt(0).toUpperCase() || 'D';
   const [accountSwitcherOpen, setAccountSwitcherOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [appWalletBalance, setAppWalletBalance] = useState<number | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const [menuTop, setMenuTop] = useState(0);
   const isAuthenticated = authState === 'authenticated';
   const isAuthenticating = authState === 'loading';
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setAppWalletBalance(null);
+      return;
+    }
+
+    let cancelled = false;
+    fetch('/api/wallet', { cache: 'no-store' })
+      .then(async response => {
+        const data: unknown = await response.json().catch(() => null);
+        if (!response.ok || typeof data !== 'object' || data === null || !('balanceUsd' in data)) {
+          throw new Error('Wallet unavailable');
+        }
+        const balance = Number(data.balanceUsd);
+        if (!Number.isFinite(balance)) throw new Error('Invalid wallet balance');
+        if (!cancelled) setAppWalletBalance(balance);
+      })
+      .catch(() => {
+        if (!cancelled) setAppWalletBalance(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated]);
 
   useLayoutEffect(() => {
     if (!mobileMenuOpen) return;
@@ -320,16 +347,14 @@ export function Header({
             Wallet
           </Link>
         </Button>
-        {isAuthenticated && activeAccount && (
+        {isAuthenticated && (
           <Popover open={accountSwitcherOpen} onOpenChange={setAccountSwitcherOpen}>
             <PopoverTrigger asChild>
               <button className="flex min-w-0 items-center gap-2 rounded-lg border border-border px-3 hover:bg-muted/50 transition-colors">
                 <div className="min-w-0 text-left">
-                  <AccountLabel type={activeAccount.account_type} />
+                  <span className="text-sm font-medium whitespace-nowrap truncate text-emerald-600">App Wallet</span>
                   <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
-                    {activeAccount.account_type === 'real'
-                      ? 'Not connected'
-                      : `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`}
+                    {appWalletBalance === null ? '—' : `${formatBalance(appWalletBalance, numberLocale)} USD`}
                   </p>
                 </div>
                 <svg
@@ -348,7 +373,17 @@ export function Header({
             </PopoverTrigger>
             <PopoverContent align="end" className="z-[100] w-64 p-2">
               <div className="space-y-1">
-                {accounts.map((account) => (
+                <Link
+                  href="/wallet"
+                  onClick={() => setAccountSwitcherOpen(false)}
+                  className="block w-full rounded-lg bg-muted px-3 py-2.5 text-left"
+                >
+                  <span className="text-sm font-medium text-emerald-600">App Wallet</span>
+                  <p className="text-base font-bold text-foreground">
+                    {appWalletBalance === null ? 'Balance unavailable' : `${formatBalance(appWalletBalance, numberLocale)} USD`}
+                  </p>
+                </Link>
+                {accounts.filter(account => account.account_type === 'demo').map((account) => (
                   <button
                     key={account.id}
                     onClick={() => {
@@ -357,7 +392,7 @@ export function Header({
                     }}
                     className={cn(
                       'w-full text-left rounded-lg px-3 py-2.5 transition-colors',
-                      account.id === activeAccount.id
+                      account.id === activeAccount?.id
                         ? 'bg-muted'
                         : 'hover:bg-muted/50'
                     )}
@@ -368,9 +403,6 @@ export function Header({
                         ? 'Not connected'
                         : `${formatBalance(account.balance, numberLocale)} ${account.currency}`}
                     </p>
-                    {account.status === 'provider_required' && (
-                      <p className="text-xs text-muted-foreground">Real account connection is not available yet</p>
-                    )}
                   </button>
                 ))}
               </div>
