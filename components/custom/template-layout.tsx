@@ -3,6 +3,7 @@ import { DerivWSProvider } from './deriv-ws-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { SiteAuthDialog } from './site-auth-dialog';
 import { SiteAuthProvider } from './site-auth-provider';
+import { AdminRouteRedirect } from './admin-route-redirect';
 import ViewportScaler from './ViewportScaler';
 import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
 
@@ -37,6 +38,7 @@ export function TemplateLayout({
   return (
     <Providers>
       <SiteAuthProvider supabaseConfig={supabaseConfig}>
+        <AdminRouteRedirect />
         <DerivWSProvider>
           <ViewportScaler>{children}</ViewportScaler>
         </DerivWSProvider>
