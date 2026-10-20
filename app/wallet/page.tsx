@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
   Bitcoin,
+  CircleCheck,
   Landmark,
+  LoaderCircle,
   Smartphone,
 } from 'lucide-react';
 import { Header } from '@/components/custom/header';
@@ -16,28 +18,156 @@ import { cn } from '@/lib/utils';
 
 type WalletAction = 'deposit' | 'withdraw';
 type PaymentMethod = 'bank-agent' | 'crypto' | 'mpesa';
+type DepositStatus = 'initiating' | 'pending' | 'completed' | 'failed' | 'expired';
+
+interface WalletDeposit {
+  id: string;
+  amount_usd: number | string;
+  amount_kes: number;
+  status: DepositStatus;
+  credited_usd?: number | string | null;
+}
+
+const USD_TO_KES = 131.21;
+const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
 const paymentMethods = [
-  { id: 'bank-agent', label: 'Bank Agent', description: 'Local bank agent', Icon: Landmark },
-  { id: 'crypto', label: 'Crypto', description: 'Digital assets', Icon: Bitcoin },
-  { id: 'mpesa', label: 'M-Pesa', description: 'Mobile money', Icon: Smartphone },
+  { id: 'bank-agent', label: 'Bank Agent', description: 'Not available through MegaPay', Icon: Landmark },
+  { id: 'crypto', label: 'Crypto', description: 'Not available through MegaPay', Icon: Bitcoin },
+  { id: 'mpesa', label: 'M-Pesa', description: 'STK push', Icon: Smartphone },
 ] as const;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function getKesAmount(amountUsd: string): number {
+  const amount = Number(amountUsd);
+  return Number.isFinite(amount) && amount > 0 ? Math.ceil(amount * USD_TO_KES - 0.0000001) : 0;
+}
 
 export default function WalletPage() {
   const auth = useSiteAuth();
   const logoSrc = useLogoSrc();
   const [action, setAction] = useState<WalletAction>('deposit');
-  const [method, setMethod] = useState<PaymentMethod>('bank-agent');
-  const [amount, setAmount] = useState('');
-  const [previewNotice, setPreviewNotice] = useState('');
+  const [method, setMethod] = useState<PaymentMethod>('mpesa');
+  const [amountUsd, setAmountUsd] = useState('2.00');
+  const [msisdn, setMsisdn] = useState('');
+  const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
+  const [deposit, setDeposit] = useState<WalletDeposit | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isStarting, setIsStarting] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageIsError, setMessageIsError] = useState(false);
 
-  const submitPreview = () => {
-    if (!Number.isFinite(Number(amount)) || Number(amount) <= 0) {
-      setPreviewNotice('Enter an amount greater than zero to preview a request.');
+  useEffect(() => {
+    if (auth.authState !== 'authenticated') {
+      setIsLoading(false);
       return;
     }
 
-    setPreviewNotice('Preview only. No payment or withdrawal was created or sent.');
+    setIsLoading(true);
+    let cancelled = false;
+    fetch('/api/wallet', { cache: 'no-store' })
+      .then(async response => {
+        const data: unknown = await response.json().catch(() => null);
+        if (!response.ok || !isRecord(data)) throw new Error('Could not load wallet details.');
+        if (cancelled) return;
+        setBalanceUsd(Number(data.balanceUsd ?? 0));
+        if (isRecord(data.latestDeposit)) setDeposit(data.latestDeposit as unknown as WalletDeposit);
+      })
+      .catch(error => {
+        if (!cancelled) {
+          setMessage(error instanceof Error ? error.message : 'Could not load wallet details.');
+          setMessageIsError(true);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [auth.authState]);
+
+  useEffect(() => {
+    if (auth.profile?.phone_e164) {
+      setMsisdn(current => current || auth.profile!.phone_e164);
+    }
+  }, [auth.profile?.phone_e164]);
+
+  const startDeposit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setMessage('');
+    setMessageIsError(false);
+    if (auth.authState !== 'authenticated') {
+      auth.openAuth('login');
+      return;
+    }
+    if (method !== 'mpesa') {
+      setMessage('Choose M-Pesa to continue.');
+      setMessageIsError(true);
+      return;
+    }
+
+    setIsStarting(true);
+    try {
+      const response = await fetch('/api/wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amountUsd, msisdn }),
+      });
+      const data: unknown = await response.json().catch(() => null);
+      if (!response.ok || !isRecord(data)) {
+        throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not start the M-Pesa request.');
+      }
+
+      setDeposit({
+        id: String(data.depositId),
+        amount_usd: Number(data.amountUsd),
+        amount_kes: Number(data.amountKes),
+        status: 'pending',
+      });
+      setMessage('STK push sent. Approve the KES payment on your phone, then check its status here.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not start the M-Pesa request.');
+      setMessageIsError(true);
+    } finally {
+      setIsStarting(false);
+    }
+  };
+
+  const checkDeposit = async () => {
+    if (!deposit) return;
+    setIsChecking(true);
+    setMessage('');
+    setMessageIsError(false);
+    try {
+      const response = await fetch(`/api/wallet/deposits/${deposit.id}/verify`, { method: 'POST' });
+      const data: unknown = await response.json().catch(() => null);
+      if (!response.ok || !isRecord(data)) {
+        throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not check payment status.');
+      }
+
+      if (data.status === 'completed') {
+        setDeposit({ ...deposit, status: 'completed', credited_usd: Number(data.creditedUsd ?? 0) });
+        if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
+        setMessage('Payment confirmed and credited to your app wallet.');
+      } else if (data.status === 'failed' || data.status === 'expired') {
+        setDeposit({ ...deposit, status: data.status });
+        setMessage(data.status === 'expired' ? 'This payment request expired. Start a new deposit to try again.' : 'The payment was not completed. Start a new deposit to try again.');
+        setMessageIsError(true);
+      } else {
+        setMessage('Payment is still pending. Approve the M-Pesa request, then check again.');
+      }
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not check payment status.');
+      setMessageIsError(true);
+    } finally {
+      setIsChecking(false);
+    }
   };
 
   const header = (
@@ -61,21 +191,23 @@ export default function WalletPage() {
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
             <div>
-              <p className="mb-2 text-sm font-medium text-emerald-600">Account wallet</p>
+              <p className="mb-2 text-sm font-medium text-emerald-600">App wallet</p>
               <h1 className="text-3xl font-semibold tracking-normal">Wallet</h1>
             </div>
-            <p className="border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-800 dark:text-amber-300">
-              Preview only · Payments are not connected
+            <p className="border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-medium text-emerald-800 dark:text-emerald-300">
+              Separate from your Deriv account
             </p>
           </div>
 
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
             <div>
-              <p className="text-sm text-muted-foreground">Real account balance</p>
-              <p className="mt-1 text-xl font-semibold">Not connected</p>
+              <p className="text-sm text-muted-foreground">Wallet balance</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums">
+                {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(balanceUsd ?? 0)}
+              </p>
             </div>
             <p className="max-w-lg text-sm leading-6 text-muted-foreground">
-              This wallet preview does not access Deriv account funds. Deposits and withdrawals are unavailable until a verified payment provider is integrated.
+              Deposits use M-Pesa in KES and are credited to this app wallet in USD at $1 = KES {USD_TO_KES.toFixed(2)}. The wallet is not connected to Deriv.
             </p>
           </div>
 
@@ -88,7 +220,7 @@ export default function WalletPage() {
                   aria-selected={action === 'deposit'}
                   onClick={() => {
                     setAction('deposit');
-                    setPreviewNotice('');
+                    setMessage('');
                   }}
                   className={cn(
                     'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium',
@@ -104,7 +236,7 @@ export default function WalletPage() {
                   aria-selected={action === 'withdraw'}
                   onClick={() => {
                     setAction('withdraw');
-                    setPreviewNotice('');
+                    setMessage('');
                   }}
                   className={cn(
                     'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium',
@@ -116,93 +248,144 @@ export default function WalletPage() {
                 </button>
               </div>
 
-              <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">
-                {action === 'deposit' ? 'Choose a deposit method' : 'Choose a withdrawal method'}
-              </h2>
-              <div className="grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Payment method">
-                {paymentMethods.map(({ id, label, description, Icon }) => (
-                  <button
-                    key={id}
-                    type="button"
-                    role="radio"
-                    aria-checked={method === id}
-                    onClick={() => {
-                      setMethod(id);
-                      setPreviewNotice('');
-                    }}
-                    className={cn(
-                      'flex min-h-28 flex-col items-start justify-between border p-4 text-left transition-colors',
-                      method === id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:bg-muted/50'
-                    )}
-                  >
-                    <Icon className="h-5 w-5 text-foreground" />
-                    <span>
-                      <span className="block text-sm font-semibold">
-                        {action === 'withdraw' ? 'Withdraw with ' : 'Deposit with '}
-                        {id === 'crypto' ? 'Crypto' : id === 'mpesa' ? 'M-Pesa' : 'Bank Agent'}
-                      </span>
-                      <span className="mt-1 block text-xs text-muted-foreground">{description}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
+              {action === 'deposit' ? (
+                <>
+                  <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Choose a deposit method</h2>
+                  <div className="grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Deposit method">
+                    {paymentMethods.map(({ id, label, description, Icon }) => {
+                      const available = id === 'mpesa';
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          role="radio"
+                          aria-checked={method === id}
+                          disabled={!available}
+                          onClick={() => setMethod(id)}
+                          className={cn(
+                            'flex min-h-28 flex-col items-start justify-between border p-4 text-left transition-colors',
+                            method === id ? 'border-primary bg-primary/5' : 'border-border',
+                            available ? 'hover:bg-muted/50' : 'cursor-not-allowed opacity-55'
+                          )}
+                        >
+                          <Icon className="h-5 w-5 text-foreground" />
+                          <span>
+                            <span className="block text-sm font-semibold">{label}</span>
+                            <span className="mt-1 block text-xs text-muted-foreground">{description}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-              <div className="mt-7 max-w-sm">
-                <label htmlFor="wallet-amount" className="mb-2 block text-sm font-medium">
-                  Amount (USD)
-                </label>
-                <input
-                  id="wallet-amount"
-                  type="number"
-                  inputMode="decimal"
-                  min="0.01"
-                  step="0.01"
-                  value={amount}
-                  onChange={event => {
-                    setAmount(event.target.value);
-                    setPreviewNotice('');
-                  }}
-                  placeholder="0.00"
-                  className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                />
-                <button
-                  type="button"
-                  onClick={submitPreview}
-                  className="mt-4 h-11 w-full bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 sm:w-auto sm:min-w-48"
-                >
-                  Preview {action === 'deposit' ? 'deposit' : 'withdrawal'} request
-                </button>
-                {previewNotice && (
-                  <p className="mt-3 text-sm text-muted-foreground" role="status" aria-live="polite">
-                    {previewNotice}
+                  <form className="mt-7 max-w-sm space-y-4" onSubmit={startDeposit}>
+                    <div>
+                      <label htmlFor="wallet-amount" className="mb-2 block text-sm font-medium">Deposit amount (USD)</label>
+                      <input
+                        id="wallet-amount"
+                        type="number"
+                        inputMode="decimal"
+                        min="2.00"
+                        step="0.01"
+                        required
+                        value={amountUsd}
+                        onChange={event => setAmountUsd(event.target.value)}
+                        className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                      <p className="mt-2 text-xs text-muted-foreground">Minimum $2.00. M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
+                    </div>
+                    <div>
+                      <label htmlFor="wallet-msisdn" className="mb-2 block text-sm font-medium">Kenyan M-Pesa phone number</label>
+                      <input
+                        id="wallet-msisdn"
+                        type="tel"
+                        autoComplete="tel"
+                        inputMode="tel"
+                        required
+                        value={msisdn}
+                        onChange={event => setMsisdn(event.target.value)}
+                        placeholder="0712 345 678"
+                        className="h-11 w-full border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isStarting || isLoading || deposit?.status === 'pending' || deposit?.status === 'initiating'}
+                      className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
+                    >
+                      {isStarting && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                      {isStarting ? 'Sending STK push…' : 'Pay with M-Pesa'}
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <div className="max-w-lg border-l-2 border-amber-500 py-1 pl-4">
+                  <h2 id="wallet-action-heading" className="text-lg font-semibold">Withdrawals are not available yet</h2>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    MegaPay’s published API documents M-Pesa deposit initiation and transaction status only. Its wallet section says wallet-operation APIs are not yet available, so this app cannot safely submit withdrawals through MegaPay.
                   </p>
-                )}
-              </div>
+                </div>
+              )}
+
+              {message && (
+                <p className={cn('mt-4 max-w-xl text-sm leading-6', messageIsError ? 'text-destructive' : 'text-muted-foreground')} role="status" aria-live="polite">
+                  {message}
+                </p>
+              )}
+              {auth.authState !== 'authenticated' && action === 'deposit' && (
+                <p className="mt-4 text-sm text-muted-foreground">Sign in to start a deposit and view your wallet balance.</p>
+              )}
             </section>
 
             <aside className="border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-              <h2 className="text-base font-semibold">{action === 'deposit' ? 'Deposit' : 'Withdrawal'} details</h2>
-              <dl className="mt-5 space-y-4 text-sm">
+              <h2 className="text-base font-semibold">{action === 'deposit' ? 'Deposit details' : 'Withdrawal details'}</h2>
+              {action === 'deposit' ? <dl className="mt-5 space-y-4 text-sm">
                 <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">Method</dt>
-                  <dd className="font-medium text-right">
-                    {paymentMethods.find(item => item.id === method)?.label}
-                  </dd>
+                  <dt className="text-muted-foreground">Exchange rate</dt>
+                  <dd className="font-medium">$1 = KES {USD_TO_KES.toFixed(2)}</dd>
                 </div>
                 <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">Amount</dt>
-                  <dd className="font-medium tabular-nums">{amount ? `${amount} USD` : '—'}</dd>
+                  <dt className="text-muted-foreground">KES request</dt>
+                  <dd className="font-medium tabular-nums">{getKesAmount(amountUsd) ? `KES ${getKesAmount(amountUsd).toLocaleString('en-KE')}` : '—'}</dd>
                 </div>
-                <div className="flex justify-between gap-4 pb-3">
+                <div className="flex justify-between gap-4 border-b border-border pb-3">
                   <dt className="text-muted-foreground">Status</dt>
-                  <dd className="font-medium">Preview only</dd>
+                  <dd className="font-medium capitalize">{deposit?.status ?? 'No deposit'}</dd>
                 </div>
-              </dl>
-              <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
-                No money is moved and no transaction is recorded from this page.
-              </p>
+                {deposit?.status === 'completed' && (
+                  <div className="flex justify-between gap-4 pb-3">
+                    <dt className="text-muted-foreground">Credited</dt>
+                    <dd className="font-medium tabular-nums">{money.format(Number(deposit.credited_usd ?? 0))}</dd>
+                  </div>
+                )}
+              </dl> : (
+                <p className="mt-4 text-sm leading-6 text-muted-foreground">
+                  Withdrawals remain disabled until MegaPay documents a payout API and the app has a verified payout workflow.
+                </p>
+              )}
+
+              {action === 'deposit' && deposit?.status === 'pending' && (
+                <button
+                  type="button"
+                  onClick={checkDeposit}
+                  disabled={isChecking}
+                  className="mt-5 flex h-10 w-full items-center justify-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50"
+                >
+                  {isChecking ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <CircleCheck className="h-4 w-4" />}
+                  {isChecking ? 'Checking MegaPay…' : 'Check payment status'}
+                </button>
+              )}
+
+              {action === 'deposit' && (
+                <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
+                  Wallet credits are posted only after MegaPay’s transaction status confirms a completed payment for the requested KES amount.
+                </p>
+              )}
+              {action === 'deposit' && deposit?.status === 'initiating' && (
+                <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
+                  The provider response is still being reconciled. Do not start another deposit; contact support before retrying to avoid a duplicate charge.
+                </p>
+              )}
             </aside>
           </div>
         </div>
