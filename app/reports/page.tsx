@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { useSiteAuth, type SitePaperTrade } from '@/components/custom/site-auth-
 import { useDemoTradeSettlement } from '@/hooks/use-demo-trade-settlement';
 
 type TradeFilter = 'all' | 'open' | 'settled';
+type TradeAccountFilter = 'demo' | 'app_wallet';
 
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
@@ -69,8 +70,18 @@ export default function ReportsPage() {
     refresh: auth.refresh,
   });
   const [filter, setFilter] = useState<TradeFilter>('all');
+  const [accountFilter, setAccountFilter] = useState<TradeAccountFilter>(
+    auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo'
+  );
+  const activeAccountType = auth.activeAccount?.account_type;
+  useEffect(() => {
+    if (activeAccountType === 'demo' || activeAccountType === 'app_wallet') {
+      setAccountFilter(activeAccountType);
+    }
+  }, [activeAccountType]);
   const combinedTrades = [...auth.paperTrades, ...auth.digitTrades].sort((a, b) => new Date(b.created_at).valueOf() - new Date(a.created_at).valueOf());
-  const visibleTrades = combinedTrades.filter(trade =>
+  const accountTrades = combinedTrades.filter(trade => (trade.funding_source ?? 'demo') === accountFilter);
+  const visibleTrades = accountTrades.filter(trade =>
     filter === 'all' || (filter === 'open' ? trade.status === 'open' : trade.status !== 'open')
   );
   const header = (
@@ -116,6 +127,26 @@ export default function ReportsPage() {
           </div>
         ) : (
           <>
+            <div className="mb-3 flex border-b border-border" role="tablist" aria-label="Trading account history">
+              {([
+                ['demo', 'Demo account'],
+                ['app_wallet', 'App Wallet'],
+              ] as const).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="tab"
+                  aria-selected={accountFilter === value}
+                  onClick={() => {
+                    setAccountFilter(value);
+                    setFilter('all');
+                  }}
+                  className={`border-b-2 px-4 py-2 text-sm font-medium ${accountFilter === value ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground'}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
             <div className="mb-4 flex items-center gap-1 border-b border-border" role="tablist" aria-label="Trade filter">
               {(['all', 'open', 'settled'] as const).map(value => (
                 <button
@@ -152,7 +183,7 @@ export default function ReportsPage() {
                   {visibleTrades.length === 0 && (
                     <tr className="border-t border-border">
                       <td colSpan={9} className="px-4 py-10 text-center text-sm text-muted-foreground">
-                        No paper trades to show.
+                        No {accountFilter === 'app_wallet' ? 'App Wallet' : 'Demo account'} trades to show.
                       </td>
                     </tr>
                   )}
