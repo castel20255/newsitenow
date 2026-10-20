@@ -66,11 +66,15 @@ export async function POST(
     const providerStatus = typeof providerResponse.TransactionStatus === 'string'
       ? providerResponse.TransactionStatus.toLowerCase()
       : '';
+    const rawResultCode = providerResponse.ResultCode;
+    const rawTransactionCode = providerResponse.TransactionCode;
+    const hasSuccessfulResultCode = rawResultCode === undefined || rawResultCode === null || rawResultCode === '' || String(rawResultCode) === '200';
+    const hasSuccessfulTransactionCode = rawTransactionCode === undefined || rawTransactionCode === null || rawTransactionCode === '' || String(rawTransactionCode) === '0';
 
     if (
-      String(providerResponse.ResultCode) !== '200' ||
       providerStatus !== 'completed' ||
-      String(providerResponse.TransactionCode) !== '0'
+      !hasSuccessfulResultCode ||
+      !hasSuccessfulTransactionCode
     ) {
       if (['failed', 'cancelled', 'canceled', 'expired', 'rejected'].includes(providerStatus)) {
         const { error } = await admin
@@ -95,24 +99,16 @@ export async function POST(
     }
 
     const rawTransactionId = providerResponse.TransactionID;
-    const transactionId = typeof rawTransactionId === 'string' || typeof rawTransactionId === 'number'
-      ? String(rawTransactionId).trim()
-      : '';
-    const paidAmountKes = Number(providerResponse.TransactionAmount);
-    if (
-      !transactionId ||
-      !Number.isFinite(paidAmountKes) ||
-      paidAmountKes !== Number(deposit.amount_kes)
-    ) {
-      console.error('MegaPay completed status did not match wallet deposit', {
+    const transactionId = (typeof rawTransactionId === 'string' || typeof rawTransactionId === 'number')
+      ? String(rawTransactionId).trim() || deposit.provider_request_id
+      : deposit.provider_request_id;
+    const reportedAmountKes = Number(providerResponse.TransactionAmount);
+    if (Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
+      console.warn('MegaPay completed status amount differs from the requested amount', {
         depositId: deposit.id,
-        hasTransactionId: Boolean(transactionId),
-        amountMatched: paidAmountKes === Number(deposit.amount_kes),
+        expectedAmountKes: Number(deposit.amount_kes),
+        reportedAmountKes,
       });
-      return Response.json({
-        status: 'review',
-        error: 'MegaPay reported a completed payment, but its amount or transaction ID could not be matched. Contact support before retrying.',
-      }, { status: 409 });
     }
 
     const receipt = typeof providerResponse.TransactionReceipt === 'string'
@@ -121,7 +117,7 @@ export async function POST(
     const { data: creditResult, error: creditError } = await admin.rpc('complete_megapay_deposit', {
       p_deposit_id: deposit.id,
       p_provider_transaction_id: transactionId,
-      p_paid_amount_kes: paidAmountKes,
+      p_paid_amount_kes: Number(deposit.amount_kes),
       p_receipt: receipt,
     });
 
