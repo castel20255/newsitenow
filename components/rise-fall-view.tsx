@@ -462,7 +462,7 @@ export function RiseFallView({
           /* No-code mobile layout: a single, reorderable column of blocks. The
              chart + symbol dropdown is one block (chartSlot); controls follow
              the configured order. */
-          <div className="w-full flex-1 min-h-0 overflow-y-auto overscroll-contain">
+          <div className="w-full flex-1 min-h-0 overflow-y-auto overscroll-contain pb-20 md:pb-0">
             {isLoading ? <Skeleton className="h-[42dvh] w-full" /> : renderConfigurable(true)}
           </div>
         ) : chartHidden ? (
@@ -495,7 +495,7 @@ export function RiseFallView({
         )
       ) : (
         /* Standard layout (unchanged): 2-column chart + controls card. */
-        <div className="w-full flex-1 min-h-0 overflow-y-auto overscroll-contain lg:overflow-hidden">
+        <div className="w-full flex-1 min-h-0 overflow-y-auto overscroll-contain pb-20 md:pb-0 lg:overflow-hidden">
           <div className="rf-workspace-grid min-h-full lg:h-full lg:min-h-0">
             <div className="min-w-0 min-h-0">
               {chartBlock}
