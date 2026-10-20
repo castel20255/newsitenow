@@ -46,6 +46,11 @@ function getKesAmount(amountUsd: string): number {
   return Number.isFinite(amount) && amount > 0 ? Math.ceil(amount * USD_TO_KES - 0.0000001) : 0;
 }
 
+function isValidKenyanMobile(value: string): boolean {
+  const digits = value.replace(/\D/g, '');
+  return /^(?:254|0)?[17]\d{8}$/.test(digits);
+}
+
 export default function WalletPage() {
   const auth = useSiteAuth();
   const logoSrc = useLogoSrc();
@@ -60,6 +65,11 @@ export default function WalletPage() {
   const [isChecking, setIsChecking] = useState(false);
   const [message, setMessage] = useState('');
   const [messageIsError, setMessageIsError] = useState(false);
+  const amountNumber = Number(amountUsd);
+  const amountCents = amountNumber * 100;
+  const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= 2 && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
+  const isValidPhone = isValidKenyanMobile(msisdn);
+  const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
 
   useEffect(() => {
     if (auth.authState !== 'authenticated') {
@@ -180,6 +190,7 @@ export default function WalletPage() {
       onLogout={() => { void auth.logout(); }}
       onSwitchAccount={async accountId => auth.switchAccount(accountId)}
       logoSrc={logoSrc}
+      appWalletBalance={balanceUsd ?? undefined}
       actions={<ThemeToggle />}
     />
   );
@@ -310,12 +321,18 @@ export default function WalletPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isStarting || isLoading || deposit?.status === 'pending' || deposit?.status === 'initiating'}
+                      disabled={isStarting || isLoading || !isValidPhone || !isValidAmount || hasOpenDeposit || auth.authState !== 'authenticated'}
                       className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
                     >
                       {isStarting && <LoaderCircle className="h-4 w-4 animate-spin" />}
                       {isStarting ? 'Sending STK push…' : 'Pay with M-Pesa'}
                     </button>
+                    {!isValidPhone && (
+                      <p className="text-xs text-muted-foreground">Enter a valid Kenyan mobile number to enable M-Pesa payment.</p>
+                    )}
+                    {hasOpenDeposit && (
+                      <p className="text-xs text-muted-foreground">A deposit is already in progress. Check its status before starting another payment.</p>
+                    )}
                   </form>
                 </>
               ) : (

@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { LogOut, Menu, Wallet, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Localize } from '@deriv-com/translations';
@@ -33,6 +34,7 @@ interface HeaderProps {
   showAppName?: boolean;
   /** Optional controls rendered to the left of the login/logout button (e.g. a theme toggle). */
   actions?: React.ReactNode;
+  appWalletBalance?: number;
 }
 
 function formatBalance(balance: string | number, locale: string): string {
@@ -254,6 +256,7 @@ export function Header({
   appName,
   showAppName,
   actions,
+  appWalletBalance: appWalletBalanceOverride,
 }: HeaderProps) {
   const { currentLang, localize } = useAppTranslations();
   const numberLocale = LANGUAGE_LOCALES[currentLang];
@@ -264,6 +267,9 @@ export function Header({
   const [accountSwitcherOpen, setAccountSwitcherOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [appWalletBalance, setAppWalletBalance] = useState<number | null>(null);
+  const pathname = usePathname();
+  const isAppWalletSelected = pathname === '/wallet';
+  const displayedAppWalletBalance = appWalletBalanceOverride ?? appWalletBalance;
   const headerRef = useRef<HTMLElement>(null);
   const [menuTop, setMenuTop] = useState(0);
   const isAuthenticated = authState === 'authenticated';
@@ -352,9 +358,18 @@ export function Header({
             <PopoverTrigger asChild>
               <button className="flex min-w-0 items-center gap-2 rounded-lg border border-border px-3 hover:bg-muted/50 transition-colors">
                 <div className="min-w-0 text-left">
-                  <span className="text-sm font-medium whitespace-nowrap truncate text-emerald-600">App Wallet</span>
+                  <span className={cn(
+                    'text-sm font-medium whitespace-nowrap truncate',
+                    isAppWalletSelected ? 'text-emerald-600' : 'text-orange-500'
+                  )}>
+                    {isAppWalletSelected || !activeAccount ? 'App Wallet' : 'Demo account'}
+                  </span>
                   <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
-                    {appWalletBalance === null ? '—' : `${formatBalance(appWalletBalance, numberLocale)} USD`}
+                    {isAppWalletSelected || !activeAccount
+                      ? displayedAppWalletBalance === null
+                        ? '—'
+                        : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`
+                      : `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`}
                   </p>
                 </div>
                 <svg
@@ -376,23 +391,27 @@ export function Header({
                 <Link
                   href="/wallet"
                   onClick={() => setAccountSwitcherOpen(false)}
-                  className="block w-full rounded-lg bg-muted px-3 py-2.5 text-left"
+                  className={cn(
+                    'block w-full rounded-lg px-3 py-2.5 text-left',
+                    isAppWalletSelected ? 'bg-muted' : 'hover:bg-muted/50'
+                  )}
                 >
                   <span className="text-sm font-medium text-emerald-600">App Wallet</span>
                   <p className="text-base font-bold text-foreground">
-                    {appWalletBalance === null ? 'Balance unavailable' : `${formatBalance(appWalletBalance, numberLocale)} USD`}
+                    {displayedAppWalletBalance === null ? 'Balance unavailable' : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`}
                   </p>
                 </Link>
                 {accounts.filter(account => account.account_type === 'demo').map((account) => (
-                  <button
+                  <Link
                     key={account.id}
+                    href="/"
                     onClick={() => {
-                      onSwitchAccount(account.id);
+                      void onSwitchAccount(account.id);
                       setAccountSwitcherOpen(false);
                     }}
                     className={cn(
                       'w-full text-left rounded-lg px-3 py-2.5 transition-colors',
-                      account.id === activeAccount?.id
+                      !isAppWalletSelected && account.id === activeAccount?.id
                         ? 'bg-muted'
                         : 'hover:bg-muted/50'
                     )}
@@ -403,7 +422,7 @@ export function Header({
                         ? 'Not connected'
                         : `${formatBalance(account.balance, numberLocale)} ${account.currency}`}
                     </p>
-                  </button>
+                  </Link>
                 ))}
               </div>
             </PopoverContent>
