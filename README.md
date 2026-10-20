@@ -36,7 +36,7 @@ Add the MegaPay variables to the deployment environment and redeploy only after 
 
 ## Admin and Manual Withdrawals
 
-Apply `202610200003_admin_withdrawals.sql` after the wallet migrations, then apply `202610200004_grant_admin_user.sql` to grant admin access to the specified existing Supabase user ID. The grant migration resolves that user's email from `auth.users`; it does not create an account or set a password. The `adminsite1@gmail.com` bootstrap admin also remains authorized. Use Supabase Auth to manage account passwords and keep credentials private.
+Apply `202610200003_admin_withdrawals.sql` after the wallet migrations. Admins are managed in `public.site_admins`; no user or email is hardcoded in migrations. To grant one existing Supabase user access, resolve their email from `auth.users` using their UUID in a one-time SQL statement. This does not create an account or set a password; manage credentials in Supabase Auth.
 
 Users can request an M-Pesa withdrawal from App Wallet. The amount is reserved immediately; admin rejection restores it. Admin approval does not claim money was sent: after the manual M-Pesa transfer, the admin must enter its payout reference to mark the request paid. App Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
 
