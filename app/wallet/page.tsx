@@ -2,9 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import {
-  ArrowRight,
   ArrowDownToLine,
   ArrowUpFromLine,
   Bitcoin,
@@ -32,15 +30,15 @@ interface WalletDeposit {
   credited_usd?: number | string | null;
 }
 
-interface WalletWithdrawal {
+interface WalletActivity {
   id: string;
-  full_name: string;
-  amount_usd: number | string;
-  msisdn: string;
-  status: 'pending' | 'approved' | 'rejected' | 'paid';
-  admin_note?: string | null;
-  payout_reference?: string | null;
+  account: 'app_wallet' | 'demo';
+  description: string;
+  transaction_type: string;
+  amount: number | string;
   created_at: string;
+  status?: string;
+  deposit?: WalletDeposit;
 }
 
 const USD_TO_KES = 131.21;
@@ -79,8 +77,7 @@ export default function WalletPage() {
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
   const [deposit, setDeposit] = useState<WalletDeposit | null>(null);
-  const [deposits, setDeposits] = useState<WalletDeposit[]>([]);
-  const [withdrawals, setWithdrawals] = useState<WalletWithdrawal[]>([]);
+  const [transactions, setTransactions] = useState<WalletActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [isSubmittingWithdrawal, setIsSubmittingWithdrawal] = useState(false);
@@ -93,6 +90,10 @@ export default function WalletPage() {
   const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= 2 && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
   const isValidPhone = isValidKenyanMobile(msisdn);
   const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
+  const demoAccount = auth.accounts.find(account => account.account_type === 'demo') ?? null;
+  const activeWalletType = auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo';
+  const activeWalletName = activeWalletType === 'app_wallet' ? 'App Wallet' : 'Demo account';
+  const activeTransactions = transactions.filter(transaction => transaction.account === activeWalletType);
 
   useEffect(() => {
     if (auth.authState !== 'authenticated') {
@@ -113,9 +114,8 @@ export default function WalletPage() {
           : isRecord(data.latestDeposit)
             ? [data.latestDeposit as unknown as WalletDeposit]
             : [];
-        setDeposits(recentDeposits);
         setDeposit(recentDeposits[0] ?? null);
-        setWithdrawals(Array.isArray(data.withdrawals) ? data.withdrawals.filter(isRecord) as unknown as WalletWithdrawal[] : []);
+        setTransactions(Array.isArray(data.transactions) ? data.transactions.filter(isRecord) as unknown as WalletActivity[] : []);
       })
       .catch(error => {
         if (!cancelled) {
@@ -147,7 +147,9 @@ export default function WalletPage() {
     const expireLocally = () => {
       const expired = { ...deposit, status: 'expired' as const };
       setDeposit(current => current?.id === deposit.id ? expired : current);
-      setDeposits(current => current.map(item => item.id === deposit.id ? expired : item));
+      setTransactions(current => current.map(item => item.id === deposit.id
+        ? { ...item, status: 'expired', deposit: expired }
+        : item));
     };
 
     if (remainingMs <= 0) {
@@ -193,7 +195,16 @@ export default function WalletPage() {
         created_at: typeof data.createdAt === 'string' ? data.createdAt : new Date().toISOString(),
       };
       setDeposit(nextDeposit);
-      setDeposits(current => [nextDeposit, ...current.filter(item => item.id !== nextDeposit.id)].slice(0, 10));
+      setTransactions(current => [{
+        id: nextDeposit.id,
+        account: 'app_wallet',
+        description: 'M-Pesa deposit',
+        transaction_type: 'deposit',
+        amount: nextDeposit.amount_usd,
+        created_at: nextDeposit.created_at,
+        status: nextDeposit.status,
+        deposit: nextDeposit,
+      }, ...current.filter(item => item.id !== nextDeposit.id)]);
       setMessage('STK push sent. Approve the KES payment on your phone, then check its status here.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not start the M-Pesa request.');
@@ -220,14 +231,16 @@ export default function WalletPage() {
       }
       setBalanceUsd(Number(data.balanceUsd));
       await auth.refresh();
-      setWithdrawals(current => [{
+      const withdrawalActivity: WalletActivity = {
         id: String(data.withdrawalId),
-        full_name: withdrawalName.trim(),
-        amount_usd: Number(withdrawalAmount),
-        msisdn: withdrawalMsisdn,
-        status: 'pending',
+        account: 'app_wallet',
+        description: 'M-Pesa withdrawal',
+        transaction_type: 'withdrawal',
+        amount: -Number(withdrawalAmount),
         created_at: new Date().toISOString(),
-      }, ...current]);
+        status: 'pending',
+      };
+      setTransactions(current => [withdrawalActivity, ...current]);
       setWithdrawalAmount('');
       setMessage('Withdrawal request submitted. The amount is reserved while the admin reviews it.');
     } catch (error) {
@@ -250,8 +263,10 @@ export default function WalletPage() {
       }
       if (data.status === 'review') {
         const reviewDeposit = { ...target, status: 'review' as const };
-        setDeposits(current => current.map(item => item.id === target.id ? reviewDeposit : item));
         setDeposit(current => current?.id === target.id ? reviewDeposit : current);
+        setTransactions(current => current.map(item => item.id === target.id
+          ? { ...item, status: 'review', deposit: reviewDeposit }
+          : item));
         setMessage(typeof data.error === 'string' ? data.error : 'Payment needs support review before it can be credited.');
         setMessageIsError(true);
         return;
@@ -280,8 +295,15 @@ export default function WalletPage() {
         setMessage('Payment is still pending. Approve the M-Pesa request, then check again.');
       }
       const updatedDeposit = { ...target, status: nextStatus, credited_usd: nextCreditedUsd };
-      setDeposits(current => current.map(item => item.id === target.id ? updatedDeposit : item));
       setDeposit(current => current?.id === target.id ? updatedDeposit : current);
+      setTransactions(current => current.map(item => item.id === target.id
+        ? {
+            ...item,
+            amount: nextStatus === 'completed' ? Number(nextCreditedUsd ?? target.amount_usd) : item.amount,
+            status: nextStatus,
+            deposit: updatedDeposit,
+          }
+        : item));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not check payment status.');
       setMessageIsError(true);
@@ -346,7 +368,7 @@ export default function WalletPage() {
           </div>
         </div>
       )}
-      <div className="flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto pb-24 md:pb-0">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
             <div>
@@ -358,25 +380,80 @@ export default function WalletPage() {
             </p>
           </div>
 
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
-            <div>
-              <p className="text-sm text-muted-foreground">Wallet balance</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums">
-                {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(balanceUsd ?? 0)}
-              </p>
-            </div>
-            <Link
-              href="/"
+          <div className="mb-8 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Active trading wallet">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={activeWalletType === 'app_wallet'}
               onClick={() => auth.switchAccount('app-wallet')}
-              className="inline-flex min-h-10 items-center gap-2 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className={cn(
+                'min-h-28 border p-4 text-left transition-colors',
+                activeWalletType === 'app_wallet' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
+              )}
             >
-              Trade now
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <p className="max-w-lg text-sm leading-6 text-muted-foreground">
-              Deposits use M-Pesa in KES and are credited in USD at $1 = KES {USD_TO_KES.toFixed(2)}. The balance can fund simulated trades; it does not fund a Deriv real account.
-            </p>
+              <span className="block text-sm font-medium text-muted-foreground">App Wallet · simulated</span>
+              <span className="mt-2 block text-2xl font-semibold tabular-nums">
+                {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(balanceUsd ?? 0)}
+              </span>
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={activeWalletType === 'demo'}
+              disabled={!demoAccount}
+              onClick={() => demoAccount && auth.switchAccount(demoAccount.id)}
+              className={cn(
+                'min-h-28 border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+                activeWalletType === 'demo' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
+              )}
+            >
+              <span className="block text-sm font-medium text-muted-foreground">Demo account · virtual</span>
+              <span className="mt-2 block text-2xl font-semibold tabular-nums">
+                {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(Number(demoAccount?.balance ?? 0))}
+              </span>
+            </button>
           </div>
+
+          <section className="mb-10" aria-labelledby="wallet-activity-heading">
+            <div className="mb-3 flex items-end justify-between gap-4">
+              <div>
+                <h2 id="wallet-activity-heading" className="text-lg font-semibold">{activeWalletName} transactions</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Deposits, withdrawals, stakes, and payouts</p>
+              </div>
+              <span className="shrink-0 text-xs text-muted-foreground">{activeTransactions.length} transactions</span>
+            </div>
+            <div className="max-h-[28rem] overflow-y-auto overscroll-contain border-y border-border" aria-label={`${activeWalletName} transaction history`}>
+              {activeTransactions.length > 0 ? (
+                <ul className="divide-y divide-border">
+                  {activeTransactions.map(transaction => (
+                    <li key={`${transaction.account}-${transaction.id}`} className="flex min-h-16 items-center justify-between gap-4 py-3 text-sm">
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium">{transaction.description}</span>
+                        <span className="mt-1 block text-xs capitalize text-muted-foreground">
+                          {transaction.status ? `${transaction.status} · ` : ''}{new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(transaction.created_at))}
+                        </span>
+                      </span>
+                      <span className={cn('shrink-0 font-semibold tabular-nums', Number(transaction.amount) < 0 ? 'text-destructive' : 'text-emerald-600')}>
+                        {money.format(Number(transaction.amount))}
+                      </span>
+                      {transaction.deposit && ['pending', 'expired', 'initiating', 'review'].includes(transaction.deposit.status) && (
+                        <button
+                          type="button"
+                          onClick={() => void checkDeposit(transaction.deposit!)}
+                          disabled={isChecking}
+                          className="shrink-0 border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50"
+                        >
+                          {isChecking && deposit?.id === transaction.deposit.id ? 'Checking…' : 'Check status'}
+                        </button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="py-8 text-center text-sm text-muted-foreground">No transactions for this account yet.</p>
+              )}
+            </div>
+          </section>
 
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.8fr)]">
             <section aria-labelledby="wallet-action-heading">
@@ -549,26 +626,6 @@ export default function WalletPage() {
                       {isSubmittingWithdrawal ? 'Submitting…' : 'Submit withdrawal'}
                     </button>
                   </form>
-                  {withdrawals.length > 0 && (
-                    <div className="mt-8 max-w-xl border-t border-border pt-5">
-                      <h3 className="text-sm font-semibold">Your withdrawal requests</h3>
-                      <ul className="mt-3 space-y-3">
-                        {withdrawals.map(item => (
-                          <li key={item.id} className="flex items-start justify-between gap-4 border-b border-border pb-3 text-sm">
-                            <span>
-                              <span className="block font-medium">{money.format(Number(item.amount_usd))} · {item.msisdn}</span>
-                              <span className="mt-1 block capitalize text-muted-foreground">{item.status}</span>
-                              {item.payout_reference && <span className="mt-1 block text-xs text-muted-foreground">Payout ref: {item.payout_reference}</span>}
-                              {item.admin_note && <span className="mt-1 block text-xs text-muted-foreground">Note: {item.admin_note}</span>}
-                            </span>
-                            <time className="shrink-0 text-xs text-muted-foreground" dateTime={item.created_at}>
-                              {new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(item.created_at))}
-                            </time>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </>
               )}
 
@@ -607,44 +664,6 @@ export default function WalletPage() {
                 <p className="mt-4 text-sm leading-6 text-muted-foreground">
                   Withdrawals remain disabled until MegaPay documents a payout API and the app has a verified payout workflow.
                 </p>
-              )}
-
-              {action === 'deposit' && deposits.length > 0 && (
-                <div className="mt-8 border-t border-border pt-5">
-                  <h3 className="text-sm font-semibold">Recent deposits</h3>
-                  <ul className="mt-3 space-y-3">
-                    {deposits.map(item => (
-                      <li key={item.id} className="flex items-center justify-between gap-3 border-b border-border pb-3 text-sm">
-                        <span className="min-w-0">
-                          <span className="block font-medium">${Number(item.amount_usd).toFixed(2)} · KES {Number(item.amount_kes).toLocaleString('en-KE')}</span>
-                          <span className="text-xs capitalize text-muted-foreground">{item.status}</span>
-                        </span>
-                        {['pending', 'expired', 'initiating', 'review'].includes(item.status) && (
-                          <button
-                            type="button"
-                            onClick={() => void checkDeposit(item)}
-                            disabled={isChecking}
-                            className="shrink-0 border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50"
-                          >
-                            {isChecking ? 'Checking…' : 'Check status'}
-                          </button>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {action === 'deposit' && deposit?.status === 'pending' && Date.now() - new Date(deposit.created_at).getTime() < 60_000 && (
-                <button
-                  type="button"
-                  onClick={() => void checkDeposit(deposit)}
-                  disabled={isChecking}
-                  className="mt-5 flex h-10 w-full items-center justify-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50"
-                >
-                  {isChecking ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <CircleCheck className="h-4 w-4" />}
-                  {isChecking ? 'Checking MegaPay…' : 'Check payment status'}
-                </button>
               )}
 
               {action === 'deposit' && (

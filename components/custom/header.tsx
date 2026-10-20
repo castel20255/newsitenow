@@ -5,7 +5,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Menu, Wallet, X } from 'lucide-react';
+import { Activity, History, LogOut, Menu, UserRound, Wallet, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
@@ -125,6 +125,15 @@ function preventDismissFromPopoverOrHeader(event: {
 }
 
 const APPEARANCE_OPTIONS = ['light', 'dark', 'system'] as const;
+const PRIMARY_NAV_ITEMS = [
+  { href: '/', label: 'Traders Hub', Icon: Activity },
+  { href: '/account', label: 'Account', Icon: UserRound },
+  { href: '/wallet', label: 'Wallet', Icon: Wallet },
+] as const;
+
+function isPrimaryRouteActive(pathname: string, href: string): boolean {
+  return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+}
 
 function AppearanceLabel({ value }: { value: (typeof APPEARANCE_OPTIONS)[number] }) {
   if (value === 'light') return <Localize i18n_default_text="Light" />;
@@ -271,7 +280,7 @@ export function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [appWalletBalance, setAppWalletBalance] = useState<number | null>(null);
   const pathname = usePathname();
-  const isAppWalletSelected = pathname === '/wallet' || activeAccount?.account_type === 'app_wallet';
+  const isAppWalletSelected = activeAccount?.account_type === 'app_wallet';
   const displayedAppWalletBalance = activeAccount?.account_type === 'app_wallet'
     ? Number(activeAccount.balance)
     : appWalletBalanceOverride ?? appWalletBalance;
@@ -347,17 +356,41 @@ export function Header({
           </h1>
         )}
       </div>
+      {isAuthenticated && (
+        <nav className="hidden md:flex flex-1 justify-center" aria-label="Primary navigation">
+          <div className="flex items-center gap-1">
+            {PRIMARY_NAV_ITEMS.map(({ href, label }) => {
+              const active = isPrimaryRouteActive(pathname, href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'px-3 py-2 text-sm font-medium transition-colors',
+                    active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
       <div className="flex min-w-0 items-center gap-3">
         <div className="hidden lg:flex items-center gap-3 shrink-0">
           {actions}
           <LanguageSwitcher />
         </div>
-        <Button asChild variant="outline" size="sm" className="shrink-0">
-          <Link href="/wallet">
-            <Wallet className="mr-2 h-4 w-4" />
-            Wallet
-          </Link>
-        </Button>
+        {isAuthenticated && pathname === '/' && (
+          <Button asChild variant="outline" size="icon" className="h-9 w-9 shrink-0 sm:w-auto sm:px-3" aria-label="Trade history">
+            <Link href="/reports" title="Trade history">
+              <History className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">History</span>
+            </Link>
+          </Button>
+        )}
         {isAuthenticated && (
           <Popover open={accountSwitcherOpen} onOpenChange={setAccountSwitcherOpen}>
             <PopoverTrigger asChild>
@@ -367,14 +400,16 @@ export function Header({
                     'text-sm font-medium whitespace-nowrap truncate',
                     isAppWalletSelected ? 'text-emerald-600' : 'text-orange-500'
                   )}>
-                    {isAppWalletSelected || !activeAccount ? 'App Wallet' : 'Demo account'}
+                    {activeAccount?.account_type === 'app_wallet' ? 'App Wallet' : activeAccount ? 'Demo account' : 'Select account'}
                   </span>
                   <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
-                    {isAppWalletSelected || !activeAccount
+                    {activeAccount?.account_type === 'app_wallet'
                       ? displayedAppWalletBalance === null
                         ? '—'
                         : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`
-                      : `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`}
+                      : activeAccount
+                        ? `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`
+                        : '—'}
                   </p>
                   {activeAccount?.account_type === 'app_wallet' && (
                     <span className="block text-xs text-muted-foreground">Simulated trading</span>
@@ -405,33 +440,17 @@ export function Header({
                     Admin dashboard
                   </Link>
                 )}
-                <Link
-                  href={pathname === '/reports' ? '/reports' : '/wallet'}
-                  onClick={() => {
-                    void onSwitchAccount('app-wallet');
-                    setAccountSwitcherOpen(false);
-                  }}
-                  className={cn(
-                    'block w-full rounded-lg px-3 py-2.5 text-left',
-                    isAppWalletSelected ? 'bg-muted' : 'hover:bg-muted/50'
-                  )}
-                >
-                  <span className="text-sm font-medium text-emerald-600">App Wallet</span>
-                  <p className="text-base font-bold text-foreground">
-                    {displayedAppWalletBalance === null ? 'Balance unavailable' : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`}
-                  </p>
-                </Link>
                 {accounts.filter(account => account.account_type === 'demo' || account.account_type === 'app_wallet').map((account) => (
                   <Link
                     key={account.id}
-                    href={pathname === '/reports' ? '/reports' : '/'}
+                    href={pathname}
                     onClick={() => {
                       void onSwitchAccount(account.id);
                       setAccountSwitcherOpen(false);
                     }}
                     className={cn(
                       'w-full text-left rounded-lg px-3 py-2.5 transition-colors',
-                      !isAppWalletSelected && account.id === activeAccount?.id
+                      account.id === activeAccount?.id
                         ? 'bg-muted'
                         : 'hover:bg-muted/50'
                     )}
@@ -472,6 +491,7 @@ export function Header({
   );
 
   return (
+    <>
     <DialogPrimitive.Root modal={false} open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       {/* modal=false keeps the header X and portaled popovers interactive */}
       {headerBar}
@@ -520,6 +540,33 @@ export function Header({
       </DialogPrimitive.Content>
       </FocusScope>
       </DialogPrimitive.Portal>
-    </DialogPrimitive.Root>
+      </DialogPrimitive.Root>
+      {isAuthenticated && (
+        <nav
+          className="fixed inset-x-0 bottom-0 z-[80] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-sm backdrop-blur md:hidden"
+          aria-label="Primary navigation"
+        >
+          <div className="grid h-16 grid-cols-3">
+            {PRIMARY_NAV_ITEMS.map(({ href, label, Icon }) => {
+              const active = isPrimaryRouteActive(pathname, href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors',
+                    active ? 'text-primary' : 'text-muted-foreground'
+                  )}
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                  <span>{label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
+      </>
   );
 }

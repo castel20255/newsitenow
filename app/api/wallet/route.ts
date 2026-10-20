@@ -8,6 +8,7 @@ const USD_TO_KES = 131.21;
 const MINIMUM_DEPOSIT_USD = 2;
 const HOURLY_DEPOSIT_LIMIT = 5;
 const DEPOSIT_TIMEOUT_MS = 60_000;
+const WALLET_ACTIVITY_PAGE_SIZE = 1000;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -47,38 +48,109 @@ async function getAuthenticatedUser() {
   return error ? null : data.user;
 }
 
+async function loadAllWalletRows<T>(
+  fetchPage: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>
+) {
+  const rows: T[] = [];
+  for (let from = 0; ; from += WALLET_ACTIVITY_PAGE_SIZE) {
+    const { data, error } = await fetchPage(from, from + WALLET_ACTIVITY_PAGE_SIZE - 1);
+    if (error) return { data: null, error };
+    const page = data ?? [];
+    rows.push(...page);
+    if (page.length < WALLET_ACTIVITY_PAGE_SIZE) return { data: rows, error: null };
+  }
+}
+
 export async function GET() {
   try {
     const user = await getAuthenticatedUser();
     if (!user) return Response.json({ error: 'Sign in to access your wallet.' }, { status: 401 });
 
     const admin = createSupabaseAdminClient();
-    const [walletResult, depositResult, withdrawalResult] = await Promise.all([
+    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult] = await Promise.all([
       admin.from('app_wallets').select('balance_usd').eq('user_id', user.id).maybeSingle(),
-      admin
+      loadAllWalletRows((from, to) => admin
         .from('wallet_deposits')
         .select('id, amount_usd, amount_kes, status, credited_usd, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(10),
-      admin
+        .range(from, to)),
+      loadAllWalletRows((from, to) => admin
         .from('wallet_withdrawals')
         .select('id, full_name, amount_usd, msisdn, status, admin_note, payout_reference, created_at, reviewed_at, paid_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(20),
+        .range(from, to)),
+      loadAllWalletRows((from, to) => admin
+        .from('app_wallet_transactions')
+        .select('id, transaction_type, amount, balance_after, reference_id, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .range(from, to)),
+      loadAllWalletRows((from, to) => admin
+        .from('wallet_transactions')
+        .select('id, transaction_type, amount, balance_after, reference_id, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .range(from, to)),
     ]);
 
-    if (walletResult.error || depositResult.error || withdrawalResult.error) {
+    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     }
 
     const deposits = depositResult.data ?? [];
+    const transactions = [
+      ...(appTransactionsResult.data ?? []).map(transaction => ({
+        ...transaction,
+        account: 'app_wallet' as const,
+        description: transaction.transaction_type === 'simulated_stake' ? 'Simulated trade stake' : 'Simulated trade payout',
+      })),
+      ...(demoTransactionsResult.data ?? []).map(transaction => ({
+        ...transaction,
+        account: 'demo' as const,
+        description: transaction.transaction_type === 'demo_credit'
+          ? 'Demo account credit'
+          : transaction.transaction_type === 'demo_stake' ? 'Demo trade stake' : 'Demo trade payout',
+      })),
+      ...(deposits.map(deposit => ({
+        id: deposit.id,
+        transaction_type: 'deposit',
+        amount: Number(deposit.credited_usd ?? deposit.amount_usd),
+        balance_after: null,
+        reference_id: deposit.id,
+        created_at: deposit.created_at,
+        account: 'app_wallet' as const,
+        description: 'M-Pesa deposit',
+        status: deposit.status,
+        deposit: {
+          id: deposit.id,
+          amount_usd: Number(deposit.amount_usd),
+          amount_kes: Number(deposit.amount_kes),
+          status: deposit.status,
+          created_at: deposit.created_at,
+          credited_usd: deposit.credited_usd === null ? null : Number(deposit.credited_usd),
+        },
+      }))),
+      ...((withdrawalResult.data ?? []).map(withdrawal => ({
+        id: withdrawal.id,
+        transaction_type: withdrawal.status === 'rejected' ? 'withdrawal_reversed' : 'withdrawal',
+        amount: withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd),
+        balance_after: null,
+        reference_id: withdrawal.id,
+        created_at: withdrawal.created_at,
+        account: 'app_wallet' as const,
+        description: withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
+        status: withdrawal.status,
+      }))),
+    ].sort((left, right) => new Date(right.created_at).valueOf() - new Date(left.created_at).valueOf());
+
     return Response.json({
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
       latestDeposit: deposits[0] ?? null,
       deposits,
       withdrawals: withdrawalResult.data ?? [],
+      transactions,
     });
   } catch {
     return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
