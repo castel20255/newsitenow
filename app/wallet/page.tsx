@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 
 type WalletAction = 'deposit' | 'withdraw';
 type PaymentMethod = 'bank-agent' | 'crypto' | 'mpesa';
-type DepositStatus = 'initiating' | 'pending' | 'completed' | 'failed' | 'expired';
+type DepositStatus = 'initiating' | 'pending' | 'completed' | 'failed' | 'expired' | 'review';
 
 interface WalletDeposit {
   id: string;
@@ -189,7 +189,18 @@ export default function WalletPage() {
     try {
       const response = await fetch(`/api/wallet/deposits/${target.id}/verify`, { method: 'POST' });
       const data: unknown = await response.json().catch(() => null);
-      if (!response.ok || !isRecord(data)) {
+      if (!isRecord(data)) {
+        throw new Error('Could not check payment status.');
+      }
+      if (data.status === 'review') {
+        const reviewDeposit = { ...target, status: 'review' as const };
+        setDeposits(current => current.map(item => item.id === target.id ? reviewDeposit : item));
+        setDeposit(current => current?.id === target.id ? reviewDeposit : current);
+        setMessage(typeof data.error === 'string' ? data.error : 'Payment needs support review before it can be credited.');
+        setMessageIsError(true);
+        return;
+      }
+      if (!response.ok) {
         throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not check payment status.');
       }
 
@@ -207,6 +218,7 @@ export default function WalletPage() {
         setMessage(data.status === 'expired' ? 'This payment request expired. Start a new deposit to try again.' : 'The payment was not completed. Start a new deposit to try again.');
         setMessageIsError(true);
       } else {
+        if (data.status === 'pending') nextStatus = 'pending';
         setMessage('Payment is still pending. Approve the M-Pesa request, then check again.');
       }
       const updatedDeposit = { ...target, status: nextStatus, credited_usd: nextCreditedUsd };
@@ -469,7 +481,7 @@ export default function WalletPage() {
                           <span className="block font-medium">${Number(item.amount_usd).toFixed(2)} · KES {Number(item.amount_kes).toLocaleString('en-KE')}</span>
                           <span className="text-xs capitalize text-muted-foreground">{item.status}</span>
                         </span>
-                        {['pending', 'expired', 'initiating'].includes(item.status) && (
+                        {['pending', 'expired', 'initiating', 'review'].includes(item.status) && (
                           <button
                             type="button"
                             onClick={() => void checkDeposit(item)}
