@@ -3,6 +3,7 @@
 import { WebSocket } from 'undici';
 import { getPublicWsUrl } from '@deriv/core';
 import { getDurationSeconds } from '@/lib/duration-utils';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 
@@ -17,6 +18,7 @@ export interface DemoTradeInput {
   stake: number;
   duration: number;
   durationUnit: DemoDurationUnit;
+  fundingSource?: 'demo' | 'app_wallet';
   dateExpiry?: number;
 }
 
@@ -159,16 +161,23 @@ export async function placeDemoTrade(input: DemoTradeInput) {
       return { error: 'The quoted contract expiry is invalid.' };
     }
 
-    const { data, error } = await supabase.rpc('place_demo_trade', {
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin.rpc('place_simulated_trade', {
       p_symbol: input.symbol,
       p_contract_type: input.contractType,
       p_stake: input.stake,
       p_entry_quote: proposal.spot,
       p_expected_payout: proposal.payout,
       p_duration_seconds: durationSeconds,
+      p_funding_source: input.fundingSource ?? 'demo',
+      p_user_id: userData.user.id,
     });
     if (error) {
-      return { error: error.message.includes('Insufficient') ? 'Your demo balance is too low.' : 'Could not place the demo trade.' };
+      return {
+        error: error.message.includes('Insufficient')
+          ? input.fundingSource === 'app_wallet' ? 'Your App Wallet balance is too low.' : 'Your demo balance is too low.'
+          : 'Could not place the simulated trade.',
+      };
     }
     return { trade: Array.isArray(data) ? data[0] : data };
   } catch (error) {
@@ -202,18 +211,20 @@ export async function settleDemoTrade(tradeId: string) {
       ticks_history: trade.symbol,
       style: 'ticks',
       count: 1,
-      end: 'latest',
+      end: Math.floor(Date.parse(trade.expires_at) / 1000),
     });
     const exitQuote = quoteResponse.history?.prices?.at(-1);
     if (!Number.isFinite(exitQuote) || !exitQuote || exitQuote <= 0) {
       return { error: 'A fresh market quote is unavailable.' };
     }
 
-    const { data, error } = await supabase.rpc('settle_demo_trade', {
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin.rpc('settle_simulated_trade', {
       p_trade_id: tradeId,
       p_exit_quote: exitQuote,
+      p_user_id: userData.user.id,
     });
-    if (error) return { error: 'Could not settle this demo trade.' };
+    if (error) return { error: 'Could not settle this simulated trade.' };
     return { result: Array.isArray(data) ? data[0] : data };
   } catch {
     return { error: 'Demo settlement is temporarily unavailable. It will retry.' };

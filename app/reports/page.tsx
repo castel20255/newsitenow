@@ -46,6 +46,7 @@ function TradeRow({ trade }: { trade: SitePaperTrade }) {
     <tr className="border-t border-border">
       <td className="px-4 py-3 font-medium">{contract}</td>
       <td className="px-4 py-3">{trade.symbol}</td>
+      <td className="px-4 py-3">{trade.funding_source === 'app_wallet' ? 'App Wallet simulation' : 'Demo account'}</td>
       <td className="px-4 py-3 text-right tabular-nums">{money.format(stake)}</td>
       <td className="px-4 py-3 text-right tabular-nums">{formatMarketPrice(trade.entry_quote, trade.price_precision)}</td>
       <td className="px-4 py-3 text-right tabular-nums">{formatMarketPrice(trade.exit_quote, trade.price_precision)}</td>
@@ -64,6 +65,7 @@ export default function ReportsPage() {
   useDemoTradeSettlement({
     authState: auth.authState,
     paperTrades: auth.paperTrades,
+    digitTrades: auth.digitTrades,
     refresh: auth.refresh,
   });
   const [filter, setFilter] = useState<TradeFilter>('all');
@@ -91,8 +93,8 @@ export default function ReportsPage() {
       <div className="w-full flex-1 min-h-0 overflow-y-auto px-4 py-4 pb-10 sm:px-6">
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs text-muted-foreground">Demo account</p>
-            <h1 className="text-lg font-semibold">Paper trade history</h1>
+            <p className="text-xs text-muted-foreground">Simulated accounts</p>
+            <h1 className="text-lg font-semibold">Trade history</h1>
           </div>
           <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
             <Localize i18n_default_text="Back to trading" />
@@ -103,10 +105,10 @@ export default function ReportsPage() {
           <div className="border-y border-border py-10 text-center">
             <p className="mb-4 text-sm text-muted-foreground">
               {auth.authState === 'unconfigured'
-                ? 'Configure Supabase to view your private demo trade history.'
+                ? 'Configure Supabase to view your simulated trade history.'
                 : auth.authState === 'loading'
                   ? 'Loading account…'
-                  : 'Sign in to view your demo trade history.'}
+                  : 'Sign in to view your simulated trade history.'}
             </p>
             {auth.authState === 'unauthenticated' && (
               <Button onClick={() => auth.openAuth('login')}>Log in</Button>
@@ -136,6 +138,7 @@ export default function ReportsPage() {
                   <tr className="text-left text-xs text-muted-foreground">
                     <th className="px-4 py-2 font-medium">Contract</th>
                     <th className="px-4 py-2 font-medium">Market</th>
+                    <th className="px-4 py-2 font-medium">Account</th>
                     <th className="px-4 py-2 text-right font-medium">Stake</th>
                     <th className="px-4 py-2 text-right font-medium">Entry price</th>
                     <th className="px-4 py-2 text-right font-medium">Exit price</th>
@@ -148,7 +151,7 @@ export default function ReportsPage() {
                   {visibleTrades.map(trade => <TradeRow key={trade.id} trade={trade} />)}
                   {visibleTrades.length === 0 && (
                     <tr className="border-t border-border">
-                      <td colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                      <td colSpan={9} className="px-4 py-10 text-center text-sm text-muted-foreground">
                         No paper trades to show.
                       </td>
                     </tr>

@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { LANGUAGE_LOCALES } from '@/lib/i18n';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { LanguageSwitcher } from '@/components/custom/language-switcher';
-import { useSiteAuth, type SiteAuthState, type SiteTradingAccount } from './site-auth-provider';
+import { useSiteAuth, type SiteAccountType, type SiteAuthState, type SiteTradingAccount } from './site-auth-provider';
 
 interface HeaderProps {
   authState: SiteAuthState;
@@ -44,7 +44,7 @@ function formatBalance(balance: string | number, locale: string): string {
   });
 }
 
-function AccountLabel({ type }: { type: 'demo' | 'real' }) {
+function AccountLabel({ type }: { type: SiteAccountType }) {
   return (
     <span
       className={cn(
@@ -52,7 +52,9 @@ function AccountLabel({ type }: { type: 'demo' | 'real' }) {
         type === 'demo' ? 'text-orange-500' : 'text-emerald-600'
       )}
     >
-      {type === 'demo' ? (
+      {type === 'app_wallet' ? (
+        'App Wallet'
+      ) : type === 'demo' ? (
         <Localize i18n_default_text="Demo account" />
       ) : (
         <Localize i18n_default_text="Real account" />
@@ -269,8 +271,10 @@ export function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [appWalletBalance, setAppWalletBalance] = useState<number | null>(null);
   const pathname = usePathname();
-  const isAppWalletSelected = pathname === '/wallet';
-  const displayedAppWalletBalance = appWalletBalanceOverride ?? appWalletBalance;
+  const isAppWalletSelected = pathname === '/wallet' || activeAccount?.account_type === 'app_wallet';
+  const displayedAppWalletBalance = activeAccount?.account_type === 'app_wallet'
+    ? Number(activeAccount.balance)
+    : appWalletBalanceOverride ?? appWalletBalance;
   const headerRef = useRef<HTMLElement>(null);
   const [menuTop, setMenuTop] = useState(0);
   const isAuthenticated = authState === 'authenticated';
@@ -372,6 +376,9 @@ export function Header({
                         : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`
                       : `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`}
                   </p>
+                  {activeAccount?.account_type === 'app_wallet' && (
+                    <span className="block text-xs text-muted-foreground">Simulated trading</span>
+                  )}
                 </div>
                 <svg
                   className={cn(
@@ -411,7 +418,7 @@ export function Header({
                     {displayedAppWalletBalance === null ? 'Balance unavailable' : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`}
                   </p>
                 </Link>
-                {accounts.filter(account => account.account_type === 'demo').map((account) => (
+                {accounts.filter(account => account.account_type === 'demo' || account.account_type === 'app_wallet').map((account) => (
                   <Link
                     key={account.id}
                     href="/"
