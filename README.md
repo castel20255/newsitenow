@@ -34,6 +34,12 @@ The wallet is a separate app-owned USD ledger and does not fund or read a Deriv 
 
 Add the MegaPay variables to the deployment environment and redeploy only after applying the migration. Until both are configured, deposit initiation returns a configuration error; no test credentials from the public docs should be used.
 
+## Admin and Manual Withdrawals
+
+Apply `202610200003_admin_withdrawals.sql` after the wallet migrations. It grants the admin role to the Supabase account whose email is `adminsite1@gmail.com`; that account must sign in through the existing Supabase Auth flow. The migration does not create an account or set a password. Use Supabase Auth to create the account or reset its password, and keep its credentials private. To change the administrator email, edit the bootstrap insert in the migration before applying it, or manage the `site_admins` table through a trusted server-side process.
+
+Users can request an M-Pesa withdrawal from App Wallet. The amount is reserved immediately; admin rejection restores it. Admin approval does not claim money was sent: after the manual M-Pesa transfer, the admin must enter its payout reference to mark the request paid. App Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
+
 ## Deploy to Vercel
 
 Import this repository into Vercel with the repository root as the Root Directory and `main` as the Production Branch. Vercel detects Next.js automatically; the build command is `npm run build` and the install command is `npm install`.

@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { LANGUAGE_LOCALES } from '@/lib/i18n';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { LanguageSwitcher } from '@/components/custom/language-switcher';
-import type { SiteAuthState, SiteTradingAccount } from './site-auth-provider';
+import { useSiteAuth, type SiteAuthState, type SiteTradingAccount } from './site-auth-provider';
 
 interface HeaderProps {
   authState: SiteAuthState;
@@ -259,6 +259,7 @@ export function Header({
   appWalletBalance: appWalletBalanceOverride,
 }: HeaderProps) {
   const { currentLang, localize } = useAppTranslations();
+  const { isAdmin } = useSiteAuth();
   const numberLocale = LANGUAGE_LOCALES[currentLang];
   const [logoError, setLogoError] = useState(false);
   const resolvedName = resolveHeaderAppName(appName);
@@ -388,6 +389,15 @@ export function Header({
             </PopoverTrigger>
             <PopoverContent align="end" className="z-[100] w-64 p-2">
               <div className="space-y-1">
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setAccountSwitcherOpen(false)}
+                    className="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium hover:bg-muted/50"
+                  >
+                    Admin dashboard
+                  </Link>
+                )}
                 <Link
                   href="/wallet"
                   onClick={() => setAccountSwitcherOpen(false)}
