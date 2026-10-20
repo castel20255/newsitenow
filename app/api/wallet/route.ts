@@ -13,6 +13,34 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function extractTransactionRequestId(value: unknown, depth = 0): string | null {
+  if (!isRecord(value) || depth > 4) return null;
+
+  for (const key of [
+    'transaction_request_id',
+    'transactionRequestId',
+    'TransactionRequestID',
+    'transaction_id',
+    'TransactionID',
+    'checkout_request_id',
+    'CheckoutRequestID',
+    'request_id',
+    'requestId',
+  ]) {
+    const candidate = value[key];
+    if ((typeof candidate === 'string' || typeof candidate === 'number') && String(candidate).trim()) {
+      return String(candidate).trim();
+    }
+  }
+
+  for (const key of ['data', 'result', 'response', 'transaction']) {
+    const nestedId = extractTransactionRequestId(value[key], depth + 1);
+    if (nestedId) return nestedId;
+  }
+
+  return null;
+}
+
 async function getAuthenticatedUser() {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.getUser();
@@ -141,14 +169,19 @@ export async function POST(request: Request) {
       return Response.json({ error: 'MegaPay’s response was interrupted. Check your wallet status or contact support before retrying to avoid a duplicate charge.' }, { status: 502 });
     }
 
-    if (!isRecord(providerResponse) || String(providerResponse.success) !== '200' || typeof providerResponse.transaction_request_id !== 'string') {
+    const transactionRequestId = extractTransactionRequestId(providerResponse);
+    if (!isRecord(providerResponse) || !transactionRequestId) {
+      console.warn('MegaPay STK initiation response could not be tracked', {
+        keys: isRecord(providerResponse) ? Object.keys(providerResponse) : [],
+        hasTransactionRequestId: Boolean(transactionRequestId),
+      });
       return Response.json({ error: 'MegaPay returned an unclear result. Check your wallet status or contact support before retrying.' }, { status: 502 });
     }
 
     const { error: updateError } = await admin
       .from('wallet_deposits')
       .update({
-        provider_request_id: providerResponse.transaction_request_id,
+        provider_request_id: transactionRequestId,
         status: 'pending',
         updated_at: new Date().toISOString(),
       })
