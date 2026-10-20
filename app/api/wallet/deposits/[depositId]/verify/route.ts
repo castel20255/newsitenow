@@ -25,7 +25,7 @@ export async function POST(
     const admin = createSupabaseAdminClient();
     const { data: deposit, error: depositError } = await admin
       .from('wallet_deposits')
-      .select('id, amount_kes, msisdn, reference, provider_request_id, status, created_at')
+      .select('id, amount_kes, provider_request_id, status, created_at')
       .eq('id', depositId)
       .eq('user_id', auth.user.id)
       .maybeSingle();
@@ -94,21 +94,25 @@ export async function POST(
       return Response.json({ status: timedOut ? 'expired' : 'pending' });
     }
 
-    const transactionId = providerResponse.TransactionID;
-    const paidAmountKes = Number(providerResponse.TransactionAmount);
-    const providerPhone = typeof providerResponse.Msisdn === 'string'
-      ? providerResponse.Msisdn.replace(/\D/g, '')
+    const rawTransactionId = providerResponse.TransactionID;
+    const transactionId = typeof rawTransactionId === 'string' || typeof rawTransactionId === 'number'
+      ? String(rawTransactionId).trim()
       : '';
-    const savedPhone = String(deposit.msisdn).replace(/\D/g, '');
+    const paidAmountKes = Number(providerResponse.TransactionAmount);
     if (
-      typeof transactionId !== 'string' ||
-      !transactionId.trim() ||
+      !transactionId ||
       !Number.isFinite(paidAmountKes) ||
-      paidAmountKes !== Number(deposit.amount_kes) ||
-      providerPhone !== savedPhone ||
-      String(providerResponse.TransactionReference) !== deposit.reference
+      paidAmountKes !== Number(deposit.amount_kes)
     ) {
-      return Response.json({ error: 'The completed payment details did not match this deposit.' }, { status: 409 });
+      console.error('MegaPay completed status did not match wallet deposit', {
+        depositId: deposit.id,
+        hasTransactionId: Boolean(transactionId),
+        amountMatched: paidAmountKes === Number(deposit.amount_kes),
+      });
+      return Response.json({
+        status: 'review',
+        error: 'MegaPay reported a completed payment, but its amount or transaction ID could not be matched. Contact support before retrying.',
+      }, { status: 409 });
     }
 
     const receipt = typeof providerResponse.TransactionReceipt === 'string'
