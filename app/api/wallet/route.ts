@@ -7,6 +7,7 @@ import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
 const USD_TO_KES = 131.21;
 const MINIMUM_DEPOSIT_USD = 2;
 const HOURLY_DEPOSIT_LIMIT = 5;
+const DEPOSIT_TIMEOUT_MS = 60_000;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -31,17 +32,18 @@ export async function GET() {
         .select('id, amount_usd, amount_kes, status, credited_usd, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle(),
+        .limit(10),
     ]);
 
     if (walletResult.error || depositResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     }
 
+    const deposits = depositResult.data ?? [];
     return Response.json({
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
-      latestDeposit: depositResult.data,
+      latestDeposit: deposits[0] ?? null,
+      deposits,
     });
   } catch {
     return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
@@ -76,6 +78,15 @@ export async function POST(request: Request) {
 
     const amountKes = Math.ceil((amountCents / 100) * USD_TO_KES - 0.0000001);
     const admin = createSupabaseAdminClient();
+    const expiredBefore = new Date(Date.now() - DEPOSIT_TIMEOUT_MS).toISOString();
+    const { error: expireError } = await admin
+      .from('wallet_deposits')
+      .update({ status: 'expired', updated_at: new Date().toISOString() })
+      .eq('user_id', user.id)
+      .in('status', ['initiating', 'pending'])
+      .lt('created_at', expiredBefore);
+    if (expireError) return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
+
     const { data: openDeposit, error: openDepositError } = await admin
       .from('wallet_deposits')
       .select('id')
@@ -110,7 +121,7 @@ export async function POST(request: Request) {
         reference,
         status: 'initiating',
       })
-      .select('id')
+      .select('id, created_at')
       .single();
 
     if (insertError || !deposit) {
@@ -151,6 +162,7 @@ export async function POST(request: Request) {
       amountUsd: amountCents / 100,
       amountKes,
       status: 'pending',
+      createdAt: deposit.created_at,
     });
   } catch {
     return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });

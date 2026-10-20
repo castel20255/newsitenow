@@ -25,6 +25,7 @@ interface WalletDeposit {
   amount_usd: number | string;
   amount_kes: number;
   status: DepositStatus;
+  created_at: string;
   credited_usd?: number | string | null;
 }
 
@@ -60,6 +61,7 @@ export default function WalletPage() {
   const [msisdn, setMsisdn] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
   const [deposit, setDeposit] = useState<WalletDeposit | null>(null);
+  const [deposits, setDeposits] = useState<WalletDeposit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
@@ -85,7 +87,13 @@ export default function WalletPage() {
         if (!response.ok || !isRecord(data)) throw new Error('Could not load wallet details.');
         if (cancelled) return;
         setBalanceUsd(Number(data.balanceUsd ?? 0));
-        if (isRecord(data.latestDeposit)) setDeposit(data.latestDeposit as unknown as WalletDeposit);
+        const recentDeposits = Array.isArray(data.deposits)
+          ? data.deposits.filter(isRecord) as unknown as WalletDeposit[]
+          : isRecord(data.latestDeposit)
+            ? [data.latestDeposit as unknown as WalletDeposit]
+            : [];
+        setDeposits(recentDeposits);
+        setDeposit(recentDeposits[0] ?? null);
       })
       .catch(error => {
         if (!cancelled) {
@@ -107,6 +115,25 @@ export default function WalletPage() {
       setMsisdn(current => current || auth.profile!.phone_e164);
     }
   }, [auth.profile?.phone_e164]);
+
+  useEffect(() => {
+    if (!deposit || !['pending', 'initiating'].includes(deposit.status)) return;
+
+    const remainingMs = 60_000 - (Date.now() - new Date(deposit.created_at).getTime());
+    const expireLocally = () => {
+      const expired = { ...deposit, status: 'expired' as const };
+      setDeposit(current => current?.id === deposit.id ? expired : current);
+      setDeposits(current => current.map(item => item.id === deposit.id ? expired : item));
+    };
+
+    if (remainingMs <= 0) {
+      expireLocally();
+      return;
+    }
+
+    const timeout = window.setTimeout(expireLocally, remainingMs);
+    return () => window.clearTimeout(timeout);
+  }, [deposit]);
 
   const startDeposit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -134,12 +161,15 @@ export default function WalletPage() {
         throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not start the M-Pesa request.');
       }
 
-      setDeposit({
+      const nextDeposit: WalletDeposit = {
         id: String(data.depositId),
         amount_usd: Number(data.amountUsd),
         amount_kes: Number(data.amountKes),
         status: 'pending',
-      });
+        created_at: typeof data.createdAt === 'string' ? data.createdAt : new Date().toISOString(),
+      };
+      setDeposit(nextDeposit);
+      setDeposits(current => [nextDeposit, ...current.filter(item => item.id !== nextDeposit.id)].slice(0, 10));
       setMessage('STK push sent. Approve the KES payment on your phone, then check its status here.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not start the M-Pesa request.');
@@ -149,29 +179,34 @@ export default function WalletPage() {
     }
   };
 
-  const checkDeposit = async () => {
-    if (!deposit) return;
+  const checkDeposit = async (target: WalletDeposit) => {
     setIsChecking(true);
     setMessage('');
     setMessageIsError(false);
     try {
-      const response = await fetch(`/api/wallet/deposits/${deposit.id}/verify`, { method: 'POST' });
+      const response = await fetch(`/api/wallet/deposits/${target.id}/verify`, { method: 'POST' });
       const data: unknown = await response.json().catch(() => null);
       if (!response.ok || !isRecord(data)) {
         throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not check payment status.');
       }
 
+      let nextStatus = target.status;
+      let nextCreditedUsd = target.credited_usd;
       if (data.status === 'completed') {
-        setDeposit({ ...deposit, status: 'completed', credited_usd: Number(data.creditedUsd ?? 0) });
+        nextStatus = 'completed';
+        nextCreditedUsd = Number(data.creditedUsd ?? 0);
         if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
         setMessage('Payment confirmed and credited to your app wallet.');
       } else if (data.status === 'failed' || data.status === 'expired') {
-        setDeposit({ ...deposit, status: data.status });
+        nextStatus = data.status;
         setMessage(data.status === 'expired' ? 'This payment request expired. Start a new deposit to try again.' : 'The payment was not completed. Start a new deposit to try again.');
         setMessageIsError(true);
       } else {
         setMessage('Payment is still pending. Approve the M-Pesa request, then check again.');
       }
+      const updatedDeposit = { ...target, status: nextStatus, credited_usd: nextCreditedUsd };
+      setDeposits(current => current.map(item => item.id === target.id ? updatedDeposit : item));
+      setDeposit(current => current?.id === target.id ? updatedDeposit : current);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not check payment status.');
       setMessageIsError(true);
@@ -381,10 +416,36 @@ export default function WalletPage() {
                 </p>
               )}
 
-              {action === 'deposit' && deposit?.status === 'pending' && (
+              {action === 'deposit' && deposits.length > 0 && (
+                <div className="mt-8 border-t border-border pt-5">
+                  <h3 className="text-sm font-semibold">Recent deposits</h3>
+                  <ul className="mt-3 space-y-3">
+                    {deposits.map(item => (
+                      <li key={item.id} className="flex items-center justify-between gap-3 border-b border-border pb-3 text-sm">
+                        <span className="min-w-0">
+                          <span className="block font-medium">${Number(item.amount_usd).toFixed(2)} · KES {Number(item.amount_kes).toLocaleString('en-KE')}</span>
+                          <span className="text-xs capitalize text-muted-foreground">{item.status}</span>
+                        </span>
+                        {['pending', 'expired', 'initiating'].includes(item.status) && (
+                          <button
+                            type="button"
+                            onClick={() => void checkDeposit(item)}
+                            disabled={isChecking}
+                            className="shrink-0 border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50"
+                          >
+                            {isChecking ? 'Checking…' : 'Check status'}
+                          </button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {action === 'deposit' && deposit?.status === 'pending' && Date.now() - new Date(deposit.created_at).getTime() < 60_000 && (
                 <button
                   type="button"
-                  onClick={checkDeposit}
+                  onClick={() => void checkDeposit(deposit)}
                   disabled={isChecking}
                   className="mt-5 flex h-10 w-full items-center justify-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50"
                 >
