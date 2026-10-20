@@ -3,10 +3,6 @@ create table if not exists public.site_admins (
   created_at timestamptz not null default now()
 );
 
-insert into public.site_admins (email)
-values ('adminsite1@gmail.com')
-on conflict (email) do nothing;
-
 create table if not exists public.wallet_withdrawals (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
