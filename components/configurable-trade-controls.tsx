@@ -32,8 +32,9 @@ import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
+import { DigitContractActions } from '@/components/digit-contract-actions';
 import type { DerivWS, ActiveSymbol, ProposalInfo, BuyResult } from '@deriv/core';
-import type { Direction, DurationSelectUnit, DurationOption } from '../lib/types';
+import type { DigitContractType, Direction, DurationSelectUnit, DurationOption } from '../lib/types';
 import type { BlockKey, ControlKey, RiseFallAppConfig, StyleVariant } from '../lib/app-config';
 
 /** Human labels shown on each draggable block in rearrange mode. */
@@ -233,12 +234,8 @@ export interface ConfigurableTradeControlsProps {
   rearrangeMode?: boolean;
   /** Called with the new block order after a drag-drop reorder. */
   onReorder?: (order: BlockKey[]) => void;
-  /**
-   * Buy is pinned to the bottom bar, which the view owns — so skip it here
-   * rather than rendering it inline. Also keeps it out of rearrange mode: a
-   * pinned button has no position to drag.
-   */
-  pinBuy?: boolean;
+  selectedContract: DigitContractType;
+  onSelectedContractChange: (contract: DigitContractType) => void;
   /**
    * The chart + symbol-dropdown block, rendered at the `chart` position in the
    * order. It manages its own edit selection, so it's placed as-is (not wrapped
@@ -282,7 +279,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     selectedKey,
     rearrangeMode,
     onReorder,
-    pinBuy,
+    selectedContract,
+    onSelectedContractChange,
     chartSlot,
   } = props;
 
@@ -357,13 +355,12 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     { key: 'DIFFER', label: 'Differs' },
   ] as const;
 
-  const [selectedContract, setSelectedContract] = useState<typeof contractOptions[number]['key']>('OVER');
   const [selectedDigit, setSelectedDigit] = useState<number>(0);
   const digitOptions = Array.from({ length: 10 }, (_, value) => value);
   const contractDisabledForDigits = selectedContract === 'EVEN' || selectedContract === 'ODD';
 
   const renderRiseFall = () => (
-    <div className="space-y-3">
+    <div className={cn('space-y-3', !editMode && 'max-lg:hidden')}>
       <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
         <Localize i18n_default_text="Contract type" />
       </div>
@@ -376,7 +373,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
               type="button"
               variant={isSelected ? 'default' : 'outline'}
               className="h-auto min-h-[44px] rounded-xl px-2 py-2 text-sm font-medium"
-              onClick={() => setSelectedContract(option.key)}
+              onClick={() => onSelectedContractChange(option.key)}
             >
               {option.label}
             </Button>
@@ -493,7 +490,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   );
 
   // ── Buy (3 styles, themed) ──────────────────────────────────────────────
-  const handleDigitBuy = async () => {
+  const handleDigitBuy = async (contractType: DigitContractType = selectedContract) => {
     if (digitTradeLock.current) return;
     const numericStake = Number(stake);
     if (!Number.isFinite(numericStake) || numericStake < MIN_TRADE_STAKE) {
@@ -512,8 +509,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     const payload = {
       market_symbol: activeSymbol.underlying_symbol,
       market_name: activeSymbol.underlying_symbol_name ?? activeSymbol.underlying_symbol,
-      contract_type: selectedContract,
-      prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
+      contract_type: contractType,
+      prediction_digit: ['EVEN', 'ODD'].includes(contractType) ? null : selectedDigit,
       entry_price: Number(marketPrice.toFixed(marketPrecision)),
       price_precision: marketPrecision,
       stake: Number(numericStake.toFixed(2)),
@@ -547,19 +544,28 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   };
 
   const renderBuy = () => (
-    <div className={cn(pinBuy && 'max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+5rem)] max-lg:left-3 max-lg:right-3 max-lg:z-[70] lg:static')}>
-      <ConfigurableBuyButton
-        variant={config.styles.buy}
-        isConnected={isConnected}
-        proposal={proposal}
-        stake={stake}
-        contractType={selectedContract}
-        selectedDigit={selectedDigit}
-        onBuy={handleDigitBuy}
-        isBuying={isBuying}
-        isSubmitting={isSubmittingDigitTrade}
-      />
-    </div>
+    <>
+      {!editMode && (
+        <DigitContractActions
+          selectedContract={selectedContract}
+          disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
+          onBuy={contractType => void handleDigitBuy(contractType)}
+        />
+      )}
+      <div className={cn(!editMode && 'max-lg:hidden')}>
+        <ConfigurableBuyButton
+          variant={config.styles.buy}
+          isConnected={isConnected}
+          proposal={proposal}
+          stake={stake}
+          contractType={selectedContract}
+          selectedDigit={selectedDigit}
+          onBuy={() => handleDigitBuy()}
+          isBuying={isBuying}
+          isSubmitting={isSubmittingDigitTrade}
+        />
+      </div>
+    </>
   );
 
   const renderers: Record<ControlKey, () => React.ReactNode> = {

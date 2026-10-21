@@ -14,9 +14,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { DigitContractActions } from '@/components/digit-contract-actions';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
 import type { DerivWS, ActiveSymbol, ProposalInfo, BuyResult } from '@deriv/core';
-import type { Direction, DurationSelectUnit, DurationOption } from '../lib/types';
+import type { DigitContractType, Direction, DurationSelectUnit, DurationOption } from '../lib/types';
 
 interface TradeControlsProps {
   direction: Direction;
@@ -48,6 +49,8 @@ interface TradeControlsProps {
   onClearBuyResult: () => void;
   /** Whether the user is authenticated — shows the View your positions link when true. */
   isAuthenticated?: boolean;
+  selectedContract: DigitContractType;
+  onSelectedContractChange: (contract: DigitContractType) => void;
 }
 
 export function TradeControls({
@@ -78,6 +81,8 @@ export function TradeControls({
   buyError,
   onClearBuyResult,
   isAuthenticated,
+  selectedContract,
+  onSelectedContractChange,
 }: TradeControlsProps) {
   const { localize } = useAppTranslations();
   const { activeAccount, refresh: refreshSiteAuth } = useSiteAuth();
@@ -114,7 +119,6 @@ export function TradeControls({
     { key: 'DIFFER', label: 'Differs' },
   ] as const;
 
-  const [selectedContract, setSelectedContract] = useState<'OVER' | 'UNDER' | 'EVEN' | 'ODD' | 'MATCH' | 'DIFFER'>('OVER');
   const [selectedDigit, setSelectedDigit] = useState<number>(0);
   const [isSubmittingDigitTrade, setIsSubmittingDigitTrade] = useState(false);
   const digitTradeLock = useRef(false);
@@ -167,7 +171,7 @@ export function TradeControls({
     return numericStake > 0 ? numericStake * payoutMultiplier : 0;
   }, [payoutMultiplier, stake]);
 
-  const handleDigitBuy = async () => {
+  const handleDigitBuy = async (contractType: DigitContractType = selectedContract) => {
     if (digitTradeLock.current) return;
     const numericStake = Number(stake);
     if (!Number.isFinite(numericStake) || numericStake < MIN_TRADE_STAKE) {
@@ -186,8 +190,8 @@ export function TradeControls({
     const payload = {
       market_symbol: activeSymbol.underlying_symbol,
       market_name: activeSymbol.underlying_symbol_name ?? activeSymbol.underlying_symbol,
-      contract_type: selectedContract,
-      prediction_digit: ['EVEN', 'ODD'].includes(selectedContract) ? null : selectedDigit,
+      contract_type: contractType,
+      prediction_digit: ['EVEN', 'ODD'].includes(contractType) ? null : selectedDigit,
       entry_price: Number(marketPrice.toFixed(marketPrecision)),
       price_precision: marketPrecision,
       stake: Number(numericStake.toFixed(2)),
@@ -222,7 +226,7 @@ export function TradeControls({
 
   return (
     <div className="w-full space-y-3 lg:space-y-4">
-      <div className="rounded-2xl border border-border bg-muted/25 p-2.5">
+      <div className="hidden rounded-2xl border border-border bg-muted/25 p-2.5 lg:block">
         <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           <Localize i18n_default_text="Contract type" />
         </div>
@@ -235,7 +239,7 @@ export function TradeControls({
                 type="button"
                 variant={isSelected ? 'default' : 'outline'}
                 className="h-auto min-h-[44px] rounded-xl px-2 py-2 text-sm font-medium"
-                onClick={() => setSelectedContract(option.key)}
+                onClick={() => onSelectedContractChange(option.key)}
               >
                 {option.label}
               </Button>
@@ -315,12 +319,18 @@ export function TradeControls({
         </div>
       </div>
 
-      <div className="max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+5rem)] max-lg:left-3 max-lg:right-3 max-lg:z-[70] lg:static">
+      <DigitContractActions
+        selectedContract={selectedContract}
+        disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
+        onBuy={contractType => void handleDigitBuy(contractType)}
+      />
+
+      <div className="hidden lg:block">
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
-          onClick={handleDigitBuy}
+          onClick={() => void handleDigitBuy()}
         >
           <span className="flex flex-col items-center leading-tight gap-0.5">
             <span><Localize i18n_default_text="Buy" /></span>
