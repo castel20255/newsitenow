@@ -26,7 +26,7 @@ MEGAPAY_EMAIL=your-megapay-account-email
 
 Without the Supabase URL and anon key, the site's account forms still open but submission is disabled. The username login lookup also requires the service-role key.
 
-## MegaPay App Wallet Deposits
+## MegaPay Real Wallet Deposits
 
 Apply all SQL migrations, including `202610200001_megapay_wallet.sql`, before enabling deposits. Configure `MEGAPAY_API_KEY` and `MEGAPAY_EMAIL` from your MegaPay account as server-side environment variables. Never expose the MegaPay key to browser code or commit real credentials.
 
@@ -38,7 +38,7 @@ Add the MegaPay variables to the deployment environment and redeploy only after 
 
 Apply `202610200003_admin_withdrawals.sql` after the wallet migrations. Admins are managed in `public.site_admins`; no user or email is hardcoded in migrations. To grant one existing Supabase user access, resolve their email from `auth.users` using their UUID in a one-time SQL statement. This does not create an account or set a password; manage credentials in Supabase Auth.
 
-Users can request an M-Pesa withdrawal from App Wallet. The amount is reserved immediately; admin rejection restores it. Admin approval does not claim money was sent: after the manual M-Pesa transfer, the admin must enter its payout reference to mark the request paid. App Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
+Users can request an M-Pesa withdrawal from Real Wallet. The amount is reserved immediately; admin rejection restores it. Admin approval does not claim money was sent: after the manual M-Pesa transfer, the admin must enter its payout reference to mark the request paid. Real Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
 
 ## Deploy to Vercel
 
@@ -59,7 +59,7 @@ The app is available at `http://localhost:3000`.
 
 ## Account and Trading Model
 
-New site accounts receive a virtual USD 10,000 demo account. Users can also select App Wallet to fund simulated trades from their deposited USD balance; stakes are reserved at placement and simulated payouts return to App Wallet. These trades use public market quotes and are recorded in the user's Supabase-backed paper-trade history. The Deriv real account is a placeholder and remains unavailable until a regulated funding and execution provider is integrated. App Wallet funds do not change the Deriv balance and cannot place real trades.
+New site accounts receive a virtual USD 10,000 demo account. Users can also select Real Wallet to fund simulated trades from their deposited USD balance; stakes are reserved at placement and simulated payouts return to Real Wallet. These trades use public market quotes and are recorded in the user's Supabase-backed paper-trade history. The Deriv real account is a placeholder and remains unavailable until a regulated funding and execution provider is integrated. Real Wallet funds do not change the Deriv balance and cannot place real trades.
 
 Demo trades use the editable duration selected for that trade (minimum 15 seconds); tick-duration contracts are not offered. Each trade stores its own `duration_seconds` and expiry in Supabase, so changing the duration for a later trade does not alter existing trades. At settlement, a winning trade credits the quoted gross payout (including the returned stake); a losing trade receives no payout and its stake remains deducted.
 

@@ -106,7 +106,7 @@ export async function PATCH(request: Request) {
       p_balance_usd: balance,
       p_note: note || null,
     });
-    if (error) return Response.json({ error: 'Could not save the Site Wallet balance.' }, { status: 409 });
+    if (error) return Response.json({ error: 'Could not save the Real Wallet balance.' }, { status: 409 });
 
     const result = Array.isArray(data) ? data[0] : data;
     if (!isRecord(result)) return Response.json({ error: 'Could not confirm the balance update.' }, { status: 503 });

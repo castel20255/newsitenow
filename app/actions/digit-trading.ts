@@ -138,7 +138,7 @@ export async function recordDigitTrade(input: DigitTradeRecordInput) {
 
     if (error) {
       if (error.message.includes('Insufficient')) {
-        return { error: input.fundingSource === 'app_wallet' ? 'Insufficient App Wallet balance for this trade.' : 'Insufficient demo balance for this trade.' };
+        return { error: input.fundingSource === 'app_wallet' ? 'Insufficient Real Wallet balance for this trade.' : 'Insufficient demo balance for this trade.' };
       }
       if (error.message.includes('Demo account unavailable')) {
         return { error: 'Demo account is not available.' };

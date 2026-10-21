@@ -54,7 +54,7 @@ function AccountLabel({ type }: { type: SiteAccountType }) {
       )}
     >
       {type === 'app_wallet' ? (
-        'App Wallet'
+        'Real Wallet'
       ) : type === 'demo' ? (
         <Localize i18n_default_text="Demo account" />
       ) : (
@@ -402,7 +402,7 @@ export function Header({
                     'text-sm font-medium whitespace-nowrap truncate',
                     isAppWalletSelected ? 'text-emerald-600' : 'text-orange-500'
                   )}>
-                    {activeAccount?.account_type === 'app_wallet' ? 'App Wallet' : activeAccount ? 'Demo account' : 'Select account'}
+                    {activeAccount?.account_type === 'app_wallet' ? 'Real Wallet' : activeAccount ? 'Demo account' : 'Select account'}
                   </span>
                   {showAccountBalance && (
                     <p className="text-base font-bold text-foreground whitespace-nowrap truncate">

@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     });
     if (error) {
       const message = error.message.includes('Insufficient')
-        ? 'Your App Wallet balance is insufficient.'
+        ? 'Your Real Wallet balance is insufficient.'
         : 'Could not submit the withdrawal request.';
       return Response.json({ error: message }, { status: 400 });
     }
