@@ -32,8 +32,11 @@ function TradeRow({ trade }: { trade: SitePaperTrade }) {
   const stake = Number(trade.stake);
   const payout = Number(trade.payout);
   const profit = trade.status === 'open' ? null : payout - stake;
-  const contract = trade.contract_type === 'CALL' ? 'Rise'
-    : trade.contract_type === 'PUT' ? 'Fall'
+  const isForexBasketTrade = trade.symbol.toLowerCase().startsWith('frx');
+  const contract = isForexBasketTrade && trade.contract_type === 'CALL' ? 'Forex Bskt Buy'
+    : isForexBasketTrade && trade.contract_type === 'PUT' ? 'Forex Bskt Sell'
+      : trade.contract_type === 'CALL' ? 'Rise'
+        : trade.contract_type === 'PUT' ? 'Fall'
       : trade.contract_type === 'CALLE' ? 'Rise (Equal)'
         : trade.contract_type === 'PUTE' ? 'Fall (Equal)'
           : trade.contract_type === 'OVER' ? 'Over'
