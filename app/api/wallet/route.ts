@@ -61,7 +61,7 @@ async function loadAllWalletRows<T>(
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const user = await getAuthenticatedUser();
     if (!user) return Response.json({ error: 'Sign in to access your wallet.' }, { status: 401 });
@@ -97,6 +97,31 @@ export async function GET() {
 
     if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
+    }
+
+    let trades: Record<string, unknown>[] = [];
+    if (new URL(request.url).searchParams.get('includeTrades') === 'true') {
+      const [paperTradesResult, digitTradesResult] = await Promise.all([
+        loadAllWalletRows((from, to) => admin
+          .from('paper_trades')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .range(from, to)),
+        loadAllWalletRows((from, to) => admin
+          .from('digit_market_trades')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .range(from, to)),
+      ]);
+      if (paperTradesResult.error || digitTradesResult.error) {
+        return Response.json({ error: 'Could not load trade history.' }, { status: 503 });
+      }
+      trades = [
+        ...(paperTradesResult.data ?? []).map(trade => ({ ...trade, source: 'contract' })),
+        ...(digitTradesResult.data ?? []).map(trade => ({ ...trade, source: 'digit' })),
+      ].sort((left, right) => new Date(String(right.created_at)).valueOf() - new Date(String(left.created_at)).valueOf());
     }
 
     const deposits = depositResult.data ?? [];
@@ -151,6 +176,7 @@ export async function GET() {
       deposits,
       withdrawals: withdrawalResult.data ?? [],
       transactions,
+      trades,
     });
   } catch {
     return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
