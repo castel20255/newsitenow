@@ -1,31 +1,23 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getPublicWsUrl } from '@deriv/core';
+import {
+  DEFAULT_DIGIT_WINDOW_SIZE,
+  extractLastDigit,
+  LastDigitStatisticsCalculator,
+  type LastDigitStatistics,
+} from '@/lib/last-digit-statistics';
 
 interface DigitSpreadProps {
   symbol?: string | null;
   currentPrice?: number | null;
+  currentPrecision?: number;
+  windowSize?: number;
+  onStatsUpdate?: (statistics: LastDigitStatistics) => void;
 }
 
-interface DigitSpreadRecord {
-  digit: number;
-  count: number;
-  percentage: number;
-}
-
-function getLastDigit(value: number): number {
-  if (!Number.isFinite(value) || value <= 0) return 0;
-  const normalized = Number(value.toFixed(10));
-  const stringValue = String(normalized);
-  if (!stringValue.includes('.')) {
-    return Number.parseInt(stringValue.slice(-1), 10) || 0;
-  }
-
-  const decimals = stringValue.split('.')[1] ?? '0';
-  const lastCharacter = decimals.trim().slice(-1) || '0';
-  return Number.parseInt(lastCharacter, 10) || 0;
-}
+type FeedStatus = 'connecting' | 'live' | 'reconnecting' | 'unavailable';
 
 function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -74,70 +66,164 @@ function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
   });
 }
 
-function getDigitSpreadData(prices: number[]): DigitSpreadRecord[] {
-  const counts = Array.from({ length: 10 }, () => 0);
-  prices.filter(Number.isFinite).forEach((price) => {
-    const lastDigit = getLastDigit(price);
-    counts[lastDigit] += 1;
-  });
-
-  const total = counts.reduce((sum, value) => sum + value, 0) || 1;
-  const exactPercentages = counts.map((count) => (count / total) * 100);
-  const percentages = exactPercentages.map(Math.floor);
-  let remainingPercentage = 100 - percentages.reduce((sum, value) => sum + value, 0);
-  const remainderOrder = exactPercentages
-    .map((percentage, digit) => ({ digit, remainder: percentage - Math.floor(percentage) }))
-    .sort((left, right) => right.remainder - left.remainder);
-  for (let index = 0; index < remainingPercentage; index += 1) {
-    percentages[remainderOrder[index].digit] += 1;
-  }
-
-  return counts.map((count, digit) => ({
-    digit,
-    count,
-    percentage: percentages[digit],
-  }));
-}
-
-export function DigitSpread({ symbol, currentPrice }: DigitSpreadProps) {
-  const [spread, setSpread] = useState<DigitSpreadRecord[]>(() =>
-    Array.from({ length: 10 }, (_, digit) => ({ digit, count: 0, percentage: 0 }))
+export function DigitSpread({
+  symbol,
+  currentPrice,
+  currentPrecision,
+  windowSize = DEFAULT_DIGIT_WINDOW_SIZE,
+  onStatsUpdate,
+}: DigitSpreadProps) {
+  const resolvedWindowSize = Number.isSafeInteger(windowSize) && windowSize > 0
+    ? windowSize
+    : DEFAULT_DIGIT_WINDOW_SIZE;
+  const [statistics, setStatistics] = useState<LastDigitStatistics>(
+    () => new LastDigitStatisticsCalculator(resolvedWindowSize).getStatistics()
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [feedStatus, setFeedStatus] = useState<FeedStatus>('connecting');
+  const onStatsUpdateRef = useRef(onStatsUpdate);
+  onStatsUpdateRef.current = onStatsUpdate;
 
   useEffect(() => {
     if (!symbol) {
-      setSpread(Array.from({ length: 10 }, (_, digit) => ({ digit, count: 0, percentage: 0 })));
+      const emptyStatistics = new LastDigitStatisticsCalculator(resolvedWindowSize).getStatistics();
+      setStatistics(emptyStatistics);
+      setFeedStatus('unavailable');
       return;
     }
 
     let active = true;
-    const fetchSpread = async () => {
-      setIsLoading(true);
+    let socket: WebSocket | null = null;
+    let reconnectTimer: number | undefined;
+    let reconnectAttempt = 0;
+    let malformedMessages = 0;
+    let historyPrecision: number | undefined;
+    const calculator = new LastDigitStatisticsCalculator(resolvedWindowSize);
+    const publish = (nextStatistics: LastDigitStatistics) => {
+      setStatistics(nextStatistics);
       try {
-        const response = await requestPublicDeriv<{ history?: { prices?: number[] }; error?: { message?: string } }>({
-          ticks_history: symbol,
-          style: 'ticks',
-          count: 500,
-        });
-        const prices = response.history?.prices ?? [];
-        if (!active) return;
-        setSpread(getDigitSpreadData(prices.slice(-500)));
+        onStatsUpdateRef.current?.(nextStatistics);
       } catch {
-        if (!active) return;
-        setSpread(Array.from({ length: 10 }, (_, digit) => ({ digit, count: 0, percentage: 0 })));
-      } finally {
-        if (active) setIsLoading(false);
+        // A consumer callback must not interrupt the live feed.
       }
     };
 
-    void fetchSpread();
+    const scheduleReconnect = () => {
+      if (!active || reconnectTimer !== undefined) return;
+      setFeedStatus('reconnecting');
+      const delay = Math.min(1000 * (2 ** reconnectAttempt), 15000);
+      reconnectAttempt += 1;
+      reconnectTimer = window.setTimeout(() => {
+        reconnectTimer = undefined;
+        connect();
+      }, delay);
+    };
+
+    const connect = () => {
+      if (!active) return;
+      setFeedStatus(reconnectAttempt === 0 ? 'connecting' : 'reconnecting');
+
+      try {
+        socket = new WebSocket(getPublicWsUrl());
+      } catch {
+        scheduleReconnect();
+        return;
+      }
+
+      socket.addEventListener('open', () => {
+        if (!active || !socket || socket.readyState !== WebSocket.OPEN) return;
+        try {
+          socket.send(JSON.stringify({ ticks: symbol, subscribe: 1 }));
+        } catch {
+          socket.close();
+        }
+      });
+
+      socket.addEventListener('message', (event) => {
+        if (!active) return;
+      try {
+          const response = JSON.parse(String(event.data)) as {
+            error?: { message?: string };
+            tick?: { symbol?: string; quote?: number | string; pip_size?: number };
+          };
+          if (response.error) {
+            socket?.close();
+            return;
+          }
+
+          const tick = response.tick;
+          if (!tick || (tick.symbol && tick.symbol !== symbol)) return;
+          if (typeof tick.quote !== 'number' && typeof tick.quote !== 'string') {
+            malformedMessages += 1;
+            if (malformedMessages >= 3) socket?.close();
+            return;
+          }
+
+          const nextStatistics = calculator.pushTick(tick.quote, tick.pip_size ?? historyPrecision);
+          if (!nextStatistics) {
+            malformedMessages += 1;
+            if (malformedMessages >= 3) socket?.close();
+            return;
+          }
+
+          malformedMessages = 0;
+          reconnectAttempt = 0;
+          setFeedStatus('live');
+          publish(nextStatistics);
+        } catch {
+          malformedMessages += 1;
+          if (malformedMessages >= 3) socket?.close();
+        }
+      });
+
+      socket.addEventListener('error', () => socket?.close());
+      socket.addEventListener('close', () => {
+        if (active) scheduleReconnect();
+      });
+    };
+
+    const initializeFeed = async () => {
+      setFeedStatus('connecting');
+      try {
+        const response = await requestPublicDeriv<{
+          history?: { prices?: number[] };
+          pip_size?: number;
+        }>({
+          ticks_history: symbol,
+          style: 'ticks',
+          count: resolvedWindowSize,
+          end: 'latest',
+        });
+        if (!active) return;
+        historyPrecision = response.pip_size;
+        publish(calculator.loadHistory(response.history?.prices ?? [], historyPrecision));
+      } catch {
+        if (!active) return;
+        setFeedStatus('reconnecting');
+      }
+      connect();
+    };
+
+    void initializeFeed();
     return () => {
       active = false;
+      if (reconnectTimer !== undefined) window.clearTimeout(reconnectTimer);
+      try {
+        socket?.close();
+      } catch {}
     };
-  }, [symbol]);
+  }, [symbol, resolvedWindowSize]);
 
-  const activeDigit = useMemo(() => (typeof currentPrice === 'number' && Number.isFinite(currentPrice) ? getLastDigit(currentPrice) : 0), [currentPrice]);
+  const activeDigit = useMemo(() => {
+    if (typeof currentPrice !== 'number') return 0;
+    return extractLastDigit(currentPrice, currentPrecision) ?? 0;
+  }, [currentPrice, currentPrecision]);
+
+  const feedStatusLabel = {
+    connecting: 'Connecting…',
+    live: `${statistics.total_ticks} / ${resolvedWindowSize} ticks`,
+    reconnecting: 'Reconnecting…',
+    unavailable: 'Market unavailable',
+  }[feedStatus];
 
   return (
     <div className="rounded-2xl border border-border bg-muted/30 p-3">
@@ -145,14 +231,15 @@ export function DigitSpread({ symbol, currentPrice }: DigitSpreadProps) {
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">0–9 spread</span>
         </div>
-        <span className="text-[10px] text-muted-foreground">{isLoading ? 'Updating…' : 'Last 500 ticks'}</span>
+        <span className="text-[10px] text-muted-foreground">{feedStatusLabel}</span>
       </div>
 
       <div className="grid grid-cols-10 gap-1">
-        {spread.map((entry) => {
-          const isSelected = entry.digit === activeDigit;
+        {Array.from({ length: 10 }, (_, digit) => {
+          const isSelected = digit === activeDigit;
+          const entry = statistics.digits[String(digit) as keyof LastDigitStatistics['digits']];
           return (
-            <div key={entry.digit} className="flex min-w-0 flex-col items-center">
+            <div key={digit} className="flex min-w-0 flex-col items-center">
               <div
                 className={`flex aspect-square w-full max-w-9 items-center justify-center rounded-full border text-xs font-semibold tabular-nums ${
                   isSelected
@@ -160,14 +247,15 @@ export function DigitSpread({ symbol, currentPrice }: DigitSpreadProps) {
                     : 'border-border bg-background text-foreground'
                 }`}
               >
-                {entry.digit}
+                {digit}
               </div>
               <div className="flex h-2 items-start justify-center">
                 {isSelected && <span className="border-x-[5px] border-t-0 border-b-[7px] border-x-transparent border-b-red-500" />}
               </div>
               <span className="text-[9px] font-medium tabular-nums text-muted-foreground">
-                {entry.percentage}%
+                {entry.percentage.toFixed(1)}%
               </span>
+              <span className="text-[8px] tabular-nums text-muted-foreground/75">{entry.count}</span>
             </div>
           );
         })}
