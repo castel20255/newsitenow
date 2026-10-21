@@ -95,7 +95,7 @@ export default function ReportsPage() {
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
             <p className="text-xs text-muted-foreground">
-              {accountFilter === 'app_wallet' ? 'App Wallet' : 'Demo account'}
+              {accountFilter === 'app_wallet' ? 'Real Wallet' : 'Demo account'}
             </p>
             <h1 className="text-lg font-semibold">Trade history</h1>
           </div>
@@ -154,7 +154,7 @@ export default function ReportsPage() {
                   {visibleTrades.length === 0 && (
                     <tr className="border-t border-border">
                       <td colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
-                        No {accountFilter === 'app_wallet' ? 'App Wallet' : 'Demo account'} trades to show.
+                        No {accountFilter === 'app_wallet' ? 'Real Wallet' : 'Demo account'} trades to show.
                       </td>
                     </tr>
                   )}

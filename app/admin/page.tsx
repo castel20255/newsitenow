@@ -118,7 +118,7 @@ export default function AdminPage() {
       if (!response.ok || typeof data !== 'object' || data === null || !('newBalance' in data)) {
         const message = typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string'
           ? data.error
-          : 'Could not update Site Wallet balance.';
+          : 'Could not update Real Wallet balance.';
         throw new Error(message);
       }
       setUsers(current => current.map(item => item.id === user.id
@@ -128,7 +128,7 @@ export default function AdminPage() {
       setBalanceDraft('');
       setBalanceNote('');
     } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : 'Could not update Site Wallet balance.');
+      setError(saveError instanceof Error ? saveError.message : 'Could not update Real Wallet balance.');
     } finally {
       setBusyId(null);
     }
@@ -243,7 +243,7 @@ export default function AdminPage() {
                         <th className="px-3 py-3 font-medium">User</th>
                         <th className="px-3 py-3 font-medium">Status / last seen</th>
                         <th className="px-3 py-3 text-right font-medium">Demo</th>
-                        <th className="px-3 py-3 text-right font-medium">Site Wallet</th>
+                        <th className="px-3 py-3 text-right font-medium">Real Wallet</th>
                         <th className="px-3 py-3 text-right font-medium">Real</th>
                         <th className="px-3 py-3 text-right font-medium">Action</th>
                       </tr>
@@ -272,7 +272,7 @@ export default function AdminPage() {
                             <td className="px-3 py-4 text-right">
                               {editingUserId === user.id ? (
                                 <div className="ml-auto w-64 space-y-2 text-left">
-                                  <label className="block text-xs font-medium" htmlFor={`site-balance-${user.id}`}>New Site Wallet balance (USD)</label>
+                                  <label className="block text-xs font-medium" htmlFor={`site-balance-${user.id}`}>New Real Wallet balance (USD)</label>
                                   <input
                                     id={`site-balance-${user.id}`}
                                     type="number"

@@ -175,7 +175,7 @@ export async function placeDemoTrade(input: DemoTradeInput) {
     if (error) {
       return {
         error: error.message.includes('Insufficient')
-          ? input.fundingSource === 'app_wallet' ? 'Your App Wallet balance is too low.' : 'Your demo balance is too low.'
+          ? input.fundingSource === 'app_wallet' ? 'Your Real Wallet balance is too low.' : 'Your demo balance is too low.'
           : 'Could not place the simulated trade.',
       };
     }

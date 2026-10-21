@@ -91,7 +91,7 @@ export default function WalletPage() {
   const isValidPhone = isValidKenyanMobile(msisdn);
   const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
   const activeWalletType = auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo';
-  const activeWalletName = activeWalletType === 'app_wallet' ? 'Site Wallet' : 'Demo account';
+  const activeWalletName = activeWalletType === 'app_wallet' ? 'Real Wallet' : 'Demo account';
   const activeWalletBalance = activeWalletType === 'app_wallet'
     ? balanceUsd ?? Number(auth.activeAccount?.balance ?? 0)
     : Number(auth.activeAccount?.balance ?? 0);
@@ -285,7 +285,7 @@ export default function WalletPage() {
         if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
         await auth.refresh();
         auth.switchAccount('app-wallet');
-        setMessage('Payment confirmed and Site Wallet credited. Opening the trading workspace.');
+        setMessage('Payment confirmed and Real Wallet credited. Opening the trading workspace.');
         setIsRedirecting(true);
         window.setTimeout(() => router.push('/'), 1200);
       } else if (data.status === 'failed' || data.status === 'expired') {
@@ -362,7 +362,7 @@ export default function WalletPage() {
               <p className="font-semibold">{isRedirecting ? 'Payment confirmed' : 'Processing payment'}</p>
               <p className="mt-1 text-sm leading-5 text-muted-foreground">
                 {isRedirecting
-                  ? 'Your Site Wallet has been updated. Opening the trading workspace.'
+                  ? 'Your Real Wallet has been updated. Opening the trading workspace.'
                   : isStarting
                     ? 'Sending your payment request. Approve it on your phone.'
                     : 'Waiting for payment confirmation.'}
@@ -375,7 +375,7 @@ export default function WalletPage() {
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
             <div>
-              <p className="mb-2 text-sm font-medium text-emerald-600">Site Wallet</p>
+              <p className="mb-2 text-sm font-medium text-emerald-600">Real Wallet</p>
               <h1 className="text-3xl font-semibold tracking-normal">Wallet</h1>
             </div>
           </div>
@@ -387,7 +387,7 @@ export default function WalletPage() {
                 <p className="mt-1 text-sm font-medium text-white/80">{activeWalletName}</p>
               </div>
               <span className="shrink-0 border border-white/20 px-2.5 py-1 text-xs font-medium text-emerald-100">
-                {activeWalletType === 'app_wallet' ? 'Site Wallet' : 'Demo'}
+                {activeWalletType === 'app_wallet' ? 'Real Wallet' : 'Demo'}
               </span>
             </div>
             <div className="px-5 py-6 sm:px-7 sm:py-8">
@@ -560,7 +560,7 @@ export default function WalletPage() {
                 <>
                   <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Request an M-Pesa withdrawal</h2>
                   <p className="mb-5 max-w-lg text-sm leading-6 text-muted-foreground">
-                    Requests are reviewed by an administrator and paid manually. The requested amount is reserved from your available Site Wallet balance. You’ll see a payout reference when it is marked paid.
+                    Requests are reviewed by an administrator and paid manually. The requested amount is reserved from your available Real Wallet balance. You’ll see a payout reference when it is marked paid.
                   </p>
                   <form className="max-w-sm space-y-4" onSubmit={requestWithdrawal}>
                     <div>
