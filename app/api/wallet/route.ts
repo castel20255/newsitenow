@@ -5,7 +5,6 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
 
 const USD_TO_KES = 131.21;
-const MINIMUM_DEPOSIT_USD = 1;
 const HOURLY_DEPOSIT_LIMIT = 5;
 const DEPOSIT_TIMEOUT_MS = 60_000;
 const WALLET_ACTIVITY_PAGE_SIZE = 1000;
@@ -67,7 +66,7 @@ export async function GET(request: Request) {
     if (!user) return Response.json({ error: 'Sign in to access your wallet.' }, { status: 401 });
 
     const admin = createSupabaseAdminClient();
-    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult] = await Promise.all([
+    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult, depositSettingsResult] = await Promise.all([
       admin.from('app_wallets').select('balance_usd').eq('user_id', user.id).maybeSingle(),
       loadAllWalletRows((from, to) => admin
         .from('wallet_deposits')
@@ -93,9 +92,10 @@ export async function GET(request: Request) {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .range(from, to)),
+      admin.from('user_deposit_settings').select('minimum_deposit_usd').eq('user_id', user.id).maybeSingle(),
     ]);
 
-    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error) {
+    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error || depositSettingsResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     }
 
@@ -172,6 +172,7 @@ export async function GET(request: Request) {
 
     return Response.json({
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
+      minimumDepositUsd: Number(depositSettingsResult.data?.minimum_deposit_usd ?? 1),
       latestDeposit: deposits[0] ?? null,
       deposits,
       withdrawals: withdrawalResult.data ?? [],
@@ -198,10 +199,19 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Enter a valid M-Pesa phone number and deposit amount.' }, { status: 400 });
     }
 
+    const admin = createSupabaseAdminClient();
+    const { data: depositSettings, error: settingsError } = await admin
+      .from('user_deposit_settings')
+      .select('minimum_deposit_usd')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (settingsError) return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
+
+    const minimumDepositUsd = Number(depositSettings?.minimum_deposit_usd ?? 1);
     const amountUsd = Number(body.amountUsd);
     const amountCents = Math.round(amountUsd * 100);
-    if (!Number.isFinite(amountUsd) || amountCents < MINIMUM_DEPOSIT_USD * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
-      return Response.json({ error: 'The minimum deposit is $1.00 USD.' }, { status: 400 });
+    if (!Number.isFinite(amountUsd) || amountCents < minimumDepositUsd * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
+      return Response.json({ error: `The minimum deposit is $${minimumDepositUsd.toFixed(2)} USD.` }, { status: 400 });
     }
 
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');
@@ -210,7 +220,6 @@ export async function POST(request: Request) {
     }
 
     const amountKes = Math.ceil((amountCents / 100) * USD_TO_KES - 0.0000001);
-    const admin = createSupabaseAdminClient();
     const expiredBefore = new Date(Date.now() - DEPOSIT_TIMEOUT_MS).toISOString();
     const { error: expireError } = await admin
       .from('wallet_deposits')

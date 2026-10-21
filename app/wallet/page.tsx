@@ -78,6 +78,7 @@ export default function WalletPage() {
   const [withdrawalMsisdn, setWithdrawalMsisdn] = useState('');
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
+  const [minimumDepositUsd, setMinimumDepositUsd] = useState(1);
   const [deposit, setDeposit] = useState<WalletDeposit | null>(null);
   const [transactions, setTransactions] = useState<WalletActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +90,7 @@ export default function WalletPage() {
   const [messageIsError, setMessageIsError] = useState(false);
   const amountNumber = Number(amountUsd);
   const amountCents = amountNumber * 100;
-  const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= 1 && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
+  const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= minimumDepositUsd && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
   const isValidPhone = isValidKenyanMobile(msisdn);
   const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
   const activeWalletType = auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo';
@@ -110,6 +111,9 @@ export default function WalletPage() {
         if (!response.ok || !isRecord(data)) throw new Error('Could not load wallet details.');
         if (cancelled) return;
         setBalanceUsd(Number(data.balanceUsd ?? 0));
+        const savedMinimum = Number(data.minimumDepositUsd ?? 1);
+        setMinimumDepositUsd(savedMinimum);
+        setAmountUsd(current => Number(current) < savedMinimum ? savedMinimum.toFixed(2) : current);
         const recentDeposits = Array.isArray(data.deposits)
           ? data.deposits.filter(isRecord) as unknown as WalletDeposit[]
           : isRecord(data.latestDeposit)
@@ -460,14 +464,14 @@ export default function WalletPage() {
                         id="wallet-amount"
                         type="number"
                         inputMode="decimal"
-                        min="1.00"
+                        min={minimumDepositUsd.toFixed(2)}
                         step="0.01"
                         required
                         value={amountUsd}
                         onChange={event => setAmountUsd(event.target.value)}
                         className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
-                      <p className="mt-2 text-xs text-muted-foreground">Minimum $1.00. M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
+                      <p className="mt-2 text-xs text-muted-foreground">Minimum {money.format(minimumDepositUsd)}. M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
                     </div>
                     <div>
                       <label htmlFor="wallet-msisdn" className="mb-2 block text-sm font-medium">Kenyan M-Pesa phone number</label>

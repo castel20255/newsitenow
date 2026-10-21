@@ -44,18 +44,21 @@ export async function GET() {
       if (data.users.length < perPage) break;
     }
 
-    const [profilesResult, accountsResult, walletsResult, adminsResult] = await Promise.all([
+    const [profilesResult, accountsResult, walletsResult, adminsResult, depositSettingsResult] = await Promise.all([
       admin.from('profiles').select('id, username, full_name, last_seen_at'),
       admin.from('trading_accounts').select('user_id, account_type, balance'),
       admin.from('app_wallets').select('user_id, balance_usd'),
       admin.from('site_admins').select('email'),
+      admin.from('user_deposit_settings').select('user_id, minimum_deposit_usd'),
     ]);
-    if (profilesResult.error || accountsResult.error || walletsResult.error || adminsResult.error) {
+    if (profilesResult.error || accountsResult.error || walletsResult.error || adminsResult.error || depositSettingsResult.error) {
       return Response.json({ error: 'Could not load user balances.' }, { status: 503 });
     }
 
     const profiles = new Map((profilesResult.data ?? []).map(profile => [profile.id, profile]));
     const adminEmails = new Set((adminsResult.data ?? []).map(record => record.email.toLowerCase()));
+    const depositMinimums = new Map((depositSettingsResult.data ?? [])
+      .map(setting => [setting.user_id, Number(setting.minimum_deposit_usd)]));
     const demoBalances = new Map((accountsResult.data ?? [])
       .filter(account => account.account_type === 'demo')
       .map(account => [account.user_id, Number(account.balance)]));
@@ -73,6 +76,7 @@ export async function GET() {
         username: profile?.username ?? '',
         fullName: profile?.full_name ?? '',
         isAdmin: adminEmails.has((user.email ?? '').toLowerCase()),
+        minimumDepositUsd: depositMinimums.get(user.id) ?? 1,
         lastSeenAt: profile?.last_seen_at ?? user.last_sign_in_at ?? null,
         demoBalance: demoBalances.get(user.id) ?? 0,
         siteWalletBalance: siteBalances.get(user.id) ?? 0,
@@ -92,7 +96,30 @@ export async function PATCH(request: Request) {
     if ('response' in access) return access.response;
 
     const body: unknown = await request.json().catch(() => null);
-    if (!isRecord(body) || typeof body.userId !== 'string' || typeof body.balance !== 'string') {
+    if (!isRecord(body) || typeof body.userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(body.userId)) {
+      return Response.json({ error: 'Enter a valid user and balance.' }, { status: 400 });
+    }
+
+    if (typeof body.minimumDepositUsd === 'string') {
+      if (!/^\d+(?:\.\d{1,2})?$/.test(body.minimumDepositUsd)) {
+        return Response.json({ error: 'Enter a valid minimum deposit with up to two decimal places.' }, { status: 400 });
+      }
+      const minimumDepositUsd = Number(body.minimumDepositUsd);
+      if (!Number.isFinite(minimumDepositUsd) || minimumDepositUsd < 1 || minimumDepositUsd > 1_000_000) {
+        return Response.json({ error: 'Minimum deposit must be between $1 and $1,000,000.' }, { status: 400 });
+      }
+
+      const admin = createSupabaseAdminClient();
+      const { data, error } = await admin
+        .from('user_deposit_settings')
+        .upsert({ user_id: body.userId, minimum_deposit_usd: minimumDepositUsd }, { onConflict: 'user_id' })
+        .select('minimum_deposit_usd')
+        .single();
+      if (error) return Response.json({ error: 'Could not save the minimum deposit.' }, { status: 409 });
+      return Response.json({ minimumDepositUsd: Number(data.minimum_deposit_usd) });
+    }
+
+    if (typeof body.balance !== 'string') {
       return Response.json({ error: 'Enter a valid user and balance.' }, { status: 400 });
     }
     if (!/^[0-9a-f-]{36}$/i.test(body.userId) || !/^\d+(?:\.\d{1,2})?$/.test(body.balance)) {
