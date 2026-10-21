@@ -31,6 +31,7 @@ interface FundUser {
   email: string;
   username: string;
   fullName: string;
+  isAdmin: boolean;
   lastSeenAt: string | null;
   demoBalance: number;
   siteWalletBalance: number;
@@ -258,7 +259,13 @@ export default function AdminPage() {
                         return (
                           <tr key={user.id} className="border-t border-border align-top">
                             <td className="px-3 py-4">
-                              <span className="block font-medium">{user.fullName || user.username || 'Unnamed user'}</span>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-medium">{user.fullName || user.username || 'Unnamed user'}</span>
+                                <span className={cn(
+                                  'inline-flex border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider',
+                                  user.isAdmin ? 'border-emerald-600/30 bg-emerald-500/10 text-emerald-700' : 'border-border text-muted-foreground'
+                                )}>{user.isAdmin ? 'Admin' : 'User'}</span>
+                              </div>
                               <span className="mt-1 block text-xs text-muted-foreground">{user.email}</span>
                               {user.username && <span className="mt-1 block text-xs text-muted-foreground">@{user.username}</span>}
                             </td>

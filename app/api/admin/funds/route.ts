@@ -44,16 +44,18 @@ export async function GET() {
       if (data.users.length < perPage) break;
     }
 
-    const [profilesResult, accountsResult, walletsResult] = await Promise.all([
+    const [profilesResult, accountsResult, walletsResult, adminsResult] = await Promise.all([
       admin.from('profiles').select('id, username, full_name, last_seen_at'),
       admin.from('trading_accounts').select('user_id, account_type, balance'),
       admin.from('app_wallets').select('user_id, balance_usd'),
+      admin.from('site_admins').select('email'),
     ]);
-    if (profilesResult.error || accountsResult.error || walletsResult.error) {
+    if (profilesResult.error || accountsResult.error || walletsResult.error || adminsResult.error) {
       return Response.json({ error: 'Could not load user balances.' }, { status: 503 });
     }
 
     const profiles = new Map((profilesResult.data ?? []).map(profile => [profile.id, profile]));
+    const adminEmails = new Set((adminsResult.data ?? []).map(record => record.email.toLowerCase()));
     const demoBalances = new Map((accountsResult.data ?? [])
       .filter(account => account.account_type === 'demo')
       .map(account => [account.user_id, Number(account.balance)]));
@@ -70,6 +72,7 @@ export async function GET() {
         email: user.email ?? '',
         username: profile?.username ?? '',
         fullName: profile?.full_name ?? '',
+        isAdmin: adminEmails.has((user.email ?? '').toLowerCase()),
         lastSeenAt: profile?.last_seen_at ?? user.last_sign_in_at ?? null,
         demoBalance: demoBalances.get(user.id) ?? 0,
         siteWalletBalance: siteBalances.get(user.id) ?? 0,
