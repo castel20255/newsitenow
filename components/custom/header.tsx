@@ -35,6 +35,7 @@ interface HeaderProps {
   /** Optional controls rendered to the left of the login/logout button (e.g. a theme toggle). */
   actions?: React.ReactNode;
   appWalletBalance?: number;
+  showAccountBalance?: boolean;
 }
 
 function formatBalance(balance: string | number, locale: string): string {
@@ -268,6 +269,7 @@ export function Header({
   showAppName,
   actions,
   appWalletBalance: appWalletBalanceOverride,
+  showAccountBalance = true,
 }: HeaderProps) {
   const { currentLang, localize } = useAppTranslations();
   const { isAdmin } = useSiteAuth();
@@ -402,15 +404,17 @@ export function Header({
                   )}>
                     {activeAccount?.account_type === 'app_wallet' ? 'App Wallet' : activeAccount ? 'Demo account' : 'Select account'}
                   </span>
-                  <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
-                    {activeAccount?.account_type === 'app_wallet'
-                      ? displayedAppWalletBalance === null
-                        ? '—'
-                        : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`
-                      : activeAccount
-                        ? `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`
-                        : '—'}
-                  </p>
+                  {showAccountBalance && (
+                    <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
+                      {activeAccount?.account_type === 'app_wallet'
+                        ? displayedAppWalletBalance === null
+                          ? '—'
+                          : `${formatBalance(displayedAppWalletBalance, numberLocale)} USD`
+                        : activeAccount
+                          ? `${formatBalance(activeAccount.balance, numberLocale)} ${activeAccount.currency}`
+                          : '—'}
+                    </p>
+                  )}
                   {activeAccount?.account_type === 'app_wallet' && (
                     <span className="block text-xs text-muted-foreground">Simulated trading</span>
                   )}
