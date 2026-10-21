@@ -211,6 +211,23 @@ export function SiteAuthProvider({
     return () => data.subscription.unsubscribe();
   }, [refresh, supabaseConfig]);
 
+  useEffect(() => {
+    if (authState !== 'authenticated') return;
+
+    const updatePresence = () => {
+      if (document.visibilityState !== 'visible') return;
+      void fetch('/api/account/presence', { method: 'POST', keepalive: true }).catch(() => {});
+    };
+
+    updatePresence();
+    const interval = window.setInterval(updatePresence, 60_000);
+    document.addEventListener('visibilitychange', updatePresence);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', updatePresence);
+    };
+  }, [authState]);
+
   const activeAccount = accounts.find(account => account.id === activeAccountId) ?? null;
   const openAuth = useCallback((mode: 'login' | 'signup') => {
     setAuthDialogMode(mode);
