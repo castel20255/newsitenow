@@ -547,17 +547,19 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   };
 
   const renderBuy = () => (
-    <ConfigurableBuyButton
-      variant={config.styles.buy}
-      isConnected={isConnected}
-      proposal={proposal}
-      stake={stake}
-      contractType={selectedContract}
-      selectedDigit={selectedDigit}
-      onBuy={handleDigitBuy}
-      isBuying={isBuying}
-      isSubmitting={isSubmittingDigitTrade}
-    />
+    <div className={cn(pinBuy && 'max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+5rem)] max-lg:left-3 max-lg:right-3 max-lg:z-[70] lg:static')}>
+      <ConfigurableBuyButton
+        variant={config.styles.buy}
+        isConnected={isConnected}
+        proposal={proposal}
+        stake={stake}
+        contractType={selectedContract}
+        selectedDigit={selectedDigit}
+        onBuy={handleDigitBuy}
+        isBuying={isBuying}
+        isSubmitting={isSubmittingDigitTrade}
+      />
+    </div>
   );
 
   const renderers: Record<ControlKey, () => React.ReactNode> = {
@@ -584,7 +586,6 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
           // Desktop layout: the chart lives in its own fixed left column (no
           // chartSlot here), so it isn't a reorderable block — skip it.
           if (isChart && !chartSlot) return null;
-          if (key === 'buy' && pinBuy) return null;
           const dragging = rearrange.draggingKey === key;
           const over = rearrange.overKey === key;
           return (
@@ -635,7 +636,6 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     return (
       <div className="w-full space-y-3">
         {config.order.map((key) => {
-          if (key === 'buy' && pinBuy) return null;
           if (key === 'chart') {
             return (
               <div
@@ -693,7 +693,6 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         // column). On desktop the chart lives in its own column, so it's omitted
         // here to avoid rendering a second chart.
         if (key === 'chart') return chartSlot ? <div key="chart">{chartSlot}</div> : null;
-        if (key === 'buy' && pinBuy) return null;
         return <div key={key}>{renderers[key]()}</div>;
       })}
       {isAuthenticated && (
