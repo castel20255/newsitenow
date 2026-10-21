@@ -242,7 +242,6 @@ export function TradeControls({
 
   return (
     <div className="w-full space-y-3 lg:space-y-4">
-      {isForexBasket && <p className="border-l-2 border-amber-500 pl-3 text-xs leading-5 text-muted-foreground">Rise/Fall contracts on forex markets. Buy opens Rise; Sell opens Fall.</p>}
       <div className="hidden rounded-2xl border border-border bg-muted/25 p-2.5">
         <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           <Localize i18n_default_text="Contract type" />

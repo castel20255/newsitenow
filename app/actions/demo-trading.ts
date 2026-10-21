@@ -112,7 +112,7 @@ interface TickHistoryResponse {
 export async function placeDemoTrade(input: DemoTradeInput) {
   const duration = getProposalRequest(input);
   if (
-    !/^[A-Z0-9_]{2,32}$/.test(input.symbol) ||
+    !/^[A-Z0-9_]{2,32}$/i.test(input.symbol) ||
     !['CALL', 'PUT', 'CALLE', 'PUTE'].includes(input.contractType) ||
     !Number.isFinite(input.stake) ||
     input.stake < MIN_TRADE_STAKE ||
