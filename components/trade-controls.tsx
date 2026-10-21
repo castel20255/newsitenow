@@ -290,43 +290,45 @@ export function TradeControls({
         )}
       </div>}
 
-      <div className="space-y-1.5">
-        <Label htmlFor="stake" className="text-xs text-muted-foreground">
-          <Localize i18n_default_text="Stake" />
-        </Label>
-        <Input
-          id="stake"
-          type="number"
-          value={stake}
-          onChange={(e) => onStakeChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
-          }}
-          min={MIN_TRADE_STAKE}
-          step="0.01"
-          className="rounded-xl"
-        />
-      </div>
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="stake" className="text-xs text-muted-foreground">
+            <Localize i18n_default_text="Stake" />
+          </Label>
+          <Input
+            id="stake"
+            type="number"
+            value={stake}
+            onChange={(e) => onStakeChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
+            }}
+            min={MIN_TRADE_STAKE}
+            step="0.01"
+            className="rounded-xl"
+          />
+        </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
-          {tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
-        </Label>
-        <Input
-          id="duration-ticks"
-          type="number"
-          inputMode="numeric"
-          value={duration}
-          onChange={(e) => onDurationChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
-          }}
-          min={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 15 : 1}
-          max={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 300 : undefined}
-          step={1}
-          placeholder="1"
-          className="rounded-xl"
-        />
+        <div className="space-y-1.5">
+          <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
+            {tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
+          </Label>
+          <Input
+            id="duration-ticks"
+            type="number"
+            inputMode="numeric"
+            value={duration}
+            onChange={(e) => onDurationChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
+            }}
+            min={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 15 : 1}
+            max={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 300 : undefined}
+            step={1}
+            placeholder="1"
+            className="rounded-xl"
+          />
+        </div>
       </div>
 
       {tradeMode === 'digits' && <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
@@ -355,7 +357,7 @@ export function TradeControls({
         <Button
           asChild
           variant="ghost"
-          className="w-full text-sm text-muted-foreground hover:text-foreground"
+          className="hidden w-full text-sm text-muted-foreground hover:text-foreground sm:flex"
         >
           <Link href="/reports">
             <Localize i18n_default_text="View your positions →" />
