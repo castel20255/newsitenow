@@ -72,7 +72,7 @@ export default function WalletPage() {
   const router = useRouter();
   const [action, setAction] = useState<WalletAction>('deposit');
   const [method, setMethod] = useState<PaymentMethod>('mpesa');
-  const [amountUsd, setAmountUsd] = useState('2.00');
+  const [amountUsd, setAmountUsd] = useState('1.00');
   const [msisdn, setMsisdn] = useState('');
   const [withdrawalName, setWithdrawalName] = useState('');
   const [withdrawalMsisdn, setWithdrawalMsisdn] = useState('');
@@ -89,11 +89,10 @@ export default function WalletPage() {
   const [messageIsError, setMessageIsError] = useState(false);
   const amountNumber = Number(amountUsd);
   const amountCents = amountNumber * 100;
-  const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= 2 && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
+  const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= 1 && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
   const isValidPhone = isValidKenyanMobile(msisdn);
   const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
   const activeWalletType = auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo';
-  const activeWalletName = activeWalletType === 'app_wallet' ? 'Real Wallet' : 'Demo account';
   const activeWalletBalance = activeWalletType === 'app_wallet'
     ? balanceUsd ?? Number(auth.activeAccount?.balance ?? 0)
     : Number(auth.activeAccount?.balance ?? 0);
@@ -372,33 +371,41 @@ export default function WalletPage() {
         </div>
       )}
       <div className="min-h-0 flex-1 overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+5rem)] lg:pb-0">
-        <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
-            <div>
-              <p className="mb-2 text-sm font-medium text-emerald-600">Real Wallet</p>
-              <h1 className="text-3xl font-semibold tracking-normal">Wallet</h1>
-            </div>
-          </div>
-
-          <section className="mb-8 overflow-hidden border border-emerald-900 bg-emerald-950 text-white shadow-lg dark:border-emerald-800" aria-label="Active account balance">
-            <div className="flex items-center justify-between gap-4 border-b border-white/15 px-5 py-4 sm:px-7">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">Active account</p>
-                <p className="mt-1 text-sm font-medium text-white/80">{activeWalletName}</p>
-              </div>
-              <span className="shrink-0 border border-white/20 px-2.5 py-1 text-xs font-medium text-emerald-100">
-                {activeWalletType === 'app_wallet' ? 'Real Wallet' : 'Demo'}
-              </span>
-            </div>
-            <div className="px-5 py-6 sm:px-7 sm:py-8">
-              <p className="text-sm text-emerald-100/80">Available balance</p>
-              <p className="mt-2 text-4xl font-semibold tabular-nums tracking-normal sm:text-5xl">
+        <div className="mx-auto max-w-5xl px-4 pb-8 pt-0 sm:px-6">
+          <section className="mb-8 overflow-hidden rounded-2xl border border-emerald-300/70 bg-[#061a16] text-white shadow-[0_10px_42px_rgba(16,185,129,0.2),0_0_22px_rgba(16,185,129,0.16)]" aria-label="Active account balance">
+            <div className="p-5 sm:p-7">
+              <p className="text-sm font-medium text-emerald-100/80">Available balance</p>
+              <p className="mt-2 text-4xl font-semibold tabular-nums sm:text-5xl">
                 {auth.authState !== 'authenticated'
                   ? 'Sign in to view'
                   : activeWalletType === 'app_wallet' && isLoading
                     ? 'Loading…'
                     : money.format(activeWalletBalance)}
               </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  aria-pressed={action === 'deposit'}
+                  onClick={() => { setAction('deposit'); setMessage(''); }}
+                  className={cn(
+                    'inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors',
+                    action === 'deposit' ? 'border-emerald-200 bg-emerald-300 text-emerald-950 shadow-[0_0_18px_rgba(110,231,183,0.42)]' : 'border-emerald-100/35 bg-emerald-950/70 text-white hover:bg-emerald-900'
+                  )}
+                >
+                  <ArrowDownToLine className="h-4 w-4" /> Deposit
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={action === 'withdraw'}
+                  onClick={() => { setAction('withdraw'); setMessage(''); }}
+                  className={cn(
+                    'inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors',
+                    action === 'withdraw' ? 'border-emerald-200 bg-emerald-300 text-emerald-950 shadow-[0_0_18px_rgba(110,231,183,0.42)]' : 'border-emerald-100/35 bg-emerald-950/70 text-white hover:bg-emerald-900'
+                  )}
+                >
+                  <ArrowUpFromLine className="h-4 w-4" /> Withdraw
+                </button>
+              </div>
             </div>
           </section>
 
@@ -414,43 +421,8 @@ export default function WalletPage() {
             </div>
           </section>
 
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.8fr)]">
+          <div>
             <section aria-labelledby="wallet-action-heading">
-              <div className="mb-6 flex border-b border-border" role="tablist" aria-label="Wallet action">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={action === 'deposit'}
-                  onClick={() => {
-                    setAction('deposit');
-                    setMessage('');
-                  }}
-                  className={cn(
-                    'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium',
-                    action === 'deposit' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground'
-                  )}
-                >
-                  <ArrowDownToLine className="h-4 w-4" />
-                  Deposit
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={action === 'withdraw'}
-                  onClick={() => {
-                    setAction('withdraw');
-                    setMessage('');
-                  }}
-                  className={cn(
-                    'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium',
-                    action === 'withdraw' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground'
-                  )}
-                >
-                  <ArrowUpFromLine className="h-4 w-4" />
-                  Withdraw
-                </button>
-              </div>
-
               {action === 'deposit' ? (
                 <>
                   <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Choose a deposit method</h2>
@@ -488,14 +460,14 @@ export default function WalletPage() {
                         id="wallet-amount"
                         type="number"
                         inputMode="decimal"
-                        min="2.00"
+                        min="1.00"
                         step="0.01"
                         required
                         value={amountUsd}
                         onChange={event => setAmountUsd(event.target.value)}
                         className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
-                      <p className="mt-2 text-xs text-muted-foreground">Minimum $2.00. M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
+                      <p className="mt-2 text-xs text-muted-foreground">Minimum $1.00. M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
                     </div>
                     <div>
                       <label htmlFor="wallet-msisdn" className="mb-2 block text-sm font-medium">Kenyan M-Pesa phone number</label>
@@ -597,45 +569,6 @@ export default function WalletPage() {
                 <p className="mt-4 text-sm text-muted-foreground">Sign in to start a deposit and view your wallet balance.</p>
               )}
             </section>
-
-            <aside className="border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-              <h2 className="text-base font-semibold">{action === 'deposit' ? 'Deposit details' : 'Withdrawal details'}</h2>
-              {action === 'deposit' ? <dl className="mt-5 space-y-4 text-sm">
-                <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">Exchange rate</dt>
-                  <dd className="font-medium">$1 = KES {USD_TO_KES.toFixed(2)}</dd>
-                </div>
-                <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">KES request</dt>
-                  <dd className="font-medium tabular-nums">{getKesAmount(amountUsd) ? `KES ${getKesAmount(amountUsd).toLocaleString('en-KE')}` : '—'}</dd>
-                </div>
-                <div className="flex justify-between gap-4 border-b border-border pb-3">
-                  <dt className="text-muted-foreground">Status</dt>
-                  <dd className="font-medium capitalize">{deposit?.status ?? 'No deposit'}</dd>
-                </div>
-                {deposit?.status === 'completed' && (
-                  <div className="flex justify-between gap-4 pb-3">
-                    <dt className="text-muted-foreground">Credited</dt>
-                    <dd className="font-medium tabular-nums">{money.format(Number(deposit.credited_usd ?? 0))}</dd>
-                  </div>
-                )}
-              </dl> : (
-                <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                    Withdrawals are not available yet while the site payout service is being set up.
-                </p>
-              )}
-
-              {action === 'deposit' && (
-                <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
-                  Wallet credits are posted after payment confirmation for the requested KES amount.
-                </p>
-              )}
-              {action === 'deposit' && deposit?.status === 'initiating' && (
-                <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
-                  Your payment is still being confirmed. Do not start another deposit; contact support if this takes too long.
-                </p>
-              )}
-            </aside>
           </div>
         </div>
       </div>
