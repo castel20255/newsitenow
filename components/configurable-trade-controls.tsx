@@ -393,7 +393,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   const renderAllowEquals = () => tradeMode === 'digits' ? (
     <div className="space-y-2">
-      <DigitSpread symbol={activeSymbol?.underlying_symbol} currentPrice={marketPrice} />
+      <DigitSpread symbol={activeSymbol?.underlying_symbol} currentPrice={marketPrice} currentPrecision={marketPrecision} />
       <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
         <Localize i18n_default_text="Digit prediction" />
       </div>
