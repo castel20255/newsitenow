@@ -18,6 +18,7 @@ import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
 import { ConfigurableTradeControls } from './configurable-trade-controls';
+import { DIGIT_CONTRACT_GROUPS, type DigitContractType } from '../lib/types';
 import type { RiseFallAppConfig } from '../lib/app-config';
 
 /**
@@ -231,10 +232,10 @@ export function RiseFallView({
   const { localize } = useAppTranslations();
   const isMobile = useIsMobile();
   const chartHidden = appConfig?.chart?.hidden ?? false;
-  const pinBuy = isMobile && !editMode;
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
   const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
+  const [selectedContract, setSelectedContract] = useState<DigitContractType>('OVER');
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
   // would fail with a "Purchase Failed" toast. One gate covers every Buy
@@ -425,7 +426,8 @@ export function RiseFallView({
         selectedKey={selectedKey}
         rearrangeMode={rearrangeMode}
         onReorder={onReorder}
-        pinBuy={pinBuy}
+        selectedContract={selectedContract}
+        onSelectedContractChange={setSelectedContract}
       />
     ) : null;
 
@@ -451,6 +453,27 @@ export function RiseFallView({
         </div>
       ) : (
         headerEl
+      )}
+
+      {!editMode && !rearrangeMode && (
+        <nav className="grid grid-cols-3 gap-1 border-b border-border bg-background px-2 py-2 lg:hidden" aria-label="Digit contract type">
+          {DIGIT_CONTRACT_GROUPS.map(group => {
+            const isSelected = group.contracts.includes(selectedContract);
+            return (
+              <button
+                key={group.label}
+                type="button"
+                aria-pressed={isSelected}
+                onClick={() => setSelectedContract(group.contracts[0])}
+                className={`min-h-10 rounded-md px-1.5 text-xs font-semibold transition-colors ${
+                  isSelected ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'
+                }`}
+              >
+                {group.label}
+              </button>
+            );
+          })}
+        </nav>
       )}
 
       {appConfig ? (
@@ -528,6 +551,8 @@ export function RiseFallView({
                   buyError={buyError}
                   onClearBuyResult={clearBuyResult}
                   isAuthenticated={authState === 'authenticated'}
+                  selectedContract={selectedContract}
+                  onSelectedContractChange={setSelectedContract}
                 />
               )}
             </div>
