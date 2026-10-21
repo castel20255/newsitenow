@@ -18,8 +18,15 @@ import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { useLogoSrc } from '@/components/custom/logo-src-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
-type WalletAction = 'deposit' | 'withdraw';
+type WalletAction = 'deposit' | 'withdraw' | null;
 type PaymentMethod = 'bank-agent' | 'crypto' | 'mpesa';
 type DepositStatus = 'initiating' | 'pending' | 'completed' | 'failed' | 'expired' | 'review';
 
@@ -70,7 +77,7 @@ export default function WalletPage() {
   const auth = useSiteAuth();
   const logoSrc = useLogoSrc();
   const router = useRouter();
-  const [action, setAction] = useState<WalletAction>('deposit');
+  const [action, setAction] = useState<WalletAction>(null);
   const [method, setMethod] = useState<PaymentMethod>('mpesa');
   const [amountUsd, setAmountUsd] = useState('1.00');
   const [msisdn, setMsisdn] = useState('');
@@ -389,22 +396,22 @@ export default function WalletPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   type="button"
-                  aria-pressed={action === 'deposit'}
+                  aria-haspopup="dialog"
                   onClick={() => { setAction('deposit'); setMessage(''); }}
                   className={cn(
                     'inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors',
-                    action === 'deposit' ? 'border-emerald-200 bg-emerald-300 text-emerald-950 shadow-[0_0_18px_rgba(110,231,183,0.42)]' : 'border-emerald-100/35 bg-emerald-950/70 text-white hover:bg-emerald-900'
+                    'border-emerald-200 bg-emerald-300 text-emerald-950 shadow-[0_0_18px_rgba(110,231,183,0.42)] hover:bg-emerald-200'
                   )}
                 >
                   <ArrowDownToLine className="h-4 w-4" /> Deposit
                 </button>
                 <button
                   type="button"
-                  aria-pressed={action === 'withdraw'}
+                  aria-haspopup="dialog"
                   onClick={() => { setAction('withdraw'); setMessage(''); }}
                   className={cn(
                     'inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors',
-                    action === 'withdraw' ? 'border-emerald-200 bg-emerald-300 text-emerald-950 shadow-[0_0_18px_rgba(110,231,183,0.42)]' : 'border-emerald-100/35 bg-emerald-950/70 text-white hover:bg-emerald-900'
+                    'border-emerald-100/35 bg-emerald-950/70 text-white hover:bg-emerald-900'
                   )}
                 >
                   <ArrowUpFromLine className="h-4 w-4" /> Withdraw
@@ -425,11 +432,14 @@ export default function WalletPage() {
             </div>
           </section>
 
-          <div>
-            <section aria-labelledby="wallet-action-heading">
-              {action === 'deposit' ? (
+          <Dialog open={action !== null} onOpenChange={open => { if (!open) setAction(null); }}>
+            <DialogContent className="max-h-[90dvh] overflow-y-auto sm:rounded-xl">
+              {action === 'deposit' && (
                 <>
-                  <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Choose a deposit method</h2>
+                  <DialogHeader>
+                    <DialogTitle>Deposit to Real Wallet</DialogTitle>
+                    <DialogDescription>Choose a method and enter your payment details.</DialogDescription>
+                  </DialogHeader>
                   <div className="grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Deposit method">
                     {paymentMethods.map(({ id, label, description, Icon }) => {
                       const available = id === 'mpesa';
@@ -457,7 +467,7 @@ export default function WalletPage() {
                     })}
                   </div>
 
-                  <form className="mt-7 max-w-sm space-y-4" onSubmit={startDeposit}>
+                  <form className="space-y-4" onSubmit={startDeposit}>
                     <div>
                       <label htmlFor="wallet-amount" className="mb-2 block text-sm font-medium">Deposit amount (USD)</label>
                       <input
@@ -503,13 +513,17 @@ export default function WalletPage() {
                     )}
                   </form>
                 </>
-              ) : (
+              )}
+              {action === 'withdraw' && (
                 <>
-                  <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Request an M-Pesa withdrawal</h2>
-                  <p className="mb-5 max-w-lg text-sm leading-6 text-muted-foreground">
-                    Requests are reviewed by an administrator and paid manually. The requested amount is reserved from your available Real Wallet balance. You’ll see a payout reference when it is marked paid.
+                  <DialogHeader>
+                    <DialogTitle>Request an M-Pesa withdrawal</DialogTitle>
+                    <DialogDescription>Enter the amount and M-Pesa details for your request.</DialogDescription>
+                  </DialogHeader>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    Withdrawals are reviewed and paid manually. Funds are reserved while your request is under review.
                   </p>
-                  <form className="max-w-sm space-y-4" onSubmit={requestWithdrawal}>
+                  <form className="space-y-4" onSubmit={requestWithdrawal}>
                     <div>
                       <label htmlFor="withdrawal-full-name" className="mb-2 block text-sm font-medium">Full names</label>
                       <input
@@ -565,15 +579,15 @@ export default function WalletPage() {
               )}
 
               {message && (
-                <p className={cn('mt-4 max-w-xl text-sm leading-6', messageIsError ? 'text-destructive' : 'text-muted-foreground')} role="status" aria-live="polite">
+                <p className={cn('text-sm leading-6', messageIsError ? 'text-destructive' : 'text-muted-foreground')} role="status" aria-live="polite">
                   {message}
                 </p>
               )}
-              {auth.authState !== 'authenticated' && action === 'deposit' && (
-                <p className="mt-4 text-sm text-muted-foreground">Sign in to start a deposit and view your wallet balance.</p>
+              {auth.authState !== 'authenticated' && action !== null && (
+                <p className="text-sm text-muted-foreground">Sign in to submit a deposit or withdrawal request.</p>
               )}
-            </section>
-          </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </main>
