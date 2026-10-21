@@ -32,6 +32,7 @@ interface FundUser {
   username: string;
   fullName: string;
   isAdmin: boolean;
+  minimumDepositUsd: number;
   lastSeenAt: string | null;
   demoBalance: number;
   siteWalletBalance: number;
@@ -52,6 +53,8 @@ export default function AdminPage() {
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [balanceDraft, setBalanceDraft] = useState('');
   const [balanceNote, setBalanceNote] = useState('');
+  const [editingDepositUserId, setEditingDepositUserId] = useState<string | null>(null);
+  const [minimumDepositDraft, setMinimumDepositDraft] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -130,6 +133,34 @@ export default function AdminPage() {
       setBalanceNote('');
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'Could not update Real Wallet balance.');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const saveMinimumDeposit = async (user: FundUser) => {
+    setBusyId(user.id);
+    setError('');
+    try {
+      const response = await fetch('/api/admin/funds', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, minimumDepositUsd: minimumDepositDraft }),
+      });
+      const data: unknown = await response.json().catch(() => null);
+      if (!response.ok || typeof data !== 'object' || data === null || !('minimumDepositUsd' in data)) {
+        const message = typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string'
+          ? data.error
+          : 'Could not update the minimum deposit.';
+        throw new Error(message);
+      }
+      setUsers(current => current.map(item => item.id === user.id
+        ? { ...item, minimumDepositUsd: Number(data.minimumDepositUsd) }
+        : item));
+      setEditingDepositUserId(null);
+      setMinimumDepositDraft('');
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : 'Could not update the minimum deposit.');
     } finally {
       setBusyId(null);
     }
@@ -241,13 +272,14 @@ export default function AdminPage() {
                 <>
                 {error && <p className="mb-4 border-l-2 border-destructive pl-3 text-sm text-destructive" role="alert">{error}</p>}
                 <div className="overflow-x-auto border-y border-border">
-                  <table className="w-full min-w-[1050px] text-left text-sm">
+                  <table className="w-full min-w-[1180px] text-left text-sm">
                     <thead>
                       <tr className="text-xs text-muted-foreground">
                         <th className="px-3 py-3 font-medium">User</th>
                         <th className="px-3 py-3 font-medium">Status / last seen</th>
                         <th className="px-3 py-3 text-right font-medium">Demo</th>
                         <th className="px-3 py-3 text-right font-medium">Real Wallet</th>
+                        <th className="px-3 py-3 text-right font-medium">Min. deposit</th>
                         <th className="px-3 py-3 text-right font-medium">Real</th>
                         <th className="px-3 py-3 text-right font-medium">Action</th>
                       </tr>
@@ -278,8 +310,34 @@ export default function AdminPage() {
                             </td>
                             <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.demoBalance)}</td>
                             <td className="px-3 py-4 text-right font-semibold tabular-nums">{money.format(user.siteWalletBalance)}</td>
+                            <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.minimumDepositUsd)}</td>
                             <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.realBalance)}</td>
-                            <td className="px-3 py-4 text-right">
+                            <td className="px-3 py-4">
+                              <div className="ml-auto flex w-64 flex-col items-stretch gap-2 text-left">
+                              {editingDepositUserId === user.id ? (
+                                <div className="space-y-2 border-b border-border pb-3">
+                                  <label className="block text-xs font-medium" htmlFor={`minimum-deposit-${user.id}`}>Minimum deposit (USD)</label>
+                                  <input
+                                    id={`minimum-deposit-${user.id}`}
+                                    type="number"
+                                    inputMode="decimal"
+                                    min="1"
+                                    max="1000000"
+                                    step="0.01"
+                                    value={minimumDepositDraft}
+                                    onChange={event => setMinimumDepositDraft(event.target.value)}
+                                    className="h-9 w-full border border-input bg-background px-2 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                  />
+                                  <div className="flex justify-end gap-2">
+                                    <button type="button" onClick={() => { setEditingDepositUserId(null); setMinimumDepositDraft(''); }} className="h-8 border border-border px-2.5 text-xs font-medium hover:bg-muted">Cancel</button>
+                                    <button type="button" disabled={busyId === user.id || !/^\d+(?:\.\d{1,2})?$/.test(minimumDepositDraft) || Number(minimumDepositDraft) < 1 || Number(minimumDepositDraft) > 1000000} onClick={() => void saveMinimumDeposit(user)} className="flex h-8 items-center gap-1 bg-primary px-2.5 text-xs font-semibold text-primary-foreground disabled:opacity-50">
+                                      {busyId === user.id ? <LoaderCircle className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />} Save minimum
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <button type="button" onClick={() => { setEditingDepositUserId(user.id); setMinimumDepositDraft(user.minimumDepositUsd.toFixed(2)); }} className="h-8 border border-border px-3 text-xs font-semibold hover:bg-muted">Minimum deposit</button>
+                              )}
                               {editingUserId === user.id ? (
                                 <div className="ml-auto w-64 space-y-2 text-left">
                                   <label className="block text-xs font-medium" htmlFor={`site-balance-${user.id}`}>New Real Wallet balance (USD)</label>
@@ -312,6 +370,7 @@ export default function AdminPage() {
                               ) : (
                                 <button type="button" onClick={() => { setEditingUserId(user.id); setBalanceDraft(user.siteWalletBalance.toFixed(2)); }} className="h-8 border border-border px-3 text-xs font-semibold hover:bg-muted">Manage</button>
                               )}
+                              </div>
                             </td>
                           </tr>
                         );
