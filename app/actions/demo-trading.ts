@@ -176,7 +176,7 @@ export async function placeDemoTrade(input: DemoTradeInput) {
       return {
         error: error.message.includes('Insufficient')
           ? input.fundingSource === 'app_wallet' ? 'Your Real Wallet balance is too low.' : 'Your demo balance is too low.'
-          : 'Could not place the simulated trade.',
+          : 'Could not place the trade.',
       };
     }
     return { trade: Array.isArray(data) ? data[0] : data };
@@ -224,7 +224,7 @@ export async function settleDemoTrade(tradeId: string) {
       p_exit_quote: exitQuote,
       p_user_id: userData.user.id,
     });
-    if (error) return { error: 'Could not settle this simulated trade.' };
+    if (error) return { error: 'Could not settle this trade.' };
     return { result: Array.isArray(data) ? data[0] : data };
   } catch {
     return { error: 'Demo settlement is temporarily unavailable. It will retry.' };

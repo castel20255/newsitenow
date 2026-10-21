@@ -212,7 +212,7 @@ export async function settleDigitTrade(tradeId: string) {
       p_price_precision: pricePrecision,
       p_user_id: userData.user.id,
     });
-    if (error) return { error: 'Could not settle this simulated digit trade.' };
+    if (error) return { error: 'Could not settle this digit trade.' };
 
     const settlement = Array.isArray(data) ? data[0] : data;
     return {
