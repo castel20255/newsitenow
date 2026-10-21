@@ -368,7 +368,7 @@ export default function WalletPage() {
           </div>
         </div>
       )}
-      <div className="min-h-0 flex-1 overflow-y-auto pb-24 md:pb-0">
+      <div className="min-h-0 flex-1 overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+5rem)] lg:pb-0">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
             <div>

@@ -91,7 +91,7 @@ export default function ReportsPage() {
   return (
     <main className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
       {header}
-      <div className="w-full min-h-0 flex-1 overflow-y-auto px-4 py-4 pb-24 sm:px-6 md:pb-10">
+      <div className="w-full min-h-0 flex-1 overflow-y-auto px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+5rem)] sm:px-6 lg:pb-10">
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
             <p className="text-xs text-muted-foreground">

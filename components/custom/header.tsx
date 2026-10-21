@@ -357,7 +357,7 @@ export function Header({
         )}
       </div>
       {isAuthenticated && (
-        <nav className="hidden md:flex flex-1 justify-center" aria-label="Primary navigation">
+        <nav className="hidden lg:flex flex-1 justify-center" aria-label="Primary navigation">
           <div className="flex items-center gap-1">
             {PRIMARY_NAV_ITEMS.map(({ href, label }) => {
               const active = isPrimaryRouteActive(pathname, href);
@@ -543,7 +543,7 @@ export function Header({
       </DialogPrimitive.Root>
       {isAuthenticated && (
         <nav
-          className="fixed inset-x-0 bottom-0 z-[80] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-sm backdrop-blur md:hidden"
+          className="fixed inset-x-0 bottom-0 z-[80] border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] shadow-sm backdrop-blur lg:hidden"
           aria-label="Primary navigation"
         >
           <div className="grid h-16 grid-cols-3">

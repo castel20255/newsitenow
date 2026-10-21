@@ -31,6 +31,8 @@ export interface PinnedBuyBarProps {
   selected?: boolean;
   /** Called when the bar is clicked in edit mode. */
   onSelect?: () => void;
+  /** Reserves space above the authenticated phone navigation bar. */
+  mobileNavVisible?: boolean;
   /**
    * Accessible name for the selection overlay. Accumulators swaps its Buy button
    * for a Close-position one while a trade is running, so "Buy button" would
@@ -59,9 +61,10 @@ export function PinnedBuyBar({
   selected,
   onSelect,
   label,
+  mobileNavVisible,
 }: PinnedBuyBarProps) {
   return (
-    <div className="shrink-0">
+    <div className={cn('shrink-0', mobileNavVisible && 'pb-[calc(env(safe-area-inset-bottom)+4rem)]')}>
       <div className="relative">
         {/* `inert` is what actually makes the button unusable: pointer-events-none
             only removes it from POINTER hit-testing, while the real <button>
