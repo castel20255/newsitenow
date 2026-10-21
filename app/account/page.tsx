@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { LogOut } from 'lucide-react';
 import { Header } from '@/components/custom/header';
 import { LanguageSwitcher } from '@/components/custom/language-switcher';
 import { ThemeToggle } from '@/components/custom/theme-toggle';
@@ -10,6 +12,14 @@ import { Button } from '@/components/ui/button';
 export default function AccountPage() {
   const auth = useSiteAuth();
   const logoSrc = useLogoSrc();
+  const router = useRouter();
+  const logOut = async () => {
+    try {
+      await auth.logout();
+    } finally {
+      router.replace('/');
+    }
+  };
   const header = (
     <Header
       authState={auth.authState}
@@ -75,6 +85,15 @@ export default function AccountPage() {
                     <p className="mt-1 text-xs text-muted-foreground">Choose your display language</p>
                   </div>
                   <LanguageSwitcher />
+                </div>
+                <div className="flex items-center justify-between gap-4 border-b border-border py-4">
+                  <div>
+                    <p className="text-sm font-medium">Log out</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Sign out of your account</p>
+                  </div>
+                  <Button variant="outline" onClick={() => void logOut()}>
+                    <LogOut className="mr-2 h-4 w-4" /> Log out
+                  </Button>
                 </div>
               </section>
             </div>
