@@ -71,7 +71,7 @@ import type {
   DerivWS,
 } from '@deriv/core';
 import type { SiteAuthState, SiteTradingAccount } from '@/components/custom/site-auth-provider';
-import type { Direction, DurationSelectUnit, DurationOption } from '../lib/types';
+import type { DurationSelectUnit, DurationOption } from '../lib/types';
 import type { UseSmartChartsApiReturn } from '@/hooks/use-smartcharts-api';
 import type { SmartChartChartData } from '@/hooks/use-smartchart-chart-data';
 import type { OpenPosition } from '../lib/types';

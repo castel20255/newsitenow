@@ -9,10 +9,13 @@ const CONTINUOUS_VOLATILITY_SYMBOLS = new Set([
   'R_50',
   'R_75',
   'R_100',
+  '1HZ15V',
   '1HZ10V',
   '1HZ25V',
+  '1HZ30V',
   '1HZ50V',
   '1HZ75V',
+  '1HZ90V',
   '1HZ100V',
 ]);
 
