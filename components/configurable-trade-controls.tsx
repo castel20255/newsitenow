@@ -718,17 +718,26 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   }
 
   return (
-    <div className="w-full space-y-3 lg:space-y-4">
+    <div className="w-full space-y-2 sm:space-y-3 lg:space-y-4">
       {isForexBasket && <p className="border-l-2 border-amber-500 pl-3 text-xs leading-5 text-muted-foreground">Rise/Fall contracts on forex markets. Buy opens Rise; Sell opens Fall.</p>}
-      {config.order.map((key) => {
+      {config.order.map((key, index) => {
         // Chart only renders where a chartSlot is provided (the no-code mobile
         // column). On desktop the chart lives in its own column, so it's omitted
         // here to avoid rendering a second chart.
         if (key === 'chart') return chartSlot ? <div key="chart">{chartSlot}</div> : null;
+        if (key === 'stake' && config.order[index + 1] === 'duration') {
+          return (
+            <div key="stake-duration" className="grid grid-cols-2 gap-2 sm:gap-3">
+              {renderers.stake()}
+              {renderers.duration()}
+            </div>
+          );
+        }
+        if (key === 'stake' || key === 'duration') return null;
         return <div key={key}>{renderers[key]()}</div>;
       })}
       {isAuthenticated && (
-        <Button asChild variant="ghost" className="w-full text-sm text-muted-foreground hover:text-foreground">
+        <Button asChild variant="ghost" className="hidden w-full text-sm text-muted-foreground hover:text-foreground sm:flex">
           <Link href="/reports">
             <Localize i18n_default_text="View your positions →" />
           </Link>

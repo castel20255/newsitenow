@@ -93,6 +93,7 @@ export default function WalletPage() {
   const [isSubmittingWithdrawal, setIsSubmittingWithdrawal] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [demoWarningVisible, setDemoWarningVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messageIsError, setMessageIsError] = useState(false);
   const amountNumber = Number(amountUsd);
@@ -357,9 +358,39 @@ export default function WalletPage() {
     deposit?.status === 'pending' && Date.now() - new Date(deposit.created_at).getTime() < 60_000
   );
 
+  useEffect(() => {
+    if (!demoWarningVisible) return;
+
+    const timer = window.setTimeout(() => setDemoWarningVisible(false), 4000);
+    return () => window.clearTimeout(timer);
+  }, [demoWarningVisible]);
+
+  const handleWalletActionClick = (type: 'deposit' | 'withdraw') => {
+    if (auth.activeAccount?.account_type !== 'app_wallet') {
+      setDemoWarningVisible(true);
+      setAction(null);
+      setMessage('');
+      setMessageIsError(false);
+      return;
+    }
+
+    setAction(type);
+    setMessage('');
+  };
+
   return (
     <main className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
       {header}
+      {demoWarningVisible && (
+        <div className="pointer-events-none fixed inset-x-0 top-5 z-[140] flex justify-center px-4">
+          <div className="flex w-full max-w-xl items-start gap-3 rounded-2xl border border-red-500/40 bg-red-950/95 px-4 py-3 text-white shadow-[0_18px_48px_rgba(127,29,29,0.45)] transition-opacity duration-500 ease-out">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-red-400/50 bg-red-500/10 text-3xl font-black text-red-300">!</div>
+            <p className="text-sm font-medium leading-6 text-red-50">
+              You&apos;re using a Demo account. Withdrawals and deposits are disabled. Switch to Real Wallet and try again.
+            </p>
+          </div>
+        </div>
+      )}
       {isProcessingPayment && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-background/60 px-4 backdrop-blur-[2px]">
           <div className="flex w-full max-w-sm items-center gap-4 border border-border bg-background p-5 shadow-xl" role="status" aria-live="polite">
@@ -397,7 +428,7 @@ export default function WalletPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  onClick={() => { setAction('deposit'); setMessage(''); }}
+                  onClick={() => handleWalletActionClick('deposit')}
                   className={cn(
                     'inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors',
                     'border-emerald-200 bg-emerald-300 text-emerald-950 shadow-[0_0_18px_rgba(110,231,183,0.42)] hover:bg-emerald-200'
@@ -408,7 +439,7 @@ export default function WalletPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  onClick={() => { setAction('withdraw'); setMessage(''); }}
+                  onClick={() => handleWalletActionClick('withdraw')}
                   className={cn(
                     'inline-flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors',
                     'border-emerald-100/35 bg-emerald-950/70 text-white hover:bg-emerald-900'
@@ -524,20 +555,6 @@ export default function WalletPage() {
                     The withdrawn amount will be sent to the M-Pesa wallet you provided immediately.
                   </p>
                   <form className="space-y-4" onSubmit={requestWithdrawal}>
-                    <div>
-                      <label htmlFor="withdrawal-full-name" className="mb-2 block text-sm font-medium">Full names</label>
-                      <input
-                        id="withdrawal-full-name"
-                        type="text"
-                        autoComplete="name"
-                        minLength={2}
-                        maxLength={120}
-                        required
-                        value={withdrawalName}
-                        onChange={event => setWithdrawalName(event.target.value)}
-                        className="h-11 w-full border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      />
-                    </div>
                     <div>
                       <label htmlFor="withdrawal-amount" className="mb-2 block text-sm font-medium">Amount (USD)</label>
                       <input
