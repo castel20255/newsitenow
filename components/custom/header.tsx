@@ -5,7 +5,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, History, LogOut, UserRound, Wallet } from 'lucide-react';
+import { Activity, History, LogOut, RefreshCw, UserRound, Wallet } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
@@ -381,6 +381,15 @@ export function Header({
         </nav>
       )}
       <div className="flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          aria-label="Refresh page"
+          title="Refresh page"
+          onClick={() => window.location.reload()}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground transition-colors duration-100 hover:bg-muted hover:text-foreground active:scale-95 lg:hidden"
+        >
+          <RefreshCw className="h-4 w-4" aria-hidden="true" />
+        </button>
         <div className="hidden lg:flex items-center gap-3 shrink-0">
           {actions}
           <LanguageSwitcher />
