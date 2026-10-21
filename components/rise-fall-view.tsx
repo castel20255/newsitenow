@@ -250,8 +250,9 @@ export function RiseFallView({
     () => filterSymbolsByCategory(symbols, marketCategory),
     [symbols, marketCategory]
   );
-  const tradeMode: TradeMode = activeTab === 'forex-basket'
-    ? 'market-only'
+  const isForexBasket = activeTab === 'forex-basket';
+  const tradeMode: TradeMode = isForexBasket
+    ? 'forex-rise-fall'
     : activeTab === 'rise-fall'
       ? 'rise-fall'
       : 'digits';
@@ -295,7 +296,7 @@ export function RiseFallView({
       return;
     }
     if (!activeSymbol || !marketSymbols.some(symbol => symbol.underlying_symbol === activeSymbol.underlying_symbol)) {
-      toast.error('Select a continuous volatility index before trading.');
+      toast.error('Select a market from the active tab before trading.');
       return;
     }
 
@@ -324,14 +325,16 @@ export function RiseFallView({
         toast.error(result.error);
         return;
       }
-      toast.success('Rise/Fall trade placed. It will settle when the contract expires.');
+      toast.success(isForexBasket
+        ? 'Simulated Rise/Fall trade placed on the forex market.'
+        : 'Rise/Fall trade placed. It will settle when the contract expires.');
       await refreshSiteAuth();
     } catch {
       toast.error('Could not place the Rise/Fall trade.');
     } finally {
       setIsPlacingDemoTrade(false);
     }
-  }, [editMode, authState, openAuth, activeSymbol, marketSymbols, stake, duration, activeAccount, refreshSiteAuth]);
+  }, [editMode, authState, openAuth, activeSymbol, marketSymbols, stake, duration, activeAccount, refreshSiteAuth, isForexBasket]);
 
   const tradeIsPending = isBuying || isPlacingDemoTrade;
 
@@ -512,6 +515,7 @@ export function RiseFallView({
         selectedContract={selectedContract}
         onSelectedContractChange={setSelectedContract}
         tradeMode={tradeMode}
+        isForexBasket={isForexBasket}
         onRiseFallBuy={handleRiseFallBuy}
       />
     ) : null;
@@ -554,7 +558,7 @@ export function RiseFallView({
                   if (tab.id === 'over-under') setSelectedContract(DIGIT_CONTRACT_GROUPS[0].contracts[0]);
                   if (tab.id === 'even-odd') setSelectedContract(DIGIT_CONTRACT_GROUPS[1].contracts[0]);
                   if (tab.id === 'matches-differs') setSelectedContract(DIGIT_CONTRACT_GROUPS[2].contracts[0]);
-                  if (tab.id === 'rise-fall') setDuration('60');
+                  if (tab.id === 'rise-fall' || tab.id === 'forex-basket') setDuration('60');
                 }}
                 className={`min-h-10 shrink-0 rounded-md px-3 text-xs font-semibold transition-colors ${
                   isSelected ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'
@@ -645,6 +649,7 @@ export function RiseFallView({
                   selectedContract={selectedContract}
                   onSelectedContractChange={setSelectedContract}
                   tradeMode={tradeMode}
+                  isForexBasket={isForexBasket}
                   onRiseFallBuy={direction => void handleRiseFallBuy(direction)}
                 />
               )}

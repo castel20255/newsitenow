@@ -1,7 +1,7 @@
 import type { ActiveSymbol } from '@/lib/types';
 
 export type MarketCategory = 'volatility' | 'forex' | 'crypto';
-export type TradeMode = 'digits' | 'rise-fall' | 'market-only';
+export type TradeMode = 'digits' | 'rise-fall' | 'forex-rise-fall' | 'market-only';
 
 const CONTINUOUS_VOLATILITY_SYMBOLS = new Set([
   'R_10',
