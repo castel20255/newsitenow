@@ -22,7 +22,7 @@ export async function signUpAccount(
   _previous: AuthActionState = idleState,
   formData: FormData
 ): Promise<AuthActionState> {
-  const username = readField(formData, 'username').toLowerCase();
+  const username = readField(formData, 'username');
   const fullName = readField(formData, 'fullName');
   const email = readField(formData, 'email').toLowerCase();
   const countryCode = readField(formData, 'countryCode').toUpperCase();
@@ -32,8 +32,8 @@ export async function signUpAccount(
   const passwordConfirmation = String(formData.get('passwordConfirmation') ?? '');
   const termsAccepted = formData.get('termsAccepted') === 'on';
 
-  if (!/^[a-z0-9_]{3,24}$/.test(username)) {
-    return { status: 'error', message: 'Username must be 3 to 24 letters, numbers, or underscores.' };
+  if (username.length < 3 || username.length > 24 || /[\u0000-\u001f\u007f]/.test(username)) {
+    return { status: 'error', message: 'Username must be 3 to 24 printable characters.' };
   }
   if (fullName.length < 2 || fullName.length > 120) {
     return { status: 'error', message: 'Enter your full name.' };
@@ -101,7 +101,8 @@ export async function signInAccount(
   _previous: AuthActionState = idleState,
   formData: FormData
 ): Promise<AuthActionState> {
-  const identifier = readField(formData, 'identifier').toLowerCase();
+  const rawIdentifier = readField(formData, 'identifier');
+  const identifier = rawIdentifier.includes('@') ? rawIdentifier.toLowerCase() : rawIdentifier;
   const password = String(formData.get('password') ?? '');
   if (!identifier || !password) {
     return { status: 'error', message: 'Enter your email or username and password.' };
@@ -112,14 +113,15 @@ export async function signInAccount(
     let email = identifier;
 
     if (!identifier.includes('@')) {
-      if (!/^[a-z0-9_]{3,24}$/.test(identifier)) {
+      if (identifier.length < 3 || identifier.length > 24 || /[\u0000-\u001f\u007f]/.test(identifier)) {
         return { status: 'error', message: INVALID_CREDENTIALS };
       }
       const admin = createSupabaseAdminClient();
+      const usernamePattern = identifier.replace(/[\\%_]/g, '\\$&');
       const { data: profile } = await admin
         .from('profiles')
         .select('id')
-        .eq('username', identifier)
+        .ilike('username', usernamePattern)
         .maybeSingle();
       if (!profile) return { status: 'error', message: INVALID_CREDENTIALS };
 

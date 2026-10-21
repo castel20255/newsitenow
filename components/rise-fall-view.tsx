@@ -87,15 +87,14 @@ const RiseFallChart = dynamic(() => import('./rise-fall-chart').then(module => m
 // header: no OAuth navigation out of the editor.
 const noopAsyncAuth = async () => {};
 
-type TradeTab = 'forex-basket' | 'crypto-binary' | 'over-under' | 'even-odd' | 'matches-differs' | 'rise-fall';
+type TradeTab = 'over-under' | 'even-odd' | 'matches-differs' | 'rise-fall' | 'forex-basket';
 
 const TRADE_TABS: { id: TradeTab; label: string }[] = [
-  { id: 'forex-basket', label: 'Forex Basket' },
-  { id: 'crypto-binary', label: 'Crypto Binary' },
   { id: 'over-under', label: 'Over/Under' },
   { id: 'even-odd', label: 'Even/Odd' },
   { id: 'matches-differs', label: 'Matches/Differs' },
   { id: 'rise-fall', label: 'Rise/Fall' },
+  { id: 'forex-basket', label: 'Forex Basket' },
 ];
 
 export interface RiseFallViewProps {
@@ -246,16 +245,12 @@ export function RiseFallView({
   const isMobile = useIsMobile();
   const chartHidden = appConfig?.chart?.hidden ?? false;
   const [activeTab, setActiveTab] = useState<TradeTab>('over-under');
-  const marketCategory: MarketCategory = activeTab === 'forex-basket'
-    ? 'forex'
-    : activeTab === 'crypto-binary'
-      ? 'crypto'
-      : 'volatility';
+  const marketCategory: MarketCategory = activeTab === 'forex-basket' ? 'forex' : 'volatility';
   const marketSymbols = useMemo(
     () => filterSymbolsByCategory(symbols, marketCategory),
     [symbols, marketCategory]
   );
-  const tradeMode: TradeMode = ['forex-basket', 'crypto-binary'].includes(activeTab)
+  const tradeMode: TradeMode = activeTab === 'forex-basket'
     ? 'market-only'
     : activeTab === 'rise-fall'
       ? 'rise-fall'
@@ -402,17 +397,12 @@ export function RiseFallView({
               <RiseFallChart
                 symbolKey={activeSymbol?.underlying_symbol ?? 'rise-fall-chart'}
                 symbol={activeSymbol?.underlying_symbol}
-                symbols={marketSymbols}
-                activeSymbol={activeSymbol}
                 isConnectionOpened={isConnected}
                 isMobile={isMobile}
                 chartData={chartData}
                 getQuotes={getQuotes}
                 subscribeQuotes={subscribeQuotes}
                 unsubscribeQuotes={unsubscribeQuotes}
-                onSymbolChange={selectSymbol}
-                prices={prices}
-                pipSize={pipSize}
                 isLive={isLive}
                 endEpoch={endEpoch}
                 contractsArray={contractMarkers}
@@ -420,6 +410,16 @@ export function RiseFallView({
             ) : (
               <Skeleton className="h-full w-full" />
             )}
+          </div>
+
+          <div className={`absolute left-2 right-2 top-2 z-[100] ${editMode ? 'pointer-events-none select-none' : ''}`}>
+            <SymbolSelector
+              symbols={marketSymbols}
+              activeSymbol={activeSymbol}
+              onSymbolChange={selectSymbol}
+              prices={prices}
+              pipSize={pipSize}
+            />
           </div>
 
           {editMode && !rearrangeMode && (

@@ -114,8 +114,12 @@ export function SymbolSelector({
           )}
         </div>
       </SelectTrigger>
-      <SelectContent>
-        {Array.from(grouped.entries()).map(([submarket, { displayName, symbols: group }]) => (
+      <SelectContent className="z-[200] max-h-[70dvh]">
+        {grouped.size === 0 ? (
+          <SelectItem value="__no-markets" disabled>
+            {localize('No markets available')}
+          </SelectItem>
+        ) : Array.from(grouped.entries()).map(([submarket, { displayName, symbols: group }]) => (
           <SelectGroup key={submarket}>
             <SelectLabel>{displayName}</SelectLabel>
             {group.map((symbol) => (

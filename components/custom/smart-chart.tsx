@@ -16,8 +16,6 @@ import type { UseSmartChartsApiReturn } from '@/hooks/use-smartcharts-api';
 import type { SmartChartChartData } from '@/hooks/use-smartchart-chart-data';
 import type { ContractMarker } from '@/lib/chart-markers';
 import { SMART_CHART_DRAWING_TOOL_POSITION } from '@/lib/smartchart-constants';
-import { SymbolSelector } from '@/components/custom/symbol-selector';
-import type { ActiveSymbol } from '@deriv/core';
 
 setSmartChartsPublicPath('/');
 
@@ -55,18 +53,12 @@ export interface SmartChartWrapperProps {
   /** Stable key when the underlying symbol changes. */
   symbolKey: string;
   symbol: string | undefined;
-  symbols: ActiveSymbol[];
-  activeSymbol: ActiveSymbol | null;
   isConnectionOpened: boolean;
   isMobile: boolean;
   chartData: SmartChartChartData | undefined;
   getQuotes: UseSmartChartsApiReturn['getQuotes'];
   subscribeQuotes: UseSmartChartsApiReturn['subscribeQuotes'];
   unsubscribeQuotes: UseSmartChartsApiReturn['unsubscribeQuotes'];
-  prices?: number[];
-  pipSize?: number;
-  /** Called when the user selects a symbol from the built-in ChartTitle market browser. */
-  onSymbolChange?: (symbol: string) => void;
   /** Whether SmartCharts should expect a live subscription feed. Defaults to true. */
   isLive?: boolean;
   /** Unix epoch (seconds) to freeze the chart at for preview mode. */
@@ -83,17 +75,12 @@ export function SmartChartWrapper({
   chartId,
   symbolKey,
   symbol,
-  symbols,
-  activeSymbol,
   isConnectionOpened,
   isMobile,
   chartData,
   getQuotes,
   subscribeQuotes,
   unsubscribeQuotes,
-  prices,
-  pipSize,
-  onSymbolChange,
   isLive = true,
   endEpoch,
   defaultGranularity = 0,
@@ -155,19 +142,6 @@ export function SmartChartWrapper({
     [isMobile]
   );
 
-  const topWidgets = useCallback(
-    () => (
-      <SymbolSelector
-        symbols={symbols}
-        activeSymbol={activeSymbol}
-        onSymbolChange={onSymbolChange ?? (() => {})}
-        prices={prices}
-        pipSize={pipSize}
-      />
-    ),
-    [symbols, activeSymbol, onSymbolChange, prices, pipSize]
-  );
-
   return (
     <div className="relative h-full min-h-0 w-full overflow-clip">
       {isReadyToMount && <SmartChart
@@ -198,7 +172,7 @@ export function SmartChartWrapper({
         subscribeQuotes={subscribeQuotes}
         symbol={symbol}
         toolbarWidget={toolbarWidget}
-        topWidgets={topWidgets}
+        topWidgets={() => null}
         unsubscribeQuotes={unsubscribeQuotes}
         {...(barriers && barriers.length > 0 && { barriers })}
         contracts_array={contractsArray ?? []}
