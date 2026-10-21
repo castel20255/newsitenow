@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import { Localize } from '@deriv-com/translations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/custom/header';
-import { PinnedBuyBar } from '@/components/custom/pinned-buy-bar';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { placeDemoTrade } from '@/app/actions/demo-trading';
 import { computeEndTimeEpoch } from '@/lib/duration-utils';
@@ -18,7 +17,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'r
 import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
-import { ConfigurableTradeControls, ConfigurableBuyButton } from './configurable-trade-controls';
+import { ConfigurableTradeControls } from './configurable-trade-controls';
 import type { RiseFallAppConfig } from '../lib/app-config';
 
 /**
@@ -232,7 +231,7 @@ export function RiseFallView({
   const { localize } = useAppTranslations();
   const isMobile = useIsMobile();
   const chartHidden = appConfig?.chart?.hidden ?? false;
-  const pinBuy = isMobile;
+  const pinBuy = isMobile && !editMode;
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
   const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
@@ -534,25 +533,6 @@ export function RiseFallView({
             </div>
           </div>
         </div>
-      )}
-
-      {pinBuy && (
-        <PinnedBuyBar
-          editMode={editMode}
-          rearrangeMode={rearrangeMode}
-          mobileNavVisible={authState === 'authenticated'}
-          selected={selectedKey === 'buy'}
-          onSelect={() => onSelect?.('buy')}
-          label={localize('Buy button')}
-        >
-          <ConfigurableBuyButton
-            variant={appConfig!.styles.buy}
-            isConnected={isConnected}
-            proposal={proposal}
-            onBuy={handleBuy}
-            isBuying={tradeIsPending}
-          />
-        </PinnedBuyBar>
       )}
 
     </main>
