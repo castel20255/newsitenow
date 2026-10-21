@@ -82,11 +82,20 @@ function getDigitSpreadData(prices: number[]): DigitSpreadRecord[] {
   });
 
   const total = counts.reduce((sum, value) => sum + value, 0) || 1;
+  const exactPercentages = counts.map((count) => (count / total) * 100);
+  const percentages = exactPercentages.map(Math.floor);
+  let remainingPercentage = 100 - percentages.reduce((sum, value) => sum + value, 0);
+  const remainderOrder = exactPercentages
+    .map((percentage, digit) => ({ digit, remainder: percentage - Math.floor(percentage) }))
+    .sort((left, right) => right.remainder - left.remainder);
+  for (let index = 0; index < remainingPercentage; index += 1) {
+    percentages[remainderOrder[index].digit] += 1;
+  }
 
   return counts.map((count, digit) => ({
     digit,
     count,
-    percentage: (count / total) * 100,
+    percentage: percentages[digit],
   }));
 }
 
@@ -128,9 +137,7 @@ export function DigitSpread({ symbol, currentPrice }: DigitSpreadProps) {
     };
   }, [symbol]);
 
-  const meterRadius = 90;
   const activeDigit = useMemo(() => (typeof currentPrice === 'number' && Number.isFinite(currentPrice) ? getLastDigit(currentPrice) : 0), [currentPrice]);
-  const pointerAngle = activeDigit * 36 - 90;
 
   return (
     <div className="rounded-2xl border border-border bg-muted/30 p-3">
@@ -141,65 +148,29 @@ export function DigitSpread({ symbol, currentPrice }: DigitSpreadProps) {
         <span className="text-[10px] text-muted-foreground">{isLoading ? 'Updating…' : 'Last 500 ticks'}</span>
       </div>
 
-      <div className="relative mx-auto flex max-w-[300px] items-center justify-center">
-        <svg viewBox="0 0 240 240" className="h-[220px] w-[220px] overflow-visible">
-          <defs>
-            <filter id="digit-spread-shadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="rgba(0,0,0,0.15)" />
-            </filter>
-          </defs>
-
-          <circle cx="120" cy="120" r={meterRadius - 10} fill="rgba(148,163,184,0.04)" stroke="rgba(148,163,184,0.28)" strokeWidth="1.5" />
-
-          {spread.map((entry, index) => {
-            const angle = (index / 10) * Math.PI * 2 - Math.PI / 2;
-            const labelRadius = meterRadius - 10;
-            const x = 120 + Math.cos(angle) * labelRadius;
-            const y = 120 + Math.sin(angle) * labelRadius;
-            const arcRadius = meterRadius - 2;
-            const startAngle = index / 10 * 2 * Math.PI - Math.PI / 2;
-            const endAngle = ((index + 1) / 10) * 2 * Math.PI - Math.PI / 2;
-            const startX = 120 + Math.cos(startAngle) * arcRadius;
-            const startY = 120 + Math.sin(startAngle) * arcRadius;
-            const endX = 120 + Math.cos(endAngle) * arcRadius;
-            const endY = 120 + Math.sin(endAngle) * arcRadius;
-            const largeArcFlag = index % 2 === 0 ? 0 : 1;
-            const path = `M 120 120 L ${startX} ${startY} A ${arcRadius} ${arcRadius} 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
-            const isSelected = entry.digit === activeDigit;
-            const fillColor = isSelected ? 'rgba(239,68,68,0.3)' : 'rgba(59,130,246,0.12)';
-            const strokeColor = isSelected ? 'rgba(239,68,68,0.75)' : 'rgba(148,163,184,0.4)';
-
-            return (
-              <g key={entry.digit}>
-                <path d={path} fill={fillColor} stroke={strokeColor} strokeWidth={isSelected ? 1.5 : 1} />
-                <text
-                  x={x}
-                  y={y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  className="fill-foreground text-[10px] font-semibold"
-                >
-                  {entry.digit}
-                </text>
-                <text
-                  x={x}
-                  y={y + 12}
-                  textAnchor="middle"
-                  className="fill-muted-foreground text-[8px] font-medium"
-                >
-                  {Number.isFinite(entry.percentage) ? `${entry.percentage.toFixed(0)}%` : '0%'}
-                </text>
-              </g>
-            );
-          })}
-
-          <g transform={`translate(120 120) rotate(${pointerAngle})`} filter="url(#digit-spread-shadow)">
-            <path d="M 0 -102 L 10 0 L -10 0 Z" fill="#ef4444" />
-            <circle cx="0" cy="0" r="8" fill="#ef4444" opacity="0.9" />
-          </g>
-          <circle cx="120" cy="120" r="20" fill="rgba(15,23,42,0.04)" stroke="rgba(148,163,184,0.25)" strokeWidth="1" />
-          <text x="120" y="128" textAnchor="middle" className="fill-foreground text-[11px] font-bold">{activeDigit}</text>
-        </svg>
+      <div className="grid grid-cols-10 gap-1">
+        {spread.map((entry) => {
+          const isSelected = entry.digit === activeDigit;
+          return (
+            <div key={entry.digit} className="flex min-w-0 flex-col items-center">
+              <div
+                className={`flex aspect-square w-full max-w-9 items-center justify-center rounded-full border text-xs font-semibold tabular-nums ${
+                  isSelected
+                    ? 'border-red-500 bg-red-500/15 text-red-600 dark:text-red-400'
+                    : 'border-border bg-background text-foreground'
+                }`}
+              >
+                {entry.digit}
+              </div>
+              <div className="flex h-2 items-start justify-center">
+                {isSelected && <span className="border-x-[5px] border-t-0 border-b-[7px] border-x-transparent border-b-red-500" />}
+              </div>
+              <span className="text-[9px] font-medium tabular-nums text-muted-foreground">
+                {entry.percentage}%
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
