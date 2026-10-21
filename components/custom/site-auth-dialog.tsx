@@ -147,14 +147,15 @@ export function SiteAuthDialog() {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [identifier, setIdentifier] = useState('');
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
 
   const selectedCountry = countries.find(country => country.code === countryCode);
+  const loginReady = Boolean(identifier.trim() && password.length > 0);
   const formReady = Boolean(
-    isConfigured
-    && /^[a-z0-9_]{3,24}$/i.test(username)
+    /^[a-z0-9_]{3,24}$/i.test(username)
     && fullName.trim().length >= 2
     && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     && countryCode
@@ -209,7 +210,14 @@ export function SiteAuthDialog() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="identifier">Email or username</Label>
-              <Input id="identifier" name="identifier" autoComplete="username" required />
+              <Input
+                id="identifier"
+                name="identifier"
+                autoComplete="username"
+                value={identifier}
+                onChange={event => setIdentifier(event.target.value)}
+                required
+              />
             </div>
             <PasswordField
               id="password"
@@ -224,7 +232,7 @@ export function SiteAuthDialog() {
               </p>
             )}
             {!isConfigured && <p className="text-sm text-destructive">Supabase is not configured for this site yet.</p>}
-            <Button type="submit" className="w-full" disabled={isPending || !isConfigured}>
+            <Button type="submit" className="w-full" disabled={isPending || !loginReady}>
               {isPending ? 'Signing in…' : 'Log in'}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
