@@ -46,7 +46,7 @@ export async function POST(
     }
 
     const config = getMegaPayConfig();
-    if (!config) return Response.json({ error: 'MegaPay is not configured on this server.' }, { status: 503 });
+    if (!config) return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
 
     let providerResponse: unknown;
     try {
@@ -60,7 +60,7 @@ export async function POST(
     }
 
     if (!isRecord(providerResponse)) {
-      return Response.json({ error: 'MegaPay returned an invalid status response.' }, { status: 502 });
+      return Response.json({ error: 'The payment service returned an invalid status.' }, { status: 502 });
     }
 
     const providerStatus = typeof providerResponse.TransactionStatus === 'string'
@@ -104,7 +104,7 @@ export async function POST(
       : deposit.provider_request_id;
     const reportedAmountKes = Number(providerResponse.TransactionAmount);
     if (Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
-      console.warn('MegaPay completed status amount differs from the requested amount', {
+      console.warn('Completed payment amount differs from the requested amount', {
         depositId: deposit.id,
         expectedAmountKes: Number(deposit.amount_kes),
         reportedAmountKes,

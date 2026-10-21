@@ -164,7 +164,7 @@ export async function POST(request: Request) {
 
     const config = getMegaPayConfig();
     if (!config) {
-      return Response.json({ error: 'MegaPay is not configured on this server.' }, { status: 503 });
+      return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
     }
 
     const body: unknown = await request.json().catch(() => null);
@@ -245,16 +245,16 @@ export async function POST(request: Request) {
         reference,
       });
     } catch {
-      return Response.json({ error: 'MegaPay’s response was interrupted. Check your wallet status or contact support before retrying to avoid a duplicate charge.' }, { status: 502 });
+      return Response.json({ error: 'The payment request was interrupted. Check your wallet status or contact support before retrying to avoid a duplicate charge.' }, { status: 502 });
     }
 
     const transactionRequestId = extractTransactionRequestId(providerResponse);
     if (!isRecord(providerResponse) || !transactionRequestId) {
-      console.warn('MegaPay STK initiation response could not be tracked', {
+      console.warn('Payment initiation response could not be tracked', {
         keys: isRecord(providerResponse) ? Object.keys(providerResponse) : [],
         hasTransactionRequestId: Boolean(transactionRequestId),
       });
-      return Response.json({ error: 'MegaPay returned an unclear result. Check your wallet status or contact support before retrying.' }, { status: 502 });
+      return Response.json({ error: 'The payment service returned an unclear result. Check your wallet status or contact support before retrying.' }, { status: 502 });
     }
 
     const { error: updateError } = await admin

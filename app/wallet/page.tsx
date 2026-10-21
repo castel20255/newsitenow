@@ -45,8 +45,8 @@ const USD_TO_KES = 131.21;
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
 const paymentMethods = [
-  { id: 'bank-agent', label: 'Bank Agent', description: 'Not available through MegaPay', Icon: Landmark },
-  { id: 'crypto', label: 'Crypto', description: 'Not available through MegaPay', Icon: Bitcoin },
+  { id: 'bank-agent', label: 'Bank Agent', description: 'Coming soon', Icon: Landmark },
+  { id: 'crypto', label: 'Crypto', description: 'Coming soon', Icon: Bitcoin },
   { id: 'mpesa', label: 'M-Pesa', description: 'STK push', Icon: Smartphone },
 ] as const;
 
@@ -91,7 +91,7 @@ export default function WalletPage() {
   const isValidPhone = isValidKenyanMobile(msisdn);
   const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
   const activeWalletType = auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo';
-  const activeWalletName = activeWalletType === 'app_wallet' ? 'App Wallet' : 'Demo account';
+  const activeWalletName = activeWalletType === 'app_wallet' ? 'Site Wallet' : 'Demo account';
   const activeWalletBalance = activeWalletType === 'app_wallet'
     ? balanceUsd ?? Number(auth.activeAccount?.balance ?? 0)
     : Number(auth.activeAccount?.balance ?? 0);
@@ -207,7 +207,7 @@ export default function WalletPage() {
         status: nextDeposit.status,
         deposit: nextDeposit,
       }, ...current.filter(item => item.id !== nextDeposit.id)]);
-      setMessage('STK push sent. Approve the KES payment on your phone, then check its status here.');
+      setMessage('Payment request sent. Approve it on your phone, then check its status here.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not start the M-Pesa request.');
       setMessageIsError(true);
@@ -285,7 +285,7 @@ export default function WalletPage() {
         if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
         await auth.refresh();
         auth.switchAccount('app-wallet');
-        setMessage('Payment confirmed and App Wallet credited. Opening the trading workspace.');
+        setMessage('Payment confirmed and Site Wallet credited. Opening the trading workspace.');
         setIsRedirecting(true);
         window.setTimeout(() => router.push('/'), 1200);
       } else if (data.status === 'failed' || data.status === 'expired') {
@@ -362,10 +362,10 @@ export default function WalletPage() {
               <p className="font-semibold">{isRedirecting ? 'Payment confirmed' : 'Processing payment'}</p>
               <p className="mt-1 text-sm leading-5 text-muted-foreground">
                 {isRedirecting
-                  ? 'App Wallet has been updated. Opening the trading workspace.'
+                  ? 'Your Site Wallet has been updated. Opening the trading workspace.'
                   : isStarting
-                    ? 'Sending the STK request. Approve it on your phone.'
-                    : 'Waiting for MegaPay to confirm your payment.'}
+                    ? 'Sending your payment request. Approve it on your phone.'
+                    : 'Waiting for payment confirmation.'}
               </p>
             </div>
           </div>
@@ -375,12 +375,9 @@ export default function WalletPage() {
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5">
             <div>
-              <p className="mb-2 text-sm font-medium text-emerald-600">App wallet</p>
+              <p className="mb-2 text-sm font-medium text-emerald-600">Site Wallet</p>
               <h1 className="text-3xl font-semibold tracking-normal">Wallet</h1>
             </div>
-            <p className="border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-medium text-emerald-800 dark:text-emerald-300">
-              Separate from your Deriv account
-            </p>
           </div>
 
           <section className="mb-8 overflow-hidden border border-emerald-900 bg-emerald-950 text-white shadow-lg dark:border-emerald-800" aria-label="Active account balance">
@@ -390,7 +387,7 @@ export default function WalletPage() {
                 <p className="mt-1 text-sm font-medium text-white/80">{activeWalletName}</p>
               </div>
               <span className="shrink-0 border border-white/20 px-2.5 py-1 text-xs font-medium text-emerald-100">
-                {activeWalletType === 'app_wallet' ? 'App Wallet' : 'Demo'}
+                {activeWalletType === 'app_wallet' ? 'Site Wallet' : 'Demo'}
               </span>
             </div>
             <div className="px-5 py-6 sm:px-7 sm:py-8">
@@ -563,7 +560,7 @@ export default function WalletPage() {
                 <>
                   <h2 id="wallet-action-heading" className="mb-4 text-lg font-semibold">Request an M-Pesa withdrawal</h2>
                   <p className="mb-5 max-w-lg text-sm leading-6 text-muted-foreground">
-                    Requests are reviewed by an administrator and paid manually. The requested amount is reserved from your available App Wallet balance. You’ll see a payout reference when it is marked paid.
+                    Requests are reviewed by an administrator and paid manually. The requested amount is reserved from your available Site Wallet balance. You’ll see a payout reference when it is marked paid.
                   </p>
                   <form className="max-w-sm space-y-4" onSubmit={requestWithdrawal}>
                     <div>
@@ -653,18 +650,18 @@ export default function WalletPage() {
                 )}
               </dl> : (
                 <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                  Withdrawals remain disabled until MegaPay documents a payout API and the app has a verified payout workflow.
+                    Withdrawals are not available yet while the site payout service is being set up.
                 </p>
               )}
 
               {action === 'deposit' && (
                 <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
-                  Wallet credits are posted only after MegaPay’s transaction status confirms a completed payment for the requested KES amount.
+                  Wallet credits are posted after payment confirmation for the requested KES amount.
                 </p>
               )}
               {action === 'deposit' && deposit?.status === 'initiating' && (
                 <p className="mt-4 border-l-2 border-amber-500 pl-3 text-sm leading-6 text-muted-foreground">
-                  The provider response is still being reconciled. Do not start another deposit; contact support before retrying to avoid a duplicate charge.
+                  Your payment is still being confirmed. Do not start another deposit; contact support if this takes too long.
                 </p>
               )}
             </aside>
