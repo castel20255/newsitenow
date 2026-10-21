@@ -14,10 +14,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { DigitContractActions } from '@/components/digit-contract-actions';
+import { DigitContractActions, RiseFallActions } from '@/components/digit-contract-actions';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
 import type { DerivWS, ActiveSymbol, ProposalInfo, BuyResult } from '@deriv/core';
 import type { DigitContractType, Direction, DurationSelectUnit, DurationOption } from '../lib/types';
+import type { TradeMode } from '@/lib/market-symbol-filters';
 
 interface TradeControlsProps {
   direction: Direction;
@@ -51,6 +52,8 @@ interface TradeControlsProps {
   isAuthenticated?: boolean;
   selectedContract: DigitContractType;
   onSelectedContractChange: (contract: DigitContractType) => void;
+  tradeMode: TradeMode;
+  onRiseFallBuy: (direction: Direction) => void;
 }
 
 export function TradeControls({
@@ -83,6 +86,8 @@ export function TradeControls({
   isAuthenticated,
   selectedContract,
   onSelectedContractChange,
+  tradeMode,
+  onRiseFallBuy,
 }: TradeControlsProps) {
   const { localize } = useAppTranslations();
   const { activeAccount, refresh: refreshSiteAuth } = useSiteAuth();
@@ -224,9 +229,17 @@ export function TradeControls({
     }
   };
 
+  if (tradeMode === 'market-only') {
+    return (
+      <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+        Choose a contract tab to trade the continuous volatility indices.
+      </div>
+    );
+  }
+
   return (
     <div className="w-full space-y-3 lg:space-y-4">
-      <div className="hidden rounded-2xl border border-border bg-muted/25 p-2.5 lg:block">
+      <div className="hidden rounded-2xl border border-border bg-muted/25 p-2.5">
         <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           <Localize i18n_default_text="Contract type" />
         </div>
@@ -248,7 +261,7 @@ export function TradeControls({
         </div>
       </div>
 
-      <div className="space-y-2">
+      {tradeMode === 'digits' && <div className="space-y-2">
         <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           <Localize i18n_default_text="Digit prediction" />
         </div>
@@ -272,7 +285,7 @@ export function TradeControls({
             ))}
           </div>
         )}
-      </div>
+      </div>}
 
       <div className="space-y-1.5">
         <Label htmlFor="stake" className="text-xs text-muted-foreground">
@@ -294,7 +307,7 @@ export function TradeControls({
 
       <div className="space-y-1.5">
         <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
-          <Localize i18n_default_text="Duration (ticks)" />
+          {tradeMode === 'rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
         </Label>
         <Input
           id="duration-ticks"
@@ -312,37 +325,26 @@ export function TradeControls({
         />
       </div>
 
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
+      {tradeMode === 'digits' && <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-muted-foreground">
         <div className="flex items-center justify-between">
           <span>Prediction</span>
           <span className="font-medium text-foreground">{contractDisabledForDigits ? selectedContract : `${selectedContract} ${selectedDigit}`}</span>
         </div>
-      </div>
+      </div>}
 
-      <DigitContractActions
-        selectedContract={selectedContract}
-        disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
-        onBuy={contractType => void handleDigitBuy(contractType)}
-      />
-
-      <div className="hidden lg:block">
-        <Button
-          className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
-          size="lg"
+      {tradeMode === 'digits' && (
+        <DigitContractActions
+          selectedContract={selectedContract}
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
-          onClick={() => void handleDigitBuy()}
-        >
-          <span className="flex flex-col items-center leading-tight gap-0.5">
-            <span><Localize i18n_default_text="Buy" /></span>
-            <span className="text-xs font-normal opacity-90">
-              <Localize
-                i18n_default_text="Payout {{payout}} USD"
-                values={{ payout: payoutPreview.toFixed(2) }}
-              />
-            </span>
-          </span>
-        </Button>
-      </div>
+          onBuy={contractType => void handleDigitBuy(contractType)}
+        />
+      )}
+      {tradeMode === 'rise-fall' && (
+        <RiseFallActions
+          disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying}
+          onBuy={onRiseFallBuy}
+        />
+      )}
 
       {isAuthenticated && (
         <Button
