@@ -227,6 +227,7 @@ export default function AdminPage() {
                     <div>
                       <p className="mb-2 flex items-center gap-2 text-sm font-medium text-emerald-600"><Shield className="h-4 w-4" /> Administration</p>
                       <h1 className="text-3xl font-semibold">{section === 'funds' ? 'Funds Management' : 'Withdrawal requests'}</h1>
+                      {section === 'funds' && <p className="mt-2 text-sm text-muted-foreground">{isLoading && users.length === 0 ? 'Loading users from the database…' : error && users.length === 0 ? 'Could not load users' : `${users.length} users loaded`}</p>}
                       {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">Approve requests, send M-Pesa manually, then record the payout reference.</p>}
                     </div>
                     <button type="button" onClick={() => void (section === 'funds' ? loadFunds() : loadWithdrawals())} disabled={isLoading} className="flex h-10 items-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50">
@@ -236,6 +237,8 @@ export default function AdminPage() {
                   </div>
 
               {section === 'funds' ? (
+                <>
+                {error && <p className="mb-4 border-l-2 border-destructive pl-3 text-sm text-destructive" role="alert">{error}</p>}
                 <div className="overflow-x-auto border-y border-border">
                   <table className="w-full min-w-[1050px] text-left text-sm">
                     <thead>
@@ -309,8 +312,9 @@ export default function AdminPage() {
                     </tbody>
                   </table>
                   {isLoading && users.length === 0 && <p className="py-12 text-center text-sm text-muted-foreground">Loading users…</p>}
-                  {!isLoading && users.length === 0 && <p className="py-12 text-center text-sm text-muted-foreground">No users found.</p>}
+                  {!isLoading && !error && users.length === 0 && <p className="py-12 text-center text-sm text-muted-foreground">No users found.</p>}
                 </div>
+                </>
               ) : (
                 <>
               <div className="mb-5 flex flex-wrap gap-5 text-sm">
