@@ -90,9 +90,11 @@ export default function WalletPage() {
   const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= 2 && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
   const isValidPhone = isValidKenyanMobile(msisdn);
   const hasOpenDeposit = deposit?.status === 'pending' || deposit?.status === 'initiating';
-  const demoAccount = auth.accounts.find(account => account.account_type === 'demo') ?? null;
   const activeWalletType = auth.activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo';
   const activeWalletName = activeWalletType === 'app_wallet' ? 'App Wallet' : 'Demo account';
+  const activeWalletBalance = activeWalletType === 'app_wallet'
+    ? balanceUsd ?? Number(auth.activeAccount?.balance ?? 0)
+    : Number(auth.activeAccount?.balance ?? 0);
   const activeTransactions = transactions.filter(transaction => transaction.account === activeWalletType);
 
   useEffect(() => {
@@ -336,6 +338,7 @@ export default function WalletPage() {
       onSwitchAccount={async accountId => auth.switchAccount(accountId)}
       logoSrc={logoSrc}
       appWalletBalance={balanceUsd ?? undefined}
+      showAccountBalance={false}
       actions={<ThemeToggle />}
     />
   );
@@ -380,39 +383,27 @@ export default function WalletPage() {
             </p>
           </div>
 
-          <div className="mb-8 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Active trading wallet">
-            <button
-              type="button"
-              role="radio"
-              aria-checked={activeWalletType === 'app_wallet'}
-              onClick={() => auth.switchAccount('app-wallet')}
-              className={cn(
-                'min-h-28 border p-4 text-left transition-colors',
-                activeWalletType === 'app_wallet' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
-              )}
-            >
-              <span className="block text-sm font-medium text-muted-foreground">App Wallet · simulated</span>
-              <span className="mt-2 block text-2xl font-semibold tabular-nums">
-                {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(balanceUsd ?? 0)}
+          <section className="mb-8 overflow-hidden border border-emerald-900 bg-emerald-950 text-white shadow-lg dark:border-emerald-800" aria-label="Active account balance">
+            <div className="flex items-center justify-between gap-4 border-b border-white/15 px-5 py-4 sm:px-7">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">Active account</p>
+                <p className="mt-1 text-sm font-medium text-white/80">{activeWalletName}</p>
+              </div>
+              <span className="shrink-0 border border-white/20 px-2.5 py-1 text-xs font-medium text-emerald-100">
+                {activeWalletType === 'app_wallet' ? 'App Wallet' : 'Demo'}
               </span>
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={activeWalletType === 'demo'}
-              disabled={!demoAccount}
-              onClick={() => demoAccount && auth.switchAccount(demoAccount.id)}
-              className={cn(
-                'min-h-28 border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50',
-                activeWalletType === 'demo' ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50'
-              )}
-            >
-              <span className="block text-sm font-medium text-muted-foreground">Demo account · virtual</span>
-              <span className="mt-2 block text-2xl font-semibold tabular-nums">
-                {auth.authState !== 'authenticated' ? 'Sign in to view' : isLoading ? 'Loading…' : money.format(Number(demoAccount?.balance ?? 0))}
-              </span>
-            </button>
-          </div>
+            </div>
+            <div className="px-5 py-6 sm:px-7 sm:py-8">
+              <p className="text-sm text-emerald-100/80">Available balance</p>
+              <p className="mt-2 text-4xl font-semibold tabular-nums tracking-normal sm:text-5xl">
+                {auth.authState !== 'authenticated'
+                  ? 'Sign in to view'
+                  : activeWalletType === 'app_wallet' && isLoading
+                    ? 'Loading…'
+                    : money.format(activeWalletBalance)}
+              </p>
+            </div>
+          </section>
 
           <section className="mb-10" aria-labelledby="wallet-activity-heading">
             <div className="mb-3 flex items-end justify-between gap-4">
