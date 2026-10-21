@@ -91,6 +91,23 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
 }
 
+function getStatusPresentation(status: string) {
+  const normalized = status.toLowerCase();
+  if (normalized === 'pending' || normalized === 'initiating') {
+    return { label: 'Pending', className: 'border-amber-500/35 bg-amber-500/10 text-amber-700 dark:text-amber-300' };
+  }
+  if (normalized === 'rejected' || normalized === 'failed' || normalized === 'expired') {
+    return { label: normalized[0].toUpperCase() + normalized.slice(1), className: 'border-rose-500/35 bg-rose-500/10 text-rose-700 dark:text-rose-300' };
+  }
+  if (normalized === 'completed' || normalized === 'paid') {
+    return { label: 'Completed', className: 'border-emerald-500/35 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' };
+  }
+  if (normalized === 'approved') {
+    return { label: 'Approved', className: 'border-sky-500/35 bg-sky-500/10 text-sky-700 dark:text-sky-300' };
+  }
+  return { label: normalized[0]?.toUpperCase() + normalized.slice(1), className: 'border-border bg-muted/50 text-muted-foreground' };
+}
+
 function getContractName(contractType: string) {
   const names: Record<string, string> = {
     CALL: 'Rise',
@@ -279,7 +296,17 @@ export default function WalletHistoryPage() {
                           <span className="border border-border px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground">{entry.category}</span>
                         </div>
                         <p className="mt-1 text-xs text-muted-foreground">{entry.detail}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">{formatDate(entry.date)}{entry.status ? ` · ${entry.status}` : ''}</p>
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <time className="text-xs text-muted-foreground" dateTime={entry.date}>{formatDate(entry.date)}</time>
+                          {entry.status && (() => {
+                            const status = getStatusPresentation(entry.status);
+                            return (
+                              <span className={cn('inline-flex items-center border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide', status.className)}>
+                                {status.label}
+                              </span>
+                            );
+                          })()}
+                        </div>
                       </div>
                       <p className={cn(
                         'shrink-0 text-sm font-semibold tabular-nums',
