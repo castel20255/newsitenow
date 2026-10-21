@@ -719,7 +719,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   return (
     <div className="w-full space-y-3 lg:space-y-4">
-      {isForexBasket && <p className="border-l-2 border-amber-500 pl-3 text-xs leading-5 text-muted-foreground">Simulated Rise/Fall contracts on forex markets. Buy opens Rise; Sell opens Fall.</p>}
+      {isForexBasket && <p className="border-l-2 border-amber-500 pl-3 text-xs leading-5 text-muted-foreground">Rise/Fall contracts on forex markets. Buy opens Rise; Sell opens Fall.</p>}
       {config.order.map((key) => {
         // Chart only renders where a chartSlot is provided (the no-code mobile
         // column). On desktop the chart lives in its own column, so it's omitted

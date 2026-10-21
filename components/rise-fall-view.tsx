@@ -326,7 +326,7 @@ export function RiseFallView({
         return;
       }
       toast.success(isForexBasket
-        ? 'Simulated Rise/Fall trade placed on the forex market.'
+        ? 'Rise/Fall trade placed on the forex market.'
         : 'Rise/Fall trade placed. It will settle when the contract expires.');
       await refreshSiteAuth();
     } catch {

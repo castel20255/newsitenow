@@ -129,14 +129,14 @@ export async function GET(request: Request) {
       ...(appTransactionsResult.data ?? []).map(transaction => ({
         ...transaction,
         account: 'app_wallet' as const,
-        description: transaction.transaction_type === 'simulated_stake' ? 'Simulated trade stake' : 'Simulated trade payout',
+        description: transaction.transaction_type === 'simulated_stake' ? 'Trade stake' : 'Trade payout',
       })),
       ...(demoTransactionsResult.data ?? []).map(transaction => ({
         ...transaction,
         account: 'demo' as const,
         description: transaction.transaction_type === 'demo_credit'
           ? 'Demo account credit'
-          : transaction.transaction_type === 'demo_stake' ? 'Demo trade stake' : 'Demo trade payout',
+          : transaction.transaction_type === 'demo_stake' ? 'Trade stake' : 'Trade payout',
       })),
       ...(deposits.map(deposit => ({
         id: deposit.id,

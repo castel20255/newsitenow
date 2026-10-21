@@ -108,10 +108,10 @@ export default function ReportsPage() {
           <div className="border-y border-border py-10 text-center">
             <p className="mb-4 text-sm text-muted-foreground">
               {auth.authState === 'unconfigured'
-                ? 'Configure Supabase to view your simulated trade history.'
+                ? 'Configure Supabase to view your trade history.'
                 : auth.authState === 'loading'
                   ? 'Loading account…'
-                  : 'Sign in to view your simulated trade history.'}
+                  : 'Sign in to view your trade history.'}
             </p>
             {auth.authState === 'unauthenticated' && (
               <Button onClick={() => auth.openAuth('login')}>Log in</Button>

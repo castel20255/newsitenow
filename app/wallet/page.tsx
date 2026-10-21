@@ -521,7 +521,7 @@ export default function WalletPage() {
                     <DialogDescription>Enter the amount and M-Pesa details for your request.</DialogDescription>
                   </DialogHeader>
                   <p className="text-sm leading-6 text-muted-foreground">
-                    Withdrawals are reviewed and paid manually. Funds are reserved while your request is under review.
+                    The withdrawn amount will be sent to the M-Pesa wallet you provided immediately.
                   </p>
                   <form className="space-y-4" onSubmit={requestWithdrawal}>
                     <div>

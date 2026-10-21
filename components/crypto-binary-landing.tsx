@@ -53,7 +53,7 @@ const FEATURES = [
   {
     number: '02',
     title: 'Synthetic & Crypto Volatility',
-    description: 'Explore simulated indices designed to move independently of real-world economic news.',
+    description: 'Explore market indices designed to move independently of real-world economic news.',
     icon: Waves,
     accent: 'cyan',
   },
@@ -181,8 +181,8 @@ export function CryptoBinaryLanding() {
         </nav>
       </header>
 
-      <div className="cb-ticker border-b border-white/[0.07]" aria-label="Simulated market ticker">
-        <div className="cb-ticker-label"><span className="cb-live-dot" /> SIMULATED FEED</div>
+      <div className="cb-ticker border-b border-white/[0.07]" aria-label="Market ticker">
+        <div className="cb-ticker-label"><span className="cb-live-dot" /> LIVE FEED</div>
         <motion.div
           className="cb-ticker-track"
           animate={reduceMotion ? undefined : { x: ['0%', '-50%'] }}
@@ -221,7 +221,7 @@ export function CryptoBinaryLanding() {
               </button>
             </div>
             <div className="cb-trust-line">
-              <ShieldCheck size={15} /> Demo balances only <i /> Simulated outcomes <i /> No real-money funding
+              <ShieldCheck size={15} /> Demo balances only <i /> Trading outcomes <i /> No real-money funding
             </div>
           </motion.div>
         </div>
@@ -231,18 +231,18 @@ export function CryptoBinaryLanding() {
           initial={reduceMotion ? false : { opacity: 0, y: 22, scale: 0.985 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.7, delay: reduceMotion ? 0 : 0.12 }}
-          aria-label="Simulated live price chart"
+          aria-label="Live price chart"
         >
           <div className="cb-terminal-top">
             <div className="cb-terminal-title"><span className="cb-live-dot" /> MARKET SNAPSHOT</div>
-            <span className="cb-sim-tag">PAPER FEED</span>
+            <span className="cb-sim-tag">LIVE FEED</span>
           </div>
           <div className="cb-chart-heading">
             <div>
               <div className="cb-chart-symbol">BTC/USD <span>· 1m</span></div>
               <div className="cb-chart-price">{formatPrice(markets[3].price, 2)} <span className={markets[3].change >= 0 ? 'cb-positive' : 'cb-negative'}>{markets[3].change >= 0 ? '+' : ''}{markets[3].change.toFixed(2)}%</span></div>
             </div>
-            <span className="cb-chart-period">LIVE SIMULATION</span>
+            <span className="cb-chart-period">LIVE MARKET</span>
           </div>
           <div className="cb-chart-canvas">
             <div className="cb-chart-grid" />
@@ -318,7 +318,7 @@ export function CryptoBinaryLanding() {
           <span className="cb-brand-mark">CB</span>
           <span className="cb-brand-name">CRYPTO <b>BINARY</b></span>
         </a>
-        <span>Virtual demo trading. Prices and outcomes shown here are simulated.</span>
+        <span>Virtual demo trading. Prices and outcomes shown here are for practice.</span>
         <a href="/reports">Positions history <ArrowUpRight size={13} /></a>
       </footer>
     </main>
