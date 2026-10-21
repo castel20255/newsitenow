@@ -6,7 +6,12 @@ import type { ActiveSymbol, ContractsForResponse, ContractInfo, DurationLimits }
 import { pickDefaultSymbol } from '../utils/pick-default-symbol';
 
 const SYMBOL_PARAM = 'symbol';
-const SELECTABLE_SUBMARKETS = new Set(['random_index', 'major_pairs', 'minor_pairs']);
+const SELECTABLE_SUBMARKETS = new Set([
+  'random_index',
+  'continuous_indices',
+  'major_pairs',
+  'minor_pairs',
+]);
 
 function readSymbolFromUrl(): string | undefined {
   if (typeof window === 'undefined') return undefined;
