@@ -5,7 +5,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, History, LogOut, Menu, UserRound, Wallet, X } from 'lucide-react';
+import { Activity, History, LogOut, UserRound, Wallet } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Localize } from '@deriv-com/translations';
 import { Button } from '@/components/ui/button';
@@ -476,16 +476,6 @@ export function Header({
             onSignUp={onSignUp}
           />
         </div>
-        <DialogPrimitive.Trigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden shrink-0"
-            aria-label={localize('Your preferences')}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-        </DialogPrimitive.Trigger>
       </div>
       </header>
   );

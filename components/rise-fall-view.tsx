@@ -87,15 +87,14 @@ const RiseFallChart = dynamic(() => import('./rise-fall-chart').then(module => m
 // header: no OAuth navigation out of the editor.
 const noopAsyncAuth = async () => {};
 
-type TradeTab = 'forex-basket' | 'crypto-binary' | 'over-under' | 'even-odd' | 'matches-differs' | 'rise-fall';
+type TradeTab = 'over-under' | 'even-odd' | 'matches-differs' | 'rise-fall' | 'forex-basket';
 
 const TRADE_TABS: { id: TradeTab; label: string }[] = [
-  { id: 'forex-basket', label: 'Forex Basket' },
-  { id: 'crypto-binary', label: 'Crypto Binary' },
   { id: 'over-under', label: 'Over/Under' },
   { id: 'even-odd', label: 'Even/Odd' },
   { id: 'matches-differs', label: 'Matches/Differs' },
   { id: 'rise-fall', label: 'Rise/Fall' },
+  { id: 'forex-basket', label: 'Forex Basket' },
 ];
 
 export interface RiseFallViewProps {
@@ -246,16 +245,12 @@ export function RiseFallView({
   const isMobile = useIsMobile();
   const chartHidden = appConfig?.chart?.hidden ?? false;
   const [activeTab, setActiveTab] = useState<TradeTab>('over-under');
-  const marketCategory: MarketCategory = activeTab === 'forex-basket'
-    ? 'forex'
-    : activeTab === 'crypto-binary'
-      ? 'crypto'
-      : 'volatility';
+  const marketCategory: MarketCategory = activeTab === 'forex-basket' ? 'forex' : 'volatility';
   const marketSymbols = useMemo(
     () => filterSymbolsByCategory(symbols, marketCategory),
     [symbols, marketCategory]
   );
-  const tradeMode: TradeMode = ['forex-basket', 'crypto-binary'].includes(activeTab)
+  const tradeMode: TradeMode = activeTab === 'forex-basket'
     ? 'market-only'
     : activeTab === 'rise-fall'
       ? 'rise-fall'
