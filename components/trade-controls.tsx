@@ -324,7 +324,7 @@ export function TradeControls({
         </div>
       </div>
 
-      <div className="max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] max-lg:left-3 max-lg:right-3 lg:static">
+      <div className="max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+5rem)] max-lg:left-3 max-lg:right-3 max-lg:z-[70] lg:static">
         <Button
           className="w-full rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
           size="lg"

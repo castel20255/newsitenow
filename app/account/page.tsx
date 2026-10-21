@@ -39,7 +39,7 @@ export default function AccountPage() {
   return (
     <main className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
       {header}
-      <div className="min-h-0 flex-1 overflow-y-auto pb-24 md:pb-8">
+      <div className="min-h-0 flex-1 overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+5rem)] lg:pb-8">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
           <div className="mb-8 border-b border-border pb-5">
             <p className="mb-2 text-sm font-medium text-emerald-600">Profile</p>

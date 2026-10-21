@@ -107,7 +107,7 @@ export default function AdminPage() {
   return (
     <main className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
       {header}
-      <div className="min-h-0 flex-1 overflow-y-auto pb-24 md:pb-0">
+      <div className="min-h-0 flex-1 overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+5rem)] lg:pb-0">
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
           {auth.authState !== 'authenticated' ? (
             <div className="mx-auto max-w-md border-y border-border py-12 text-center">
