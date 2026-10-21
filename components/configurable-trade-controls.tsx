@@ -32,9 +32,10 @@ import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
-import { DigitContractActions } from '@/components/digit-contract-actions';
+import { DigitContractActions, RiseFallActions } from '@/components/digit-contract-actions';
 import type { DerivWS, ActiveSymbol, ProposalInfo, BuyResult } from '@deriv/core';
 import type { DigitContractType, Direction, DurationSelectUnit, DurationOption } from '../lib/types';
+import type { TradeMode } from '@/lib/market-symbol-filters';
 import type { BlockKey, ControlKey, RiseFallAppConfig, StyleVariant } from '../lib/app-config';
 
 /** Human labels shown on each draggable block in rearrange mode. */
@@ -236,6 +237,8 @@ export interface ConfigurableTradeControlsProps {
   onReorder?: (order: BlockKey[]) => void;
   selectedContract: DigitContractType;
   onSelectedContractChange: (contract: DigitContractType) => void;
+  tradeMode: TradeMode;
+  onRiseFallBuy: (direction: Direction) => void;
   /**
    * The chart + symbol-dropdown block, rendered at the `chart` position in the
    * order. It manages its own edit selection, so it's placed as-is (not wrapped
@@ -281,6 +284,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     onReorder,
     selectedContract,
     onSelectedContractChange,
+    tradeMode,
+    onRiseFallBuy,
     chartSlot,
   } = props;
 
@@ -360,7 +365,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   const contractDisabledForDigits = selectedContract === 'EVEN' || selectedContract === 'ODD';
 
   const renderRiseFall = () => (
-    <div className={cn('space-y-3', !editMode && 'max-lg:hidden')}>
+    <div className={cn('space-y-3', !editMode && 'hidden')}>
       <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
         <Localize i18n_default_text="Contract type" />
       </div>
@@ -470,7 +475,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   const renderDuration = () => (
     <div className="space-y-1.5">
       <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
-        <Localize i18n_default_text="Duration (ticks)" />
+        {tradeMode === 'rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
       </Label>
       <Input
         id="duration-ticks"
@@ -545,14 +550,20 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   const renderBuy = () => (
     <>
-      {!editMode && (
+      {!editMode && tradeMode === 'digits' && (
         <DigitContractActions
           selectedContract={selectedContract}
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
           onBuy={contractType => void handleDigitBuy(contractType)}
         />
       )}
-      <div className={cn(!editMode && 'max-lg:hidden')}>
+      {!editMode && tradeMode === 'rise-fall' && (
+        <RiseFallActions
+          disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying}
+          onBuy={onRiseFallBuy}
+        />
+      )}
+      {editMode && <div>
         <ConfigurableBuyButton
           variant={config.styles.buy}
           isConnected={isConnected}
@@ -564,7 +575,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
           isBuying={isBuying}
           isSubmitting={isSubmittingDigitTrade}
         />
-      </div>
+      </div>}
     </>
   );
 
@@ -575,6 +586,17 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     duration: renderDuration,
     buy: renderBuy,
   };
+
+  if (tradeMode === 'market-only' && !editMode) {
+    return (
+      <div className="w-full space-y-3">
+        {chartSlot}
+        <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+          Choose a contract tab to trade the continuous volatility indices.
+        </div>
+      </div>
+    );
+  }
 
   if (editMode && rearrangeMode) {
     // Rearrange mode: every block (incl. the chart + symbol, which move as one)

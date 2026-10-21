@@ -18,7 +18,9 @@ import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
 import { ConfigurableTradeControls } from './configurable-trade-controls';
-import { DIGIT_CONTRACT_GROUPS, type DigitContractType } from '../lib/types';
+import { DIGIT_CONTRACT_GROUPS, type DigitContractType, type Direction } from '../lib/types';
+import { filterSymbolsByCategory, type MarketCategory, type TradeMode } from '../lib/market-symbol-filters';
+import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 import type { RiseFallAppConfig } from '../lib/app-config';
 
 /**
@@ -84,6 +86,17 @@ const RiseFallChart = dynamic(() => import('./rise-fall-chart').then(module => m
 // Edit-mode stand-in for the login prompt's auth handlers — same rule as the
 // header: no OAuth navigation out of the editor.
 const noopAsyncAuth = async () => {};
+
+type TradeTab = 'forex-basket' | 'crypto-binary' | 'over-under' | 'even-odd' | 'matches-differs' | 'rise-fall';
+
+const TRADE_TABS: { id: TradeTab; label: string }[] = [
+  { id: 'forex-basket', label: 'Forex Basket' },
+  { id: 'crypto-binary', label: 'Crypto Binary' },
+  { id: 'over-under', label: 'Over/Under' },
+  { id: 'even-odd', label: 'Even/Odd' },
+  { id: 'matches-differs', label: 'Matches/Differs' },
+  { id: 'rise-fall', label: 'Rise/Fall' },
+];
 
 export interface RiseFallViewProps {
   // Auth
@@ -232,10 +245,31 @@ export function RiseFallView({
   const { localize } = useAppTranslations();
   const isMobile = useIsMobile();
   const chartHidden = appConfig?.chart?.hidden ?? false;
+  const [activeTab, setActiveTab] = useState<TradeTab>('over-under');
+  const marketCategory: MarketCategory = activeTab === 'forex-basket'
+    ? 'forex'
+    : activeTab === 'crypto-binary'
+      ? 'crypto'
+      : 'volatility';
+  const marketSymbols = useMemo(
+    () => filterSymbolsByCategory(symbols, marketCategory),
+    [symbols, marketCategory]
+  );
+  const tradeMode: TradeMode = ['forex-basket', 'crypto-binary'].includes(activeTab)
+    ? 'market-only'
+    : activeTab === 'rise-fall'
+      ? 'rise-fall'
+      : 'digits';
   const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
   const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
   const [selectedContract, setSelectedContract] = useState<DigitContractType>('OVER');
+
+  useEffect(() => {
+    if (marketSymbols.length > 0 && !marketSymbols.some(symbol => symbol.underlying_symbol === activeSymbol?.underlying_symbol)) {
+      selectSymbol(marketSymbols[0].underlying_symbol);
+    }
+  }, [marketSymbols, activeSymbol?.underlying_symbol, selectSymbol]);
 
   // Logged-out Buy opens the login/sign-up prompt instead of sending a buy that
   // would fail with a "Purchase Failed" toast. One gate covers every Buy
@@ -258,6 +292,51 @@ export function RiseFallView({
     toast.error('Legacy rise/fall contracts are disabled. This market now uses the digit contract types only.');
     return;
   }, [editMode, duration, durationUnit]);
+
+  const handleRiseFallBuy = useCallback(async (tradeDirection: Direction) => {
+    if (editMode) return;
+    if (authState !== 'authenticated') {
+      await openAuth('login');
+      return;
+    }
+    if (!activeSymbol || !marketSymbols.some(symbol => symbol.underlying_symbol === activeSymbol.underlying_symbol)) {
+      toast.error('Select a continuous volatility index before trading.');
+      return;
+    }
+
+    const numericStake = Number(stake);
+    if (!Number.isFinite(numericStake) || numericStake < MIN_TRADE_STAKE || numericStake > 10000) {
+      toast.error(`Enter a valid stake of at least $${MIN_TRADE_STAKE.toFixed(2)}.`);
+      return;
+    }
+    const durationSeconds = Number(duration);
+    if (!Number.isSafeInteger(durationSeconds) || durationSeconds < 15 || durationSeconds > 300) {
+      toast.error('Enter a duration from 15 to 300 seconds.');
+      return;
+    }
+
+    setIsPlacingDemoTrade(true);
+    try {
+      const result = await placeDemoTrade({
+        symbol: activeSymbol.underlying_symbol,
+        contractType: tradeDirection,
+        stake: numericStake,
+        duration: durationSeconds,
+        durationUnit: 's',
+        fundingSource: activeAccount?.account_type === 'app_wallet' ? 'app_wallet' : 'demo',
+      });
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success('Rise/Fall trade placed. It will settle when the contract expires.');
+      await refreshSiteAuth();
+    } catch {
+      toast.error('Could not place the Rise/Fall trade.');
+    } finally {
+      setIsPlacingDemoTrade(false);
+    }
+  }, [editMode, authState, openAuth, activeSymbol, marketSymbols, stake, duration, activeAccount, refreshSiteAuth]);
 
   const tradeIsPending = isBuying || isPlacingDemoTrade;
 
@@ -305,7 +384,7 @@ export function RiseFallView({
         <div className="rf-chart-hidden relative">
           <div className={editMode ? 'pointer-events-none select-none' : ''}>
             <SymbolSelector
-              symbols={symbols}
+              symbols={marketSymbols}
               activeSymbol={activeSymbol}
               onSymbolChange={selectSymbol}
               prices={prices}
@@ -323,6 +402,8 @@ export function RiseFallView({
               <RiseFallChart
                 symbolKey={activeSymbol?.underlying_symbol ?? 'rise-fall-chart'}
                 symbol={activeSymbol?.underlying_symbol}
+                symbols={marketSymbols}
+                activeSymbol={activeSymbol}
                 isConnectionOpened={isConnected}
                 isMobile={isMobile}
                 chartData={chartData}
@@ -330,6 +411,8 @@ export function RiseFallView({
                 subscribeQuotes={subscribeQuotes}
                 unsubscribeQuotes={unsubscribeQuotes}
                 onSymbolChange={selectSymbol}
+                prices={prices}
+                pipSize={pipSize}
                 isLive={isLive}
                 endEpoch={endEpoch}
                 contractsArray={contractMarkers}
@@ -349,7 +432,7 @@ export function RiseFallView({
       ),
     [
       chartHidden,
-      symbols,
+      marketSymbols,
       prices,
       pipSize,
       editMode,
@@ -428,6 +511,8 @@ export function RiseFallView({
         onReorder={onReorder}
         selectedContract={selectedContract}
         onSelectedContractChange={setSelectedContract}
+        tradeMode={tradeMode}
+        onRiseFallBuy={handleRiseFallBuy}
       />
     ) : null;
 
@@ -456,20 +541,26 @@ export function RiseFallView({
       )}
 
       {!editMode && !rearrangeMode && (
-        <nav className="grid grid-cols-3 gap-1 border-b border-border bg-background px-2 py-2 lg:hidden" aria-label="Digit contract type">
-          {DIGIT_CONTRACT_GROUPS.map(group => {
-            const isSelected = group.contracts.includes(selectedContract);
+        <nav className="flex shrink-0 gap-1 overflow-x-auto border-b border-border bg-background px-2 py-2" aria-label="Trading market and contract type">
+          {TRADE_TABS.map(tab => {
+            const isSelected = activeTab === tab.id;
             return (
               <button
-                key={group.label}
+                key={tab.id}
                 type="button"
                 aria-pressed={isSelected}
-                onClick={() => setSelectedContract(group.contracts[0])}
-                className={`min-h-10 rounded-md px-1.5 text-xs font-semibold transition-colors ${
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  if (tab.id === 'over-under') setSelectedContract(DIGIT_CONTRACT_GROUPS[0].contracts[0]);
+                  if (tab.id === 'even-odd') setSelectedContract(DIGIT_CONTRACT_GROUPS[1].contracts[0]);
+                  if (tab.id === 'matches-differs') setSelectedContract(DIGIT_CONTRACT_GROUPS[2].contracts[0]);
+                  if (tab.id === 'rise-fall') setDuration('60');
+                }}
+                className={`min-h-10 shrink-0 rounded-md px-3 text-xs font-semibold transition-colors ${
                   isSelected ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'
                 }`}
               >
-                {group.label}
+                {tab.label}
               </button>
             );
           })}
@@ -553,6 +644,8 @@ export function RiseFallView({
                   isAuthenticated={authState === 'authenticated'}
                   selectedContract={selectedContract}
                   onSelectedContractChange={setSelectedContract}
+                  tradeMode={tradeMode}
+                  onRiseFallBuy={direction => void handleRiseFallBuy(direction)}
                 />
               )}
             </div>

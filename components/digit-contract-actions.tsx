@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { DIGIT_CONTRACT_GROUPS, type DigitContractType } from '@/lib/types';
+import type { Direction } from '@/lib/types';
 
 const CONTRACT_LABELS: Record<DigitContractType, string> = {
   OVER: 'Over',
@@ -25,7 +26,7 @@ export function DigitContractActions({
     ?? DIGIT_CONTRACT_GROUPS[0].contracts;
 
   return (
-    <div className="max-lg:fixed max-lg:bottom-[calc(env(safe-area-inset-bottom)+5rem)] max-lg:left-3 max-lg:right-3 max-lg:z-[70] max-lg:grid max-lg:grid-cols-2 max-lg:gap-2 lg:hidden">
+    <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+5rem)] left-3 right-3 z-[70] grid grid-cols-2 gap-2 lg:static lg:z-auto lg:gap-2">
       {contracts.map((contract, index) => (
         <Button
           key={contract}
@@ -40,6 +41,37 @@ export function DigitContractActions({
           {CONTRACT_LABELS[contract]}
         </Button>
       ))}
+    </div>
+  );
+}
+
+export function RiseFallActions({
+  disabled,
+  onBuy,
+}: {
+  disabled: boolean;
+  onBuy: (direction: Direction) => void;
+}) {
+  return (
+    <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+5rem)] left-3 right-3 z-[70] grid grid-cols-2 gap-2 lg:static lg:z-auto lg:gap-2">
+      <Button
+        type="button"
+        size="lg"
+        disabled={disabled}
+        className="h-12 rounded-xl bg-emerald-600 font-semibold text-white hover:bg-emerald-700"
+        onClick={() => onBuy('CALL')}
+      >
+        Rise
+      </Button>
+      <Button
+        type="button"
+        size="lg"
+        disabled={disabled}
+        className="h-12 rounded-xl bg-rose-600 font-semibold text-white hover:bg-rose-700"
+        onClick={() => onBuy('PUT')}
+      >
+        Fall
+      </Button>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTheme } from 'next-themes';
 import {
   ChartMode,
-  ChartTitle,
   DrawTools,
   Share,
   setSmartChartsPublicPath,
@@ -17,6 +16,8 @@ import type { UseSmartChartsApiReturn } from '@/hooks/use-smartcharts-api';
 import type { SmartChartChartData } from '@/hooks/use-smartchart-chart-data';
 import type { ContractMarker } from '@/lib/chart-markers';
 import { SMART_CHART_DRAWING_TOOL_POSITION } from '@/lib/smartchart-constants';
+import { SymbolSelector } from '@/components/custom/symbol-selector';
+import type { ActiveSymbol } from '@deriv/core';
 
 setSmartChartsPublicPath('/');
 
@@ -54,12 +55,16 @@ export interface SmartChartWrapperProps {
   /** Stable key when the underlying symbol changes. */
   symbolKey: string;
   symbol: string | undefined;
+  symbols: ActiveSymbol[];
+  activeSymbol: ActiveSymbol | null;
   isConnectionOpened: boolean;
   isMobile: boolean;
   chartData: SmartChartChartData | undefined;
   getQuotes: UseSmartChartsApiReturn['getQuotes'];
   subscribeQuotes: UseSmartChartsApiReturn['subscribeQuotes'];
   unsubscribeQuotes: UseSmartChartsApiReturn['unsubscribeQuotes'];
+  prices?: number[];
+  pipSize?: number;
   /** Called when the user selects a symbol from the built-in ChartTitle market browser. */
   onSymbolChange?: (symbol: string) => void;
   /** Whether SmartCharts should expect a live subscription feed. Defaults to true. */
@@ -78,12 +83,16 @@ export function SmartChartWrapper({
   chartId,
   symbolKey,
   symbol,
+  symbols,
+  activeSymbol,
   isConnectionOpened,
   isMobile,
   chartData,
   getQuotes,
   subscribeQuotes,
   unsubscribeQuotes,
+  prices,
+  pipSize,
   onSymbolChange,
   isLive = true,
   endEpoch,
@@ -147,8 +156,16 @@ export function SmartChartWrapper({
   );
 
   const topWidgets = useCallback(
-    () => <ChartTitle onChange={onSymbolChange} />,
-    [onSymbolChange]
+    () => (
+      <SymbolSelector
+        symbols={symbols}
+        activeSymbol={activeSymbol}
+        onSymbolChange={onSymbolChange ?? (() => {})}
+        prices={prices}
+        pipSize={pipSize}
+      />
+    ),
+    [symbols, activeSymbol, onSymbolChange, prices, pipSize]
   );
 
   return (
