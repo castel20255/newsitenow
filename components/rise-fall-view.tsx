@@ -397,17 +397,12 @@ export function RiseFallView({
               <RiseFallChart
                 symbolKey={activeSymbol?.underlying_symbol ?? 'rise-fall-chart'}
                 symbol={activeSymbol?.underlying_symbol}
-                symbols={marketSymbols}
-                activeSymbol={activeSymbol}
                 isConnectionOpened={isConnected}
                 isMobile={isMobile}
                 chartData={chartData}
                 getQuotes={getQuotes}
                 subscribeQuotes={subscribeQuotes}
                 unsubscribeQuotes={unsubscribeQuotes}
-                onSymbolChange={selectSymbol}
-                prices={prices}
-                pipSize={pipSize}
                 isLive={isLive}
                 endEpoch={endEpoch}
                 contractsArray={contractMarkers}
@@ -415,6 +410,16 @@ export function RiseFallView({
             ) : (
               <Skeleton className="h-full w-full" />
             )}
+          </div>
+
+          <div className={`absolute left-2 right-2 top-2 z-[100] ${editMode ? 'pointer-events-none select-none' : ''}`}>
+            <SymbolSelector
+              symbols={marketSymbols}
+              activeSymbol={activeSymbol}
+              onSymbolChange={selectSymbol}
+              prices={prices}
+              pipSize={pipSize}
+            />
           </div>
 
           {editMode && !rearrangeMode && (

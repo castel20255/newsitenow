@@ -154,8 +154,11 @@ export function SiteAuthDialog() {
 
   const selectedCountry = countries.find(country => country.code === countryCode);
   const loginReady = Boolean(identifier.trim() && password.length > 0);
+  const normalizedUsername = username.trim();
   const formReady = Boolean(
-    /^[a-z0-9_]{3,24}$/i.test(username)
+    normalizedUsername.length >= 3
+    && normalizedUsername.length <= 24
+    && !/[\u0000-\u001f\u007f]/.test(username)
     && fullName.trim().length >= 2
     && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     && countryCode
@@ -247,7 +250,7 @@ export function SiteAuthDialog() {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" minLength={3} maxLength={24} autoComplete="username" pattern="[A-Za-z0-9_]{3,24}" value={username} onChange={event => setUsername(event.target.value)} required />
+                <Input id="username" name="username" minLength={3} maxLength={24} autoComplete="username" value={username} onChange={event => setUsername(event.target.value)} required />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="fullName">Full name</Label>
