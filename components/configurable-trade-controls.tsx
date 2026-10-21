@@ -486,7 +486,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         onKeyDown={(event) => {
           if (['e', 'E', '+', '-', '.'].includes(event.key)) event.preventDefault();
         }}
-        min={1}
+        min={tradeMode === 'rise-fall' ? 15 : 1}
+        max={tradeMode === 'rise-fall' ? 300 : undefined}
         step={1}
         placeholder="1"
         className="rounded-xl"

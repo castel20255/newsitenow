@@ -318,7 +318,8 @@ export function TradeControls({
           onKeyDown={(e) => {
             if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
           }}
-          min={1}
+          min={tradeMode === 'rise-fall' ? 15 : 1}
+          max={tradeMode === 'rise-fall' ? 300 : undefined}
           step={1}
           placeholder="1"
           className="rounded-xl"
