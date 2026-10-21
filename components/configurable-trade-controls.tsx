@@ -388,7 +388,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     </div>
   );
 
-  const renderAllowEquals = () => (
+  const renderAllowEquals = () => tradeMode === 'digits' ? (
     <div className="space-y-2">
       <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
         <Localize i18n_default_text="Digit prediction" />
@@ -414,8 +414,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         </div>
       )}
     </div>
-  );
-
+  ) : null;
   // ── Stake (3 styles) ────────────────────────────────────────────────────
   const renderStake = () => {
     const setStakeNum = (amount: number) => onStakeChange(String(Math.max(MIN_TRADE_STAKE, amount)));

@@ -1,12 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
   Bitcoin,
   CircleCheck,
+  History,
   Landmark,
   LoaderCircle,
   Smartphone,
@@ -95,8 +97,6 @@ export default function WalletPage() {
   const activeWalletBalance = activeWalletType === 'app_wallet'
     ? balanceUsd ?? Number(auth.activeAccount?.balance ?? 0)
     : Number(auth.activeAccount?.balance ?? 0);
-  const activeTransactions = transactions.filter(transaction => transaction.account === activeWalletType);
-
   useEffect(() => {
     if (auth.authState !== 'authenticated') {
       setIsLoading(false);
@@ -402,44 +402,15 @@ export default function WalletPage() {
             </div>
           </section>
 
-          <section className="mb-10" aria-labelledby="wallet-activity-heading">
-            <div className="mb-3 flex items-end justify-between gap-4">
+          <section className="mb-10 border-y border-border py-4" aria-labelledby="wallet-activity-heading">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h2 id="wallet-activity-heading" className="text-lg font-semibold">{activeWalletName} transactions</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Deposits, withdrawals, stakes, and payouts</p>
+                <h2 id="wallet-activity-heading" className="text-lg font-semibold">Transaction history</h2>
+                <p className="mt-1 text-sm text-muted-foreground">View deposits, withdrawals, wallet activity, and trades.</p>
               </div>
-              <span className="shrink-0 text-xs text-muted-foreground">{activeTransactions.length} transactions</span>
-            </div>
-            <div className="max-h-[28rem] overflow-y-auto overscroll-contain border-y border-border" aria-label={`${activeWalletName} transaction history`}>
-              {activeTransactions.length > 0 ? (
-                <ul className="divide-y divide-border">
-                  {activeTransactions.map(transaction => (
-                    <li key={`${transaction.account}-${transaction.id}`} className="flex min-h-16 items-center justify-between gap-4 py-3 text-sm">
-                      <span className="min-w-0">
-                        <span className="block truncate font-medium">{transaction.description}</span>
-                        <span className="mt-1 block text-xs capitalize text-muted-foreground">
-                          {transaction.status ? `${transaction.status} · ` : ''}{new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(transaction.created_at))}
-                        </span>
-                      </span>
-                      <span className={cn('shrink-0 font-semibold tabular-nums', Number(transaction.amount) < 0 ? 'text-destructive' : 'text-emerald-600')}>
-                        {money.format(Number(transaction.amount))}
-                      </span>
-                      {transaction.deposit && ['pending', 'expired', 'initiating', 'review'].includes(transaction.deposit.status) && (
-                        <button
-                          type="button"
-                          onClick={() => void checkDeposit(transaction.deposit!)}
-                          disabled={isChecking}
-                          className="shrink-0 border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50"
-                        >
-                          {isChecking && deposit?.id === transaction.deposit.id ? 'Checking…' : 'Check status'}
-                        </button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="py-8 text-center text-sm text-muted-foreground">No transactions for this account yet.</p>
-              )}
+              <Link href="/wallet/history" className="inline-flex h-10 items-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90">
+                <History className="h-4 w-4" /> View full history
+              </Link>
             </div>
           </section>
 
