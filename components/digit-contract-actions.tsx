@@ -48,9 +48,11 @@ export function DigitContractActions({
 export function RiseFallActions({
   disabled,
   onBuy,
+  labels,
 }: {
   disabled: boolean;
   onBuy: (direction: Direction) => void;
+  labels?: { rise: string; fall: string };
 }) {
   return (
     <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+5rem)] left-3 right-3 z-[70] grid grid-cols-2 gap-2 lg:static lg:z-auto lg:gap-2">
@@ -61,7 +63,7 @@ export function RiseFallActions({
         className="h-12 rounded-xl bg-emerald-600 font-semibold text-white hover:bg-emerald-700"
         onClick={() => onBuy('CALL')}
       >
-        Rise
+        {labels?.rise ?? 'Rise'}
       </Button>
       <Button
         type="button"
@@ -70,7 +72,7 @@ export function RiseFallActions({
         className="h-12 rounded-xl bg-rose-600 font-semibold text-white hover:bg-rose-700"
         onClick={() => onBuy('PUT')}
       >
-        Fall
+        {labels?.fall ?? 'Fall'}
       </Button>
     </div>
   );

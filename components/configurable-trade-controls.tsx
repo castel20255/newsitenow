@@ -238,6 +238,7 @@ export interface ConfigurableTradeControlsProps {
   selectedContract: DigitContractType;
   onSelectedContractChange: (contract: DigitContractType) => void;
   tradeMode: TradeMode;
+  isForexBasket: boolean;
   onRiseFallBuy: (direction: Direction) => void;
   /**
    * The chart + symbol-dropdown block, rendered at the `chart` position in the
@@ -285,6 +286,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     selectedContract,
     onSelectedContractChange,
     tradeMode,
+    isForexBasket,
     onRiseFallBuy,
     chartSlot,
   } = props;
@@ -474,7 +476,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
   const renderDuration = () => (
     <div className="space-y-1.5">
       <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
-        {tradeMode === 'rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
+        {tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
       </Label>
       <Input
         id="duration-ticks"
@@ -485,8 +487,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         onKeyDown={(event) => {
           if (['e', 'E', '+', '-', '.'].includes(event.key)) event.preventDefault();
         }}
-        min={tradeMode === 'rise-fall' ? 15 : 1}
-        max={tradeMode === 'rise-fall' ? 300 : undefined}
+        min={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 15 : 1}
+        max={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 300 : undefined}
         step={1}
         placeholder="1"
         className="rounded-xl"
@@ -557,10 +559,11 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
           onBuy={contractType => void handleDigitBuy(contractType)}
         />
       )}
-      {!editMode && tradeMode === 'rise-fall' && (
+      {!editMode && (tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall') && (
         <RiseFallActions
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying}
           onBuy={onRiseFallBuy}
+          labels={isForexBasket ? { rise: 'Buy', fall: 'Sell' } : undefined}
         />
       )}
       {editMode && <div>
@@ -716,6 +719,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   return (
     <div className="w-full space-y-3 lg:space-y-4">
+      {isForexBasket && <p className="border-l-2 border-amber-500 pl-3 text-xs leading-5 text-muted-foreground">Simulated Rise/Fall contracts on forex markets. Buy opens Rise; Sell opens Fall.</p>}
       {config.order.map((key) => {
         // Chart only renders where a chartSlot is provided (the no-code mobile
         // column). On desktop the chart lives in its own column, so it's omitted

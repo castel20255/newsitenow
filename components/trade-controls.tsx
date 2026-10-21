@@ -53,6 +53,7 @@ interface TradeControlsProps {
   selectedContract: DigitContractType;
   onSelectedContractChange: (contract: DigitContractType) => void;
   tradeMode: TradeMode;
+  isForexBasket: boolean;
   onRiseFallBuy: (direction: Direction) => void;
 }
 
@@ -87,6 +88,7 @@ export function TradeControls({
   selectedContract,
   onSelectedContractChange,
   tradeMode,
+  isForexBasket,
   onRiseFallBuy,
 }: TradeControlsProps) {
   const { localize } = useAppTranslations();
@@ -239,6 +241,7 @@ export function TradeControls({
 
   return (
     <div className="w-full space-y-3 lg:space-y-4">
+      {isForexBasket && <p className="border-l-2 border-amber-500 pl-3 text-xs leading-5 text-muted-foreground">Simulated Rise/Fall contracts on forex markets. Buy opens Rise; Sell opens Fall.</p>}
       <div className="hidden rounded-2xl border border-border bg-muted/25 p-2.5">
         <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           <Localize i18n_default_text="Contract type" />
@@ -307,7 +310,7 @@ export function TradeControls({
 
       <div className="space-y-1.5">
         <Label htmlFor="duration-ticks" className="text-xs text-muted-foreground">
-          {tradeMode === 'rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
+          {tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 'Duration (seconds)' : <Localize i18n_default_text="Duration (ticks)" />}
         </Label>
         <Input
           id="duration-ticks"
@@ -318,8 +321,8 @@ export function TradeControls({
           onKeyDown={(e) => {
             if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
           }}
-          min={tradeMode === 'rise-fall' ? 15 : 1}
-          max={tradeMode === 'rise-fall' ? 300 : undefined}
+          min={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 15 : 1}
+          max={tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall' ? 300 : undefined}
           step={1}
           placeholder="1"
           className="rounded-xl"
@@ -340,10 +343,11 @@ export function TradeControls({
           onBuy={contractType => void handleDigitBuy(contractType)}
         />
       )}
-      {tradeMode === 'rise-fall' && (
+      {(tradeMode === 'rise-fall' || tradeMode === 'forex-rise-fall') && (
         <RiseFallActions
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying}
           onBuy={onRiseFallBuy}
+          labels={isForexBasket ? { rise: 'Buy', fall: 'Sell' } : undefined}
         />
       )}
 
