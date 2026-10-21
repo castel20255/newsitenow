@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
 
 const USD_TO_KES = 131.21;
-const MINIMUM_DEPOSIT_USD = 2;
+const MINIMUM_DEPOSIT_USD = 1;
 const HOURLY_DEPOSIT_LIMIT = 5;
 const DEPOSIT_TIMEOUT_MS = 60_000;
 const WALLET_ACTIVITY_PAGE_SIZE = 1000;
@@ -201,7 +201,7 @@ export async function POST(request: Request) {
     const amountUsd = Number(body.amountUsd);
     const amountCents = Math.round(amountUsd * 100);
     if (!Number.isFinite(amountUsd) || amountCents < MINIMUM_DEPOSIT_USD * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
-      return Response.json({ error: 'The minimum deposit is $2.00 USD.' }, { status: 400 });
+      return Response.json({ error: 'The minimum deposit is $1.00 USD.' }, { status: 400 });
     }
 
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');
