@@ -130,6 +130,13 @@
   * {
     @apply border-border;
   }
+  button,
+  a {
+    touch-action: manipulation;
+  }
+  button {
+    @apply rounded-lg;
+  }
   body {
     @apply bg-background text-foreground;
   }

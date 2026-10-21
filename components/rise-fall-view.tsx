@@ -18,6 +18,7 @@ import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
 import { ConfigurableTradeControls } from './configurable-trade-controls';
+import { DigitSpread } from './digit-spread';
 import { DIGIT_CONTRACT_GROUPS, type DigitContractType, type Direction } from '../lib/types';
 import { filterSymbolsByCategory, type MarketCategory, type TradeMode } from '../lib/market-symbol-filters';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
@@ -425,6 +426,17 @@ export function RiseFallView({
             />
           </div>
 
+          {!editMode && tradeMode === 'digits' && (
+            <div className="pointer-events-none absolute inset-x-2 bottom-1 z-[100]">
+              <DigitSpread
+                symbol={activeSymbol?.underlying_symbol}
+                currentPrice={prices?.at(-1) ?? null}
+                currentPrecision={pipSize}
+                floating
+              />
+            </div>
+          )}
+
           {editMode && !rearrangeMode && (
             <>
               <FixedZone label={localize('Symbol picker')} style={{ top: 0, height: 54 }} />
@@ -435,6 +447,7 @@ export function RiseFallView({
       ),
     [
       chartHidden,
+      tradeMode,
       marketSymbols,
       prices,
       pipSize,

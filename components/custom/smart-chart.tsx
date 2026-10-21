@@ -131,13 +131,15 @@ export function SmartChartWrapper({
 
   const toolbarWidget = useCallback(
     () => (
+      isMobile ? null : (
       <ToolbarWidget>
         <ChartMode onChartType={setChartType} onGranularity={setGranularity} />
-        {!isMobile && <StudyLegend />}
-        {!isMobile && <Views onChartType={setChartType} onGranularity={setGranularity} />}
+        <StudyLegend />
+        <Views onChartType={setChartType} onGranularity={setGranularity} />
         <DrawTools />
-        {!isMobile && <Share />}
+        <Share />
       </ToolbarWidget>
+      )
     ),
     [isMobile]
   );

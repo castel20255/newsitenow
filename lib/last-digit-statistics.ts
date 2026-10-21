@@ -10,7 +10,7 @@ export interface LastDigitStatistics {
 
 export type DigitStatisticsUpdateHandler = (statistics: LastDigitStatistics) => void;
 
-export const DEFAULT_DIGIT_WINDOW_SIZE = 100;
+export const DEFAULT_DIGIT_WINDOW_SIZE = 1000;
 
 function toPlainDecimal(value: string): string | null {
   const cleaned = value.trim().replace(/,/g, '').replace(/[^\d.eE+-]/g, '');

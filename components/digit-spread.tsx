@@ -15,6 +15,7 @@ interface DigitSpreadProps {
   currentPrecision?: number;
   windowSize?: number;
   onStatsUpdate?: (statistics: LastDigitStatistics) => void;
+  floating?: boolean;
 }
 
 type FeedStatus = 'connecting' | 'live' | 'reconnecting' | 'unavailable';
@@ -72,6 +73,7 @@ export function DigitSpread({
   currentPrecision,
   windowSize = DEFAULT_DIGIT_WINDOW_SIZE,
   onStatsUpdate,
+  floating = false,
 }: DigitSpreadProps) {
   const resolvedWindowSize = Number.isSafeInteger(windowSize) && windowSize > 0
     ? windowSize
@@ -226,22 +228,22 @@ export function DigitSpread({
   }[feedStatus];
 
   return (
-    <div className="rounded-2xl border border-border bg-muted/30 p-3">
-      <div className="mb-2 flex items-center justify-between gap-2">
+    <div className={floating ? 'w-full' : 'rounded-2xl border border-border bg-muted/30 p-3'}>
+      <div className={`mb-1 flex items-center justify-between gap-2 ${floating ? 'px-1' : ''}`}>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">0–9 spread</span>
+          <span className={`font-medium uppercase tracking-[0.22em] text-muted-foreground ${floating ? 'text-[9px]' : 'text-[11px]'}`}>0–9 spread</span>
         </div>
-        <span className="text-[10px] text-muted-foreground">{feedStatusLabel}</span>
+        <span className={`text-muted-foreground ${floating ? 'text-[9px]' : 'text-[10px]'}`}>{feedStatusLabel}</span>
       </div>
 
-      <div className="grid grid-cols-10 gap-1">
+      <div className={`grid grid-cols-10 ${floating ? 'gap-0.5' : 'gap-1'}`}>
         {Array.from({ length: 10 }, (_, digit) => {
           const isSelected = digit === activeDigit;
           const entry = statistics.digits[String(digit) as keyof LastDigitStatistics['digits']];
           return (
             <div key={digit} className="flex min-w-0 flex-col items-center">
               <div
-                className={`flex aspect-square w-full max-w-9 items-center justify-center rounded-full border text-xs font-semibold tabular-nums ${
+                className={`flex aspect-square w-full ${floating ? 'max-w-7' : 'max-w-9'} items-center justify-center rounded-full border text-xs font-semibold tabular-nums ${
                   isSelected
                     ? 'border-red-500 bg-red-500/15 text-red-600 dark:text-red-400'
                     : 'border-border bg-background text-foreground'
@@ -249,13 +251,13 @@ export function DigitSpread({
               >
                 {digit}
               </div>
-              <div className="flex h-2 items-start justify-center">
-                {isSelected && <span className="border-x-[5px] border-t-0 border-b-[7px] border-x-transparent border-b-red-500" />}
+              <div className="flex h-1.5 items-start justify-center">
+                {isSelected && <span className="border-x-[4px] border-t-0 border-b-[6px] border-x-transparent border-b-red-500" />}
               </div>
-              <span className="text-[9px] font-medium tabular-nums text-muted-foreground">
+              <span className={`font-medium tabular-nums text-muted-foreground ${floating ? 'text-[8px]' : 'text-[9px]'}`}>
                 {entry.percentage.toFixed(1)}%
               </span>
-              <span className="text-[8px] tabular-nums text-muted-foreground/75">{entry.count}</span>
+              {!floating && <span className="text-[8px] tabular-nums text-muted-foreground/75">{entry.count}</span>}
             </div>
           );
         })}

@@ -31,7 +31,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { cn } from '@/lib/utils';
-import { DigitSpread } from '@/components/digit-spread';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
 import { DigitContractActions, RiseFallActions } from '@/components/digit-contract-actions';
 import type { DerivWS, ActiveSymbol, ProposalInfo, BuyResult } from '@deriv/core';
@@ -393,7 +392,6 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
 
   const renderAllowEquals = () => tradeMode === 'digits' ? (
     <div className="space-y-2">
-      <DigitSpread symbol={activeSymbol?.underlying_symbol} currentPrice={marketPrice} currentPrecision={marketPrecision} />
       <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
         <Localize i18n_default_text="Digit prediction" />
       </div>
