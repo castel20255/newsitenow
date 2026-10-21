@@ -18,10 +18,9 @@ import Link from 'next/link';
 import { GripVertical, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
-import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
-import { waitForMarketTicks } from '@/lib/digit-market-ticks';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 import { useRearrangeDrag } from '@/hooks/use-rearrange-drag';
 import { Button } from '@/components/ui/button';
@@ -68,6 +67,7 @@ export interface ConfigurableBuyButtonProps {
   selectedDigit?: number;
   onBuy: () => void;
   isBuying: boolean;
+  isSubmitting?: boolean;
 }
 
 function getDigitPayoutMultiplier(contractType: string, selectedDigit: number): number {
@@ -120,15 +120,14 @@ export function ConfigurableBuyButton({
   selectedDigit,
   onBuy,
   isBuying,
+  isSubmitting,
 }: ConfigurableBuyButtonProps) {
-  const { localize } = useAppTranslations();
-
   const numericStake = Number(stake ?? '0') || 0;
   const computedPayout = contractType && selectedDigit !== undefined && numericStake > 0
     ? numericStake * getDigitPayoutMultiplier(contractType, selectedDigit)
     : proposal ? proposal.payout : 0;
   const hasValidStake = Number.isFinite(numericStake) && numericStake >= MIN_TRADE_STAKE;
-  const disabled = (contractType ? !hasValidStake : !proposal && !stake) || isBuying;
+  const disabled = (contractType ? !hasValidStake : !proposal && !stake) || isBuying || isSubmitting;
   const payout = Number.isFinite(computedPayout) ? computedPayout.toFixed(2) : null;
 
   const variants: Record<StyleVariant, () => React.ReactNode> = {
@@ -140,18 +139,14 @@ export function ConfigurableBuyButton({
         disabled={disabled}
         onClick={onBuy}
       >
-        {isBuying ? (
-          <Localize i18n_default_text="Purchasing..." />
-        ) : (
-          <span className="flex flex-col items-center leading-tight gap-0.5">
-            <span><Localize i18n_default_text="Buy" /></span>
-            {payout && (
-              <span className="text-xs font-normal opacity-90">
-                <Localize i18n_default_text="Payout {{payout}} USD" values={{ payout }} />
-              </span>
-            )}
-          </span>
-        )}
+        <span className="flex flex-col items-center leading-tight gap-0.5">
+          <span><Localize i18n_default_text="Buy" /></span>
+          {payout && (
+            <span className="text-xs font-normal opacity-90">
+              <Localize i18n_default_text="Payout {{payout}} USD" values={{ payout }} />
+            </span>
+          )}
+        </span>
       </Button>
     ),
     // Block — squared, bold, payout shown as a badge on the right.
@@ -162,7 +157,7 @@ export function ConfigurableBuyButton({
         onClick={onBuy}
       >
         <span className="flex w-full items-center justify-between px-1">
-          <span>{isBuying ? localize('Purchasing...') : localize('Buy')}</span>
+          <span><Localize i18n_default_text="Buy" /></span>
           {payout && (
             <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-medium">
               {payout} USD
@@ -181,7 +176,7 @@ export function ConfigurableBuyButton({
         <span className="flex flex-col items-center leading-tight gap-0.5">
           <span className="flex items-center gap-1.5 font-semibold">
             <TrendingUp className="h-4 w-4" />
-            {isBuying ? localize('Purchasing...') : localize('Buy')}
+            <Localize i18n_default_text="Buy" />
           </span>
           {payout && (
             <span className="text-xs font-normal opacity-90">
@@ -538,18 +533,10 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
         toast.error('Sign in to save digit trades to your selected account.');
         return;
       }
-      await refreshSiteAuth();
-      await waitForMarketTicks(ws, activeSymbol.underlying_symbol, Math.max(1, Number(duration) || 1));
-      let settlement = await settleDigitTrade(result.tradeId);
-      while ('pending' in settlement && settlement.pending) {
-        await new Promise(resolve => window.setTimeout(resolve, settlement.retryAfterMs));
-        settlement = await settleDigitTrade(result.tradeId);
-      }
-      if ('error' in settlement) {
-        toast.error(settlement.error);
-        return;
-      }
-      await refreshSiteAuth();
+      digitTradeLock.current = false;
+      setIsSubmittingDigitTrade(false);
+      toast.success('Trade placed. It will settle when the selected duration ends.');
+      void refreshSiteAuth();
     } catch {
       toast.error('Could not record the digit-market trade.');
       return;
@@ -568,7 +555,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       contractType={selectedContract}
       selectedDigit={selectedDigit}
       onBuy={handleDigitBuy}
-      isBuying={isBuying || isSubmittingDigitTrade}
+      isBuying={isBuying}
+      isSubmitting={isSubmittingDigitTrade}
     />
   );
 

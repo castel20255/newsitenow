@@ -4,10 +4,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Localize } from '@deriv-com/translations';
-import { recordDigitTrade, settleDigitTrade } from '@/app/actions/digit-trading';
+import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
-import { waitForMarketTicks } from '@/lib/digit-market-ticks';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -208,18 +207,10 @@ export function TradeControls({
         toast.error('Sign in to save digit trades to your selected account.');
         return;
       }
-      await refreshSiteAuth();
-      await waitForMarketTicks(ws, activeSymbol.underlying_symbol, Math.max(1, Number(duration) || 1));
-      let settlement = await settleDigitTrade(result.tradeId);
-      while ('pending' in settlement && settlement.pending) {
-        await new Promise(resolve => window.setTimeout(resolve, settlement.retryAfterMs));
-        settlement = await settleDigitTrade(result.tradeId);
-      }
-      if ('error' in settlement) {
-        toast.error(settlement.error);
-        return;
-      }
-      await refreshSiteAuth();
+      digitTradeLock.current = false;
+      setIsSubmittingDigitTrade(false);
+      toast.success('Trade placed. It will settle when the selected duration ends.');
+      void refreshSiteAuth();
     } catch {
       toast.error('Could not record the digit-market trade.');
       return;
@@ -331,19 +322,15 @@ export function TradeControls({
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
           onClick={handleDigitBuy}
         >
-          {isBuying || isSubmittingDigitTrade ? (
-            <Localize i18n_default_text="Purchasing..." />
-          ) : (
-            <span className="flex flex-col items-center leading-tight gap-0.5">
-              <span><Localize i18n_default_text="Buy" /></span>
-              <span className="text-xs font-normal opacity-90">
-                <Localize
-                  i18n_default_text="Payout {{payout}} USD"
-                  values={{ payout: payoutPreview.toFixed(2) }}
-                />
-              </span>
+          <span className="flex flex-col items-center leading-tight gap-0.5">
+            <span><Localize i18n_default_text="Buy" /></span>
+            <span className="text-xs font-normal opacity-90">
+              <Localize
+                i18n_default_text="Payout {{payout}} USD"
+                values={{ payout: payoutPreview.toFixed(2) }}
+              />
             </span>
-          )}
+          </span>
         </Button>
       </div>
 
