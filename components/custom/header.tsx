@@ -402,7 +402,7 @@ export function Header({
                     'text-sm font-medium whitespace-nowrap truncate',
                     isAppWalletSelected ? 'text-emerald-600' : 'text-orange-500'
                   )}>
-                    {activeAccount?.account_type === 'app_wallet' ? 'Real Wallet' : activeAccount ? 'Demo account' : 'Select account'}
+                    {activeAccount?.account_type === 'app_wallet' ? 'Real Wallet' : activeAccount ? 'Demo Wallet' : 'Select account'}
                   </span>
                   {showAccountBalance && (
                     <p className="text-base font-bold text-foreground whitespace-nowrap truncate">
@@ -416,7 +416,7 @@ export function Header({
                     </p>
                   )}
                   {activeAccount?.account_type === 'app_wallet' && (
-                    <span className="block text-xs text-muted-foreground">Simulated trading</span>
+                    <span className="block text-xs text-muted-foreground"></span>
                   )}
                 </div>
                 <svg
