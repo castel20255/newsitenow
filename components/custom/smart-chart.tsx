@@ -19,6 +19,8 @@ import { SMART_CHART_DRAWING_TOOL_POSITION } from '@/lib/smartchart-constants';
 
 setSmartChartsPublicPath('/');
 
+const MOBILE_Y_AXIS_MARGIN = { top: 53, bottom: 32 } as const;
+
 /** Configuration for a single barrier rendered on the chart. */
 export interface ChartBarrier {
   /** Shade type: 'ABOVE', 'BELOW', 'BETWEEN', 'OUTSIDE', 'NONE_SINGLE', 'NONE_DOUBLE'. */
@@ -166,6 +168,7 @@ export function SmartChartWrapper({
         isLive={isLive}
         isMobile={isMobile}
         isVerticalScrollEnabled={false}
+        yAxisMargin={isMobile ? MOBILE_Y_AXIS_MARGIN : undefined}
         {...(endEpoch !== undefined && { endEpoch })}
         maxTick={isMobile ? (granularity === 0 ? 8 : 32) : undefined}
         onSettingsChange={() => {}}

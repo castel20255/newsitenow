@@ -24,6 +24,10 @@ type BeforeInstallPrompt = Event & {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 };
 
+type InstallPromptWindow = Window & {
+  __cryptoBinaryInstallPrompt?: BeforeInstallPrompt | null;
+};
+
 type FeedMarket = {
   symbol: string;
   price: number;
@@ -106,18 +110,23 @@ export function CryptoBinaryLanding() {
   useEffect(() => {
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
-      setInstallPrompt(event as BeforeInstallPrompt);
+      const prompt = event as BeforeInstallPrompt;
+      (window as InstallPromptWindow).__cryptoBinaryInstallPrompt = prompt;
+      setInstallPrompt(prompt);
     };
     const onInstalled = () => {
       setIsInstalled(true);
       setInstallPrompt(null);
+      (window as InstallPromptWindow).__cryptoBinaryInstallPrompt = null;
+    };
+    const onInstallPromptReady = () => {
+      setInstallPrompt((window as InstallPromptWindow).__cryptoBinaryInstallPrompt ?? null);
     };
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
     window.addEventListener('appinstalled', onInstalled);
-    if ('serviceWorker' in navigator && window.isSecureContext) {
-      void navigator.serviceWorker.register('/sw.js').catch(() => {});
-    }
+    window.addEventListener('crypto-binary-install-prompt-ready', onInstallPromptReady);
+    setInstallPrompt((window as InstallPromptWindow).__cryptoBinaryInstallPrompt ?? null);
     setIsInstalled(
       window.matchMedia('(display-mode: standalone)').matches ||
       Boolean((navigator as Navigator & { standalone?: boolean }).standalone)
@@ -126,6 +135,7 @@ export function CryptoBinaryLanding() {
     return () => {
       window.removeEventListener('beforeinstallprompt', onBeforeInstall);
       window.removeEventListener('appinstalled', onInstalled);
+      window.removeEventListener('crypto-binary-install-prompt-ready', onInstallPromptReady);
     };
   }, []);
 
@@ -147,7 +157,8 @@ export function CryptoBinaryLanding() {
       toast.message('Crypto Binary is already installed.');
       return;
     }
-    if (!installPrompt) {
+    const availablePrompt = installPrompt ?? (window as InstallPromptWindow).__cryptoBinaryInstallPrompt ?? null;
+    if (!availablePrompt) {
       if (!window.isSecureContext) {
         toast.message('Install the app from a secure HTTPS connection.');
         return;
@@ -160,11 +171,16 @@ export function CryptoBinaryLanding() {
       return;
     }
 
-    const prompt = installPrompt;
+    const prompt = availablePrompt;
     setInstallPrompt(null);
-    await prompt.prompt();
-    const choice = await prompt.userChoice;
-    if (choice.outcome === 'accepted') setIsInstalled(true);
+    (window as InstallPromptWindow).__cryptoBinaryInstallPrompt = null;
+    try {
+      await prompt.prompt();
+      const choice = await prompt.userChoice;
+      if (choice.outcome === 'accepted') setIsInstalled(true);
+    } catch {
+      toast.message('Your browser could not open the install prompt. Try its Install app option.');
+    }
   };
 
   const tickerItems = [...markets, ...markets];
