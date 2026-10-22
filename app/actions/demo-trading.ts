@@ -81,7 +81,8 @@ function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
         const response = JSON.parse(String(event.data)) as Record<string, unknown>;
         if (response.req_id !== 1) return;
         if (response.error) {
-          finish(() => reject(new Error('The market rejected this trade request.')));
+          const marketError = response.error as { message?: string };
+          finish(() => reject(new Error(`Market quote rejected: ${marketError.message ?? 'The market rejected this trade request.'}`)));
           return;
         }
         finish(() => resolve(response as T));
@@ -181,8 +182,8 @@ export async function placeDemoTrade(input: DemoTradeInput) {
     }
     return { trade: Array.isArray(data) ? data[0] : data };
   } catch (error) {
-    if (error instanceof Error && error.message.includes('Market')) {
-      return { error: 'Could not get a fresh market quote. Try again.' };
+    if (error instanceof Error && error.message.toLowerCase().includes('market')) {
+      return { error: `Could not get a fresh market quote: ${error.message}` };
     }
     return { error: 'Demo trading is unavailable. Check your account and try again.' };
   }
