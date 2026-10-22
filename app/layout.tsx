@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { IBM_Plex_Sans } from 'next/font/google';
 import { buildFaviconUri } from '@/lib/build-favicon-uri';
 import { getLogoSrc } from '@/lib/get-logo-src';
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${fontClass} ${ibmPlexSans.variable} bg-background flex h-dvh min-h-0 flex-col overflow-hidden`}
       >
+        <Script src="/pwa-install-prompt.js" strategy="beforeInteractive" />
         <TemplateI18nProvider>
           <TemplateLayout supabaseConfig={supabaseConfig}>
             <LogoSrcProvider logoSrc={logoSrc}>{children}</LogoSrcProvider>
