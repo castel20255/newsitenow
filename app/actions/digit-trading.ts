@@ -22,13 +22,13 @@ export interface DigitTradeRecordInput {
 interface TickHistoryResponse {
   req_id?: number;
   error?: { message?: string };
-  history?: { prices?: number[] };
+  history?: { prices?: number[]; times?: number[] };
 }
 
 interface TickResponse {
   req_id?: number;
   error?: { message?: string };
-  tick?: { symbol?: string; quote?: number; pip_size?: number };
+  tick?: { symbol?: string; quote?: number; pip_size?: number; epoch?: number };
 }
 
 function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
@@ -72,26 +72,36 @@ function requestPublicDeriv<T>(payload: Record<string, unknown>): Promise<T> {
   });
 }
 
-async function getLatestPublicTick(symbol: string): Promise<{ price: number; precision: number }> {
+async function getLatestPublicTick(symbol: string): Promise<{ price: number; precision: number; epoch: number }> {
   const response = await requestPublicDeriv<TickResponse>({ ticks: symbol, subscribe: 1 });
   const price = response.tick?.quote;
   const pipSize = response.tick?.pip_size;
-  if (response.tick?.symbol !== symbol || !Number.isFinite(price) || !price || price <= 0 || !Number.isInteger(pipSize) || (pipSize as number) < 0 || (pipSize as number) > 10) {
+  const epoch = response.tick?.epoch;
+  if (response.tick?.symbol !== symbol || !Number.isFinite(price) || !price || price <= 0 || !Number.isInteger(pipSize) || (pipSize as number) < 0 || (pipSize as number) > 10 || !Number.isSafeInteger(epoch) || (epoch as number) <= 0) {
     throw new Error('The market returned an invalid tick.');
   }
-  return { price, precision: pipSize as number };
+  return { price, precision: pipSize as number, epoch: epoch as number };
 }
 
-async function getPublicPriceAt(symbol: string, epoch: number): Promise<number> {
+async function getDigitExitPrice(
+  symbol: string,
+  entryEpoch: number,
+  durationTicks: number
+): Promise<number | null> {
+  if (!Number.isSafeInteger(entryEpoch) || entryEpoch <= 0) throw new Error('Digit trade entry tick is invalid.');
+
   const response = await requestPublicDeriv<TickHistoryResponse>({
     ticks_history: symbol,
     style: 'ticks',
-    count: 1,
-    end: epoch,
+    start: entryEpoch,
+    end: 'latest',
   });
-  const price = response.history?.prices?.at(-1);
-  if (!Number.isFinite(price) || !price || price <= 0) throw new Error('The market returned an invalid historical price.');
-  return price;
+  const prices = response.history?.prices ?? [];
+  const times = response.history?.times ?? [];
+  const followingTicks = prices.filter((price, index) =>
+    Number.isFinite(price) && price > 0 && Number.isFinite(times[index]) && times[index] > entryEpoch
+  );
+  return followingTicks.length >= durationTicks ? followingTicks[durationTicks - 1] : null;
 }
 
 export async function recordDigitTrade(input: DigitTradeRecordInput) {
@@ -123,13 +133,14 @@ export async function recordDigitTrade(input: DigitTradeRecordInput) {
 
     const entryTick = await getLatestPublicTick(input.market_symbol.toUpperCase());
     const admin = createSupabaseAdminClient();
-    const { data, error } = await admin.rpc('open_digit_market_trade', {
+    const { data, error } = await admin.rpc('open_digit_market_trade_at_tick', {
       p_market_symbol: input.market_symbol.toUpperCase(),
       p_market_name: input.market_name,
       p_contract_type: input.contract_type,
       p_prediction_digit: input.prediction_digit,
       p_entry_price: entryTick.price,
       p_price_precision: entryTick.precision,
+      p_entry_epoch: entryTick.epoch,
       p_stake: input.stake,
       p_duration_ticks: durationTicks,
       p_funding_source: input.fundingSource ?? 'demo',
@@ -175,7 +186,7 @@ export async function settleDigitTrade(tradeId: string) {
 
     const { data: trade, error: tradeError } = await supabase
       .from('digit_market_trades')
-      .select('market_symbol, duration_ticks, price_precision, outcome_digit, payout, expires_at, status')
+      .select('market_symbol, duration_ticks, price_precision, entry_epoch, outcome_digit, payout, created_at, status')
       .eq('id', tradeId)
       .maybeSingle();
     if (tradeError || !trade) return { error: 'Digit trade not found.' };
@@ -191,8 +202,6 @@ export async function settleDigitTrade(tradeId: string) {
       return { error: 'Digit trade duration is invalid.' };
     }
 
-    const waitMs = Date.parse(trade.expires_at) - Date.now();
-    if (waitMs > 0) return { pending: true, retryAfterMs: Math.min(waitMs, 1000) };
     const fallbackTick = Number.isInteger(trade.price_precision)
       ? null
       : await getLatestPublicTick(trade.market_symbol);
@@ -202,9 +211,12 @@ export async function settleDigitTrade(tradeId: string) {
     if (pricePrecision === undefined || pricePrecision < 0 || pricePrecision > 10) {
       return { error: 'Digit trade precision is invalid.' };
     }
-    const expiresAt = Date.parse(trade.expires_at);
-    if (!Number.isFinite(expiresAt)) return { error: 'Digit trade expiry is invalid.' };
-    const exitPrice = await getPublicPriceAt(trade.market_symbol, Math.floor(expiresAt / 1000));
+    const storedEntryEpoch = Number(trade.entry_epoch);
+    const entryEpoch = Number.isSafeInteger(storedEntryEpoch) && storedEntryEpoch > 0
+      ? storedEntryEpoch
+      : Math.floor(Date.parse(trade.created_at) / 1000);
+    const exitPrice = await getDigitExitPrice(trade.market_symbol, entryEpoch, trade.duration_ticks);
+    if (exitPrice === null) return { pending: true, retryAfterMs: 250 };
     const admin = createSupabaseAdminClient();
     const { data, error } = await admin.rpc('settle_digit_market_trade', {
       p_trade_id: tradeId,

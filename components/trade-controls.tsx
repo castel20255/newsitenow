@@ -223,7 +223,7 @@ export function TradeControls({
       }
       digitTradeLock.current = false;
       setIsSubmittingDigitTrade(false);
-      toast.success('Trade placed. It will settle when the selected duration ends.');
+      toast.success('Trade placed');
       void refreshSiteAuth();
     } catch {
       toast.error('Could not record the digit-market trade.');
