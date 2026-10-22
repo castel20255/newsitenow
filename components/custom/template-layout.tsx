@@ -44,7 +44,7 @@ export function TemplateLayout({
         </DerivWSProvider>
         <SiteAuthDialog />
       </SiteAuthProvider>
-      <Toaster />
+      <Toaster position="top-center" duration={3000} />
     </Providers>
   );
 }
