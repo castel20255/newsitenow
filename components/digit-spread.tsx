@@ -280,9 +280,6 @@ export function DigitSpread({
               <div className="flex h-1.5 items-start justify-center">
                 {isActive && <span role="img" aria-label="Current market digit" className="border-x-[4px] border-t-0 border-b-[6px] border-x-transparent border-b-red-500" />}
               </div>
-              <span className={`whitespace-nowrap rounded-sm border border-border bg-background px-1 font-medium tabular-nums text-foreground ${floating ? 'text-[8px]' : 'text-[9px]'}`}>
-                {entry.percentage.toFixed(1)}%
-              </span>
               {!floating && <span className="text-[8px] tabular-nums text-muted-foreground/75">{entry.count}</span>}
             </div>
           );

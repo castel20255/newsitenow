@@ -16,6 +16,7 @@ import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { DigitContractActions, RiseFallActions } from '@/components/digit-contract-actions';
 import { DigitSpread } from '@/components/digit-spread';
+import type { LastDigitStatistics } from '@/lib/last-digit-statistics';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
 import type { DerivWS, ActiveSymbol, ProposalInfo, BuyResult } from '@deriv/core';
 import type { DigitContractType, Direction, DurationSelectUnit, DurationOption } from '../lib/types';
@@ -55,6 +56,8 @@ interface TradeControlsProps {
   onSelectedContractChange: (contract: DigitContractType) => void;
   tradeMode: TradeMode;
   showDigitSpread?: boolean;
+  digitPercentages?: readonly number[];
+  onDigitStatsUpdate?: (statistics: LastDigitStatistics) => void;
   isForexBasket: boolean;
   onRiseFallBuy: (direction: Direction) => void;
 }
@@ -91,6 +94,8 @@ export function TradeControls({
   onSelectedContractChange,
   tradeMode,
   showDigitSpread = false,
+  digitPercentages,
+  onDigitStatsUpdate,
   isForexBasket,
   onRiseFallBuy,
 }: TradeControlsProps) {
@@ -268,7 +273,12 @@ export function TradeControls({
 
       {tradeMode === 'digits' && <div className="space-y-2">
         {showDigitSpread && (
-          <DigitSpread symbol={activeSymbol?.underlying_symbol} currentPrice={marketPrice} currentPrecision={marketPrecision} />
+          <DigitSpread
+            symbol={activeSymbol?.underlying_symbol}
+            currentPrice={marketPrice}
+            currentPrecision={marketPrecision}
+            onStatsUpdate={onDigitStatsUpdate}
+          />
         )}
         <div className="text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
           <Localize i18n_default_text="Digit prediction" />
@@ -285,10 +295,13 @@ export function TradeControls({
                 key={digit}
                 type="button"
                 variant={selectedDigit === digit ? 'default' : 'outline'}
-                className="h-10 rounded-xl text-sm font-medium"
+                className="h-12 flex-col gap-0.5 rounded-xl text-sm font-medium"
                 onClick={() => setSelectedDigit(digit)}
               >
-                {digit}
+                <span>{digit}</span>
+                <span className={`text-[9px] tabular-nums ${selectedDigit === digit ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                  {(digitPercentages?.[digit] ?? 0).toFixed(1)}%
+                </span>
               </Button>
             ))}
           </div>
