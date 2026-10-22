@@ -165,7 +165,11 @@ export default function WalletHistoryPage() {
       .filter(transaction => !['deposit', 'withdrawal', 'withdrawal_reversed'].includes(transaction.transaction_type))
       .map(transaction => ({
         id: `transaction-${transaction.account}-${transaction.id}`,
-        category: 'transactions' as const,
+        category: transaction.transaction_type === 'admin_deposit'
+          ? 'deposits' as const
+          : transaction.transaction_type === 'admin_withdrawal'
+            ? 'withdrawals' as const
+            : 'transactions' as const,
         title: transaction.description,
         detail: transaction.account === 'app_wallet' ? 'Real Wallet ledger' : 'Demo account ledger',
         date: transaction.created_at,
