@@ -7,12 +7,12 @@ import {
   ArrowDownToLine,
   ArrowRight,
   ArrowUpRight,
-  Bot,
   Clock3,
   LineChart,
   ShieldCheck,
   Sparkles,
   Waves,
+  Wallet,
   Zap,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -45,30 +45,30 @@ const INITIAL_SERIES = [34, 37, 32, 43, 39, 45, 41, 52, 48, 58, 54, 62, 56, 69, 
 const FEATURES = [
   {
     number: '01',
-    title: 'Automated Options Bots',
-    description: 'Build, backtest, and run rule-based strategies with configurable risk controls.',
-    icon: Bot,
+    title: 'Forex Basket Trading',
+    description: 'Trade major and minor forex pairs with Rise and Fall Buy/Sell contracts.',
+    icon: Waves,
     accent: 'mint',
   },
   {
     number: '02',
-    title: 'Synthetic & Crypto Volatility',
-    description: 'Explore market indices designed to move independently of real-world economic news.',
-    icon: Waves,
+    title: 'Digit Contracts',
+    description: 'Choose Over, Under, Even, Odd, Matches, or Differs contracts on supported markets.',
+    icon: LineChart,
     accent: 'cyan',
   },
   {
     number: '03',
-    title: 'Rise/Fall Momentum',
-    description: 'Read short-term direction with live charts, clear entry context, and expiry tracking.',
-    icon: LineChart,
+    title: 'Live Digit Analysis',
+    description: 'Compare last-digit frequencies from a rolling tick window alongside the chart.',
+    icon: Clock3,
     accent: 'lime',
   },
   {
     number: '04',
-    title: 'Digit & Tick Analysis',
-    description: 'Follow last-digit movement, tick history, and probability signals in real time.',
-    icon: Clock3,
+    title: 'Wallets & Trade History',
+    description: 'Switch between Demo and Real Wallets, with M-Pesa deposits, withdrawals, and recorded trades.',
+    icon: Wallet,
     accent: 'amber',
   },
 ] as const;
@@ -115,6 +115,9 @@ export function CryptoBinaryLanding() {
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
     window.addEventListener('appinstalled', onInstalled);
+    if ('serviceWorker' in navigator && window.isSecureContext) {
+      void navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
     setIsInstalled(
       window.matchMedia('(display-mode: standalone)').matches ||
       Boolean((navigator as Navigator & { standalone?: boolean }).standalone)
@@ -145,13 +148,23 @@ export function CryptoBinaryLanding() {
       return;
     }
     if (!installPrompt) {
-      toast.message('App installation is not available in this browser yet.');
+      if (!window.isSecureContext) {
+        toast.message('Install the app from a secure HTTPS connection.');
+        return;
+      }
+      const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      toast.message(isIos
+        ? 'To install, tap Share, then Add to Home Screen.'
+        : 'Open your browser menu and choose Install app or Add to Home Screen.');
       return;
     }
 
-    await installPrompt.prompt();
-    const choice = await installPrompt.userChoice;
-    if (choice.outcome === 'accepted') setInstallPrompt(null);
+    const prompt = installPrompt;
+    setInstallPrompt(null);
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if (choice.outcome === 'accepted') setIsInstalled(true);
   };
 
   const tickerItems = [...markets, ...markets];
@@ -182,7 +195,7 @@ export function CryptoBinaryLanding() {
       </header>
 
       <div className="cb-ticker border-b border-white/[0.07]" aria-label="Market ticker">
-        <div className="cb-ticker-label"><span className="cb-live-dot" /> LIVE FEED</div>
+            <div className="cb-ticker-label"><span className="cb-live-dot" /> MARKET PREVIEW</div>
         <motion.div
           className="cb-ticker-track"
           animate={reduceMotion ? undefined : { x: ['0%', '-50%'] }}
@@ -207,7 +220,7 @@ export function CryptoBinaryLanding() {
             <p className="cb-greeting">Good morning <span>— let’s find your signal.</span></p>
             <h1>Welcome to <span>Crypto Binary</span></h1>
             <p className="cb-hero-subtitle">
-              Access advanced decentralized options, automated trading bots, and high-frequency analytical markets in one unified ecosystem.
+              Follow market charts, place Rise/Fall and digit trades, and manage activity across Demo and Real Wallet accounts.
             </p>
             <div className="cb-hero-actions">
               <button className="cb-button-primary" onClick={() => openAuth('login')}>
@@ -221,7 +234,7 @@ export function CryptoBinaryLanding() {
               </button>
             </div>
             <div className="cb-trust-line">
-              <ShieldCheck size={15} /> Demo balances only <i /> Trading outcomes <i /> No real-money funding
+              <ShieldCheck size={15} /> Demo and Real Wallets <i /> M-Pesa payments <i /> Trade history
             </div>
           </motion.div>
         </div>
@@ -231,18 +244,18 @@ export function CryptoBinaryLanding() {
           initial={reduceMotion ? false : { opacity: 0, y: 22, scale: 0.985 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.7, delay: reduceMotion ? 0 : 0.12 }}
-          aria-label="Live price chart"
+          aria-label="Illustrative market chart"
         >
           <div className="cb-terminal-top">
-            <div className="cb-terminal-title"><span className="cb-live-dot" /> MARKET SNAPSHOT</div>
-            <span className="cb-sim-tag">LIVE FEED</span>
+            <div className="cb-terminal-title"><span className="cb-live-dot" /> MARKET PREVIEW</div>
+            <span className="cb-sim-tag">SAMPLE DATA</span>
           </div>
           <div className="cb-chart-heading">
             <div>
               <div className="cb-chart-symbol">BTC/USD <span>· 1m</span></div>
               <div className="cb-chart-price">{formatPrice(markets[3].price, 2)} <span className={markets[3].change >= 0 ? 'cb-positive' : 'cb-negative'}>{markets[3].change >= 0 ? '+' : ''}{markets[3].change.toFixed(2)}%</span></div>
             </div>
-            <span className="cb-chart-period">LIVE MARKET</span>
+            <span className="cb-chart-period">ILLUSTRATIVE</span>
           </div>
           <div className="cb-chart-canvas">
             <div className="cb-chart-grid" />
@@ -261,7 +274,7 @@ export function CryptoBinaryLanding() {
           </div>
           <div className="cb-chart-footer">
             <span><i className="cb-chart-keyline" /> Market price</span>
-            <span>Updates every 1.35s</span>
+            <span>Animated sample prices</span>
           </div>
           <div className="cb-market-strip">
             <div><span>EUR/USD</span><b className={markets[4].change >= 0 ? 'cb-positive' : 'cb-negative'}>{markets[4].change >= 0 ? '+' : ''}{markets[4].change.toFixed(2)}%</b></div>
@@ -277,7 +290,7 @@ export function CryptoBinaryLanding() {
             <div className="cb-eyebrow">BUILT FOR ACTIVE THINKING</div>
             <h2 id="cb-features-title">One workspace. <span>More ways to read the market.</span></h2>
           </div>
-          <p>Tools for exploring price movement, testing ideas, and tracking each decision in one place.</p>
+          <p>Choose a market, set your stake and duration, then follow open and settled trades in your account history.</p>
         </motion.div>
         <div className="cb-feature-grid">
           {FEATURES.map((feature, index) => {
@@ -306,7 +319,7 @@ export function CryptoBinaryLanding() {
         <div className="cb-bottom-copy">
           <div className="cb-eyebrow"><Zap size={14} /> YOUR NEXT MOVE STARTS HERE</div>
           <h2>Make room for <span>better decisions.</span></h2>
-          <p>Explore a demo account, follow live market feeds, and keep your positions close.</p>
+          <p>Open a Demo or Real Wallet account to explore supported markets, digit analysis, and trade history.</p>
         </div>
         <button className="cb-button-primary" onClick={() => openAuth('signup')}>
           Create your account <ArrowRight size={17} />
@@ -318,7 +331,7 @@ export function CryptoBinaryLanding() {
           <span className="cb-brand-mark">CB</span>
           <span className="cb-brand-name">CRYPTO <b>BINARY</b></span>
         </a>
-        <span>Virtual demo trading. Prices and outcomes shown here are for practice.</span>
+        <span>Market values in this preview are illustrative. Trading outcomes depend on market movement.</span>
         <a href="/reports">Positions history <ArrowUpRight size={13} /></a>
       </footer>
     </main>

@@ -65,8 +65,6 @@ export interface SmartChartWrapperProps {
   endEpoch?: number;
   /** Default granularity (0 = ticks, 60 = 1m candles, etc.). Defaults to 0. */
   defaultGranularity?: number;
-  /** Apply one initial zoom step when the chart mounts. */
-  initialZoom?: 1 | -1;
   /** Barriers to display on the chart. */
   barriers?: ChartBarrier[];
   /** Contract markers to display entry/exit spots on the chart when trades are placed. */
@@ -86,7 +84,6 @@ export function SmartChartWrapper({
   isLive = true,
   endEpoch,
   defaultGranularity = 0,
-  initialZoom,
   barriers,
   contractsArray,
 }: SmartChartWrapperProps) {
@@ -171,7 +168,6 @@ export function SmartChartWrapper({
         isVerticalScrollEnabled={false}
         {...(endEpoch !== undefined && { endEpoch })}
         maxTick={isMobile ? (granularity === 0 ? 8 : 32) : undefined}
-        zoom={initialZoom}
         onSettingsChange={() => {}}
         settings={chartSettings}
         stateChangeListener={() => {}}
