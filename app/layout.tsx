@@ -30,7 +30,15 @@ export function generateMetadata(): Metadata {
   return {
     title: 'Crypto Binary',
     description: 'Crypto Binary market analysis and demo trading workspace.',
-    ...(faviconUri ? { icons: { icon: faviconUri } } : {}),
+    icons: {
+      icon: faviconUri ?? '/icon.svg',
+      apple: '/apple-touch-icon.png',
+    },
+    appleWebApp: {
+      capable: true,
+      title: 'Crypto Binary',
+      statusBarStyle: 'default',
+    },
   };
 }
 
