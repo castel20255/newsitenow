@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
 import { ConfigurableTradeControls } from './configurable-trade-controls';
 import { DigitSpread } from './digit-spread';
+import type { LastDigitStatistics } from '@/lib/last-digit-statistics';
 import { DIGIT_CONTRACT_GROUPS, type DigitContractType, type Direction } from '../lib/types';
 import { filterSymbolsByCategory, type MarketCategory, type TradeMode } from '../lib/market-symbol-filters';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
@@ -261,6 +262,12 @@ export function RiseFallView({
   const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
   const [selectedContract, setSelectedContract] = useState<DigitContractType>('OVER');
+  const [digitPercentages, setDigitPercentages] = useState<number[]>(() => Array(10).fill(0));
+  const handleDigitStatsUpdate = useCallback((statistics: LastDigitStatistics) => {
+    setDigitPercentages(Array.from({ length: 10 }, (_, digit) =>
+      statistics.digits[String(digit) as keyof LastDigitStatistics['digits']].percentage
+    ));
+  }, []);
 
   useEffect(() => {
     if (marketSymbols.length > 0 && !marketSymbols.some(symbol => symbol.underlying_symbol === activeSymbol?.underlying_symbol)) {
@@ -432,6 +439,7 @@ export function RiseFallView({
                 symbol={activeSymbol?.underlying_symbol}
                 currentPrice={prices?.at(-1) ?? null}
                 currentPrecision={pipSize}
+                onStatsUpdate={handleDigitStatsUpdate}
                 floating
               />
             </div>
@@ -448,6 +456,7 @@ export function RiseFallView({
     [
       chartHidden,
       tradeMode,
+      handleDigitStatsUpdate,
       marketSymbols,
       prices,
       pipSize,
@@ -528,7 +537,9 @@ export function RiseFallView({
         selectedContract={selectedContract}
         onSelectedContractChange={setSelectedContract}
         tradeMode={tradeMode}
-        showDigitSpread={!isMobile}
+        showDigitSpread={!isMobile || chartHidden}
+        digitPercentages={digitPercentages}
+        onDigitStatsUpdate={handleDigitStatsUpdate}
         isForexBasket={isForexBasket}
         onRiseFallBuy={handleRiseFallBuy}
       />
@@ -664,6 +675,8 @@ export function RiseFallView({
                   onSelectedContractChange={setSelectedContract}
                   tradeMode={tradeMode}
                   showDigitSpread={!isMobile}
+                  digitPercentages={digitPercentages}
+                  onDigitStatsUpdate={handleDigitStatsUpdate}
                   isForexBasket={isForexBasket}
                   onRiseFallBuy={direction => void handleRiseFallBuy(direction)}
                 />

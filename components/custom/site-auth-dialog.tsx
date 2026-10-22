@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition, type FormEvent } from 'react';
+import Link from 'next/link';
 import { Eye, EyeOff, Search } from 'lucide-react';
 import { getCountries, getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
@@ -199,12 +200,12 @@ export function SiteAuthDialog() {
 
   return (
     <Dialog open={authDialogOpen} onOpenChange={open => !open && closeAuth()}>
-      <DialogContent className="max-h-[90dvh] w-[min(32rem,calc(100vw-1.5rem))] overflow-y-auto p-5 sm:p-7">
+      <DialogContent className="max-h-[90dvh] w-[min(32rem,calc(100vw-1.5rem))] overflow-y-auto rounded-2xl border-border/70 bg-background/95 p-5 shadow-2xl backdrop-blur-xl sm:p-7">
         <DialogHeader>
-          <DialogTitle>{authDialogMode === 'signup' ? 'Create your account' : 'Welcome back'}</DialogTitle>
+          <DialogTitle>{authDialogMode === 'signup' ? 'Create a trading account' : 'Welcome back'}</DialogTitle>
           <DialogDescription>
             {authDialogMode === 'signup'
-              ? 'Create a site account to start with a $10,000 demo balance.'
+              ? 'Use a $10,000 Demo balance to learn, or fund your Real Wallet using supported payment methods.'
               : 'Sign in with your email or username.'}
           </DialogDescription>
         </DialogHeader>
@@ -303,7 +304,7 @@ export function SiteAuthDialog() {
                 autoComplete="new-password"
               />
             </div>
-            <p className="text-xs text-muted-foreground">Use at least 10 characters. Your password is managed by Supabase Auth and is never stored as plain text by this app.</p>
+            <p className="text-xs text-muted-foreground">Use a strong password.</p>
             <div className="flex items-start gap-2.5">
               <Checkbox
                 id="termsAccepted"
@@ -312,9 +313,16 @@ export function SiteAuthDialog() {
                 onCheckedChange={value => setTermsAccepted(value === true)}
                 className="mt-0.5"
               />
-              <Label htmlFor="termsAccepted" className="text-sm font-normal leading-5">
-                I accept the Terms and Conditions and understand the demo balance is virtual. Real-money funding and trading are not available yet.
-              </Label>
+              <div className="space-y-1">
+                <Label htmlFor="termsAccepted" className="text-sm font-normal leading-5">
+                  I agree to the Terms of Service and Privacy Policy. Demo funds are virtual; Real Wallet payments use supported methods.
+                </Label>
+                <p className="text-xs leading-5">
+                  <Link href="/terms" className="font-medium text-primary underline underline-offset-2">Read the Terms of Service</Link>
+                  <span className="text-muted-foreground"> · </span>
+                  <Link href="/privacy" className="font-medium text-primary underline underline-offset-2">Read the Privacy Policy</Link>
+                </p>
+              </div>
             </div>
             {message.message && (
               <p role="status" className={`text-sm ${message.status === 'error' ? 'text-destructive' : 'text-emerald-600'}`}>
