@@ -160,14 +160,14 @@ export function CryptoBinaryLanding() {
     const availablePrompt = installPrompt ?? (window as InstallPromptWindow).__cryptoBinaryInstallPrompt ?? null;
     if (!availablePrompt) {
       if (!window.isSecureContext) {
-        toast.message('Install the app from a secure HTTPS connection.');
+        toast.message('Open Crypto Binary over HTTPS to install it.');
         return;
       }
       const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       toast.message(isIos
         ? 'To install, tap Share, then Add to Home Screen.'
-        : 'Open your browser menu and choose Install app or Add to Home Screen.');
+        : 'Install Crypto Binary from your browser’s Install app or Add to Home Screen command.');
       return;
     }
 
@@ -179,7 +179,11 @@ export function CryptoBinaryLanding() {
       const choice = await prompt.userChoice;
       if (choice.outcome === 'accepted') setIsInstalled(true);
     } catch {
-      toast.message('Your browser could not open the install prompt. Try its Install app option.');
+      const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      toast.message(isIos
+        ? 'To install, tap Share, then Add to Home Screen.'
+        : 'Install Crypto Binary from your browser’s Install app or Add to Home Screen command.');
     }
   };
 

@@ -145,8 +145,24 @@
 .nocode-drag-hint {
   animation: nocode-drag-hint 1s ease-in-out 2;
 }
+
+@keyframes digit-lowest-pulse {
+  0%,
+  100% {
+    box-shadow: inset 0 0 0 1px rgb(159 4 9 / 0.48), 0 0 0 0 rgb(159 4 9 / 0.16);
+  }
+  50% {
+    box-shadow: inset 0 0 12px rgb(159 4 9 / 0.5), 0 0 10px 2px rgb(159 4 9 / 0.32);
+  }
+}
+
+.digit-lowest-pulse {
+  animation: digit-lowest-pulse 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nocode-drag-hint {
+  .nocode-drag-hint,
+  .digit-lowest-pulse {
     animation: none;
   }
 }
