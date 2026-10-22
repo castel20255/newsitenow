@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { DigitContractActions, RiseFallActions } from '@/components/digit-contract-actions';
+import { DigitPredictionButton } from '@/components/digit-prediction-button';
 import { DigitSpread } from '@/components/digit-spread';
 import type { LastDigitStatistics } from '@/lib/last-digit-statistics';
 import { EndTimePicker } from '@/components/custom/end-time-picker';
@@ -57,6 +58,8 @@ interface TradeControlsProps {
   tradeMode: TradeMode;
   showDigitSpread?: boolean;
   digitPercentages?: readonly number[];
+  highestDigit?: number | null;
+  lowestDigit?: number | null;
   onDigitStatsUpdate?: (statistics: LastDigitStatistics) => void;
   isForexBasket: boolean;
   onRiseFallBuy: (direction: Direction) => void;
@@ -95,6 +98,8 @@ export function TradeControls({
   tradeMode,
   showDigitSpread = false,
   digitPercentages,
+  highestDigit = null,
+  lowestDigit = null,
   onDigitStatsUpdate,
   isForexBasket,
   onRiseFallBuy,
@@ -291,18 +296,15 @@ export function TradeControls({
         ) : (
           <div className="grid grid-cols-5 gap-2">
             {digitOptions.map((digit) => (
-              <Button
+              <DigitPredictionButton
                 key={digit}
-                type="button"
-                variant={selectedDigit === digit ? 'default' : 'outline'}
-                className="h-12 flex-col gap-0.5 rounded-xl text-sm font-medium"
-                onClick={() => setSelectedDigit(digit)}
-              >
-                <span>{digit}</span>
-                <span className={`text-[9px] tabular-nums ${selectedDigit === digit ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
-                  {(digitPercentages?.[digit] ?? 0).toFixed(1)}%
-                </span>
-              </Button>
+                digit={digit}
+                percentage={digitPercentages?.[digit] ?? 0}
+                selected={selectedDigit === digit}
+                highest={highestDigit === digit}
+                lowest={lowestDigit === digit}
+                onSelect={() => setSelectedDigit(digit)}
+              />
             ))}
           </div>
         )}

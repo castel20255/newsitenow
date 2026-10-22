@@ -268,6 +268,17 @@ export function RiseFallView({
       statistics.digits[String(digit) as keyof LastDigitStatistics['digits']].percentage
     ));
   }, []);
+  const digitExtremes = useMemo(() => {
+    const highestPercentage = Math.max(...digitPercentages);
+    const lowestPercentage = Math.min(...digitPercentages);
+    if (highestPercentage === 0 || highestPercentage === lowestPercentage) {
+      return { highestDigit: null, lowestDigit: null };
+    }
+    return {
+      highestDigit: digitPercentages.indexOf(highestPercentage),
+      lowestDigit: digitPercentages.indexOf(lowestPercentage),
+    };
+  }, [digitPercentages]);
 
   useEffect(() => {
     if (marketSymbols.length > 0 && !marketSymbols.some(symbol => symbol.underlying_symbol === activeSymbol?.underlying_symbol)) {
@@ -539,6 +550,8 @@ export function RiseFallView({
         tradeMode={tradeMode}
         showDigitSpread={!isMobile || chartHidden}
         digitPercentages={digitPercentages}
+        highestDigit={digitExtremes.highestDigit}
+        lowestDigit={digitExtremes.lowestDigit}
         onDigitStatsUpdate={handleDigitStatsUpdate}
         isForexBasket={isForexBasket}
         onRiseFallBuy={handleRiseFallBuy}
@@ -676,6 +689,8 @@ export function RiseFallView({
                   tradeMode={tradeMode}
                   showDigitSpread={!isMobile}
                   digitPercentages={digitPercentages}
+                  highestDigit={digitExtremes.highestDigit}
+                  lowestDigit={digitExtremes.lowestDigit}
                   onDigitStatsUpdate={handleDigitStatsUpdate}
                   isForexBasket={isForexBasket}
                   onRiseFallBuy={direction => void handleRiseFallBuy(direction)}
