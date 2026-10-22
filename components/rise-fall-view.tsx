@@ -427,7 +427,7 @@ export function RiseFallView({
           </div>
 
           {!editMode && tradeMode === 'digits' && (
-            <div className="pointer-events-none absolute inset-x-2 bottom-1 z-[100]">
+            <div className="pointer-events-none absolute bottom-12 left-2 right-14 z-[100]">
               <DigitSpread
                 symbol={activeSymbol?.underlying_symbol}
                 currentPrice={prices?.at(-1) ?? null}

@@ -216,9 +216,24 @@ export function DigitSpread({
   }, [symbol, resolvedWindowSize]);
 
   const activeDigit = useMemo(() => {
-    if (typeof currentPrice !== 'number') return 0;
-    return extractLastDigit(currentPrice, currentPrecision) ?? 0;
+    if (typeof currentPrice !== 'number') return null;
+    return extractLastDigit(currentPrice, currentPrecision);
   }, [currentPrice, currentPrecision]);
+  const extremeDigits = useMemo(() => {
+    if (statistics.total_ticks === 0) return { highest: null, lowest: null };
+
+    const percentages = Array.from({ length: 10 }, (_, digit) =>
+      statistics.digits[String(digit) as keyof LastDigitStatistics['digits']].percentage
+    );
+    const highestPercentage = Math.max(...percentages);
+    const lowestPercentage = Math.min(...percentages);
+    if (highestPercentage === lowestPercentage) return { highest: null, lowest: null };
+
+    return {
+      highest: percentages.indexOf(highestPercentage),
+      lowest: percentages.indexOf(lowestPercentage),
+    };
+  }, [statistics]);
 
   const feedStatusLabel = {
     connecting: 'Connecting…',
@@ -238,21 +253,35 @@ export function DigitSpread({
 
       <div className={`grid grid-cols-10 ${floating ? 'gap-0.5' : 'gap-1'}`}>
         {Array.from({ length: 10 }, (_, digit) => {
-          const isSelected = digit === activeDigit;
+          const isActive = digit === activeDigit;
+          const isHighest = digit === extremeDigits.highest;
+          const isLowest = digit === extremeDigits.lowest;
           const entry = statistics.digits[String(digit) as keyof LastDigitStatistics['digits']];
           return (
-            <div key={digit} className="flex min-w-0 flex-col items-center">
-              <div
-                className={`flex aspect-square w-full ${floating ? 'max-w-7' : 'max-w-9'} items-center justify-center rounded-full border text-xs font-semibold tabular-nums ${
-                  isSelected
-                    ? 'border-red-500 bg-red-500/15 text-red-600 dark:text-red-400'
-                    : 'border-border bg-background text-foreground'
-                }`}
-              >
-                {digit}
+            <div
+              key={digit}
+              className="flex min-w-0 flex-col items-center"
+              aria-label={`Digit ${digit}: ${entry.percentage.toFixed(1)} percent${isHighest ? ', highest frequency' : ''}${isLowest ? ', lowest frequency' : ''}`}
+              title={`Digit ${digit}: ${entry.percentage.toFixed(1)}%${isHighest ? ' · Highest' : ''}${isLowest ? ' · Lowest' : ''}`}
+            >
+              <div className={`relative flex aspect-square w-full ${floating ? 'max-w-7' : 'max-w-9'} items-center justify-center`}>
+                {(isHighest || isLowest) && (
+                  <svg viewBox="0 0 40 40" className="pointer-events-none absolute -inset-1 h-[calc(100%+8px)] w-[calc(100%+8px)] overflow-visible" aria-hidden="true">
+                    <path
+                      d="M 4 20 A 16 16 0 0 1 36 20"
+                      fill="none"
+                      stroke={isHighest ? '#16a34a' : '#9F0409'}
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                )}
+                <div className="flex h-full w-full items-center justify-center rounded-full border border-border bg-background text-xs font-semibold tabular-nums text-foreground">
+                  {digit}
+                </div>
               </div>
               <div className="flex h-1.5 items-start justify-center">
-                {isSelected && <span className="border-x-[4px] border-t-0 border-b-[6px] border-x-transparent border-b-red-500" />}
+                {isActive && <span role="img" aria-label="Current market digit" className="border-x-[4px] border-t-0 border-b-[6px] border-x-transparent border-b-red-500" />}
               </div>
               <span className={`font-medium tabular-nums text-muted-foreground ${floating ? 'text-[8px]' : 'text-[9px]'}`}>
                 {entry.percentage.toFixed(1)}%

@@ -129,7 +129,11 @@ export async function GET(request: Request) {
       ...(appTransactionsResult.data ?? []).map(transaction => ({
         ...transaction,
         account: 'app_wallet' as const,
-        description: transaction.transaction_type === 'simulated_stake' ? 'Trade stake' : 'Trade payout',
+        description: transaction.transaction_type === 'admin_deposit'
+          ? 'M-Pesa deposit'
+          : transaction.transaction_type === 'admin_withdrawal'
+            ? 'M-Pesa withdrawal'
+            : transaction.transaction_type === 'simulated_stake' ? 'Trade stake' : 'Trade payout',
       })),
       ...(demoTransactionsResult.data ?? []).map(transaction => ({
         ...transaction,
