@@ -25,6 +25,7 @@ export function RiseFallChart(props: RiseFallChartProps) {
     <SmartChartWrapper
       chartId="rise-fall-chart"
       defaultGranularity={60}
+      initialZoom={props.isMobile ? 1 : undefined}
       {...props}
     />
   );

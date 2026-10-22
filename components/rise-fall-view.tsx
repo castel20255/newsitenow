@@ -426,7 +426,7 @@ export function RiseFallView({
             />
           </div>
 
-          {!editMode && tradeMode === 'digits' && (
+          {!editMode && isMobile && tradeMode === 'digits' && (
             <div className="pointer-events-none absolute bottom-12 left-2 right-14 z-[100]">
               <DigitSpread
                 symbol={activeSymbol?.underlying_symbol}
@@ -528,6 +528,7 @@ export function RiseFallView({
         selectedContract={selectedContract}
         onSelectedContractChange={setSelectedContract}
         tradeMode={tradeMode}
+        showDigitSpread={!isMobile}
         isForexBasket={isForexBasket}
         onRiseFallBuy={handleRiseFallBuy}
       />
@@ -662,6 +663,7 @@ export function RiseFallView({
                   selectedContract={selectedContract}
                   onSelectedContractChange={setSelectedContract}
                   tradeMode={tradeMode}
+                  showDigitSpread={!isMobile}
                   isForexBasket={isForexBasket}
                   onRiseFallBuy={direction => void handleRiseFallBuy(direction)}
                 />

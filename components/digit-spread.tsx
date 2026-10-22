@@ -245,9 +245,6 @@ export function DigitSpread({
   return (
     <div className={floating ? 'w-full' : 'rounded-2xl border border-border bg-muted/30 p-3'}>
       <div className={`mb-1 flex items-center justify-between gap-2 ${floating ? 'px-1' : ''}`}>
-        <div className="flex items-center gap-2">
-          <span className={`font-medium uppercase tracking-[0.22em] text-muted-foreground ${floating ? 'text-[9px]' : 'text-[11px]'}`}>0–9 spread</span>
-        </div>
         <span className={`text-muted-foreground ${floating ? 'text-[9px]' : 'text-[10px]'}`}>{feedStatusLabel}</span>
       </div>
 
