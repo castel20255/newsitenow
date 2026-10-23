@@ -95,13 +95,13 @@ export function SimulatedActivityNotice() {
       className="simulated-activity-notice"
       role="status"
       aria-live="polite"
-      aria-label="Simulated trading activity"
+      aria-label="Demo trading activity"
     >
       <div className="simulated-activity-copy">
         <div className="simulated-activity-heading">
           <span className="simulated-activity-indicator" aria-hidden="true" />
-          <span>SIMULATED ACTIVITY</span>
-          <span className="simulated-activity-kind">{notice.kind}</span>
+          <span>ACTIVITY</span>
+          <span className="simulated-activity-kind">DEMO · {notice.kind}</span>
         </div>
         {notice.kind === 'withdrawal' ? (
           <p>
