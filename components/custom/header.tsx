@@ -74,13 +74,11 @@ function resolveShowAppName(showAppName?: boolean): boolean {
 
 function AuthButtons({
   isAuthenticated,
-  isAuthenticating,
   onLogin,
   onLogout,
   onSignUp,
 }: {
   isAuthenticated: boolean;
-  isAuthenticating: boolean;
   onLogin: () => Promise<void>;
   onLogout: () => void;
   onSignUp?: () => Promise<void>;
@@ -95,15 +93,11 @@ function AuthButtons({
 
   return (
     <div className="flex items-center gap-2">
-      <Button variant="outline" size="sm" onClick={onLogin} disabled={isAuthenticating}>
-        {isAuthenticating ? (
-          <Localize i18n_default_text="Logging in..." />
-        ) : (
-          <Localize i18n_default_text="Log in" />
-        )}
+      <Button variant="outline" size="sm" onClick={onLogin}>
+        <Localize i18n_default_text="Log in" />
       </Button>
       {onSignUp && (
-        <Button size="sm" onClick={onSignUp} disabled={isAuthenticating}>
+        <Button size="sm" onClick={onSignUp}>
           <Localize i18n_default_text="Sign up" />
         </Button>
       )}
@@ -211,13 +205,11 @@ function AppearancePicker() {
 
 function MobileAuthButtons({
   isAuthenticated,
-  isAuthenticating,
   onLogin,
   onLogout,
   onSignUp,
 }: {
   isAuthenticated: boolean;
-  isAuthenticating: boolean;
   onLogin: () => Promise<void>;
   onLogout: () => void;
   onSignUp?: () => Promise<void>;
@@ -239,16 +231,11 @@ function MobileAuthButtons({
         variant="outline"
         className={cn(className, 'bg-transparent hover:bg-transparent')}
         onClick={onLogin}
-        disabled={isAuthenticating}
       >
-        {isAuthenticating ? (
-          <Localize i18n_default_text="Logging in..." />
-        ) : (
-          <Localize i18n_default_text="Log in" />
-        )}
+        <Localize i18n_default_text="Log in" />
       </Button>
       {onSignUp && (
-        <Button className={className} onClick={onSignUp} disabled={isAuthenticating}>
+        <Button className={className} onClick={onSignUp}>
           <Localize i18n_default_text="Sign up" />
         </Button>
       )}
@@ -289,7 +276,6 @@ export function Header({
   const headerRef = useRef<HTMLElement>(null);
   const [menuTop, setMenuTop] = useState(0);
   const isAuthenticated = authState === 'authenticated';
-  const isAuthenticating = authState === 'loading';
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -454,15 +440,15 @@ export function Header({
                   </Link>
                 )}
                 {accounts.filter(account => account.account_type === 'demo' || account.account_type === 'app_wallet').map((account) => (
-                  <Link
+                  <button
                     key={account.id}
-                    href={pathname}
+                    type="button"
                     onClick={() => {
                       void onSwitchAccount(account.id);
                       setAccountSwitcherOpen(false);
                     }}
                     className={cn(
-                      'w-full text-left rounded-lg px-3 py-2.5 transition-colors',
+                      'block w-full text-left rounded-lg px-3 py-2.5 transition-colors',
                       account.id === activeAccount?.id
                         ? 'bg-muted'
                         : 'hover:bg-muted/50'
@@ -474,7 +460,7 @@ export function Header({
                         ? 'Not connected'
                         : `${formatBalance(account.balance, numberLocale)} ${account.currency}`}
                     </p>
-                  </Link>
+                  </button>
                 ))}
               </div>
             </PopoverContent>
@@ -483,7 +469,6 @@ export function Header({
         <div className="hidden lg:flex items-center gap-3 shrink-0">
           <AuthButtons
             isAuthenticated={isAuthenticated}
-            isAuthenticating={isAuthenticating}
             onLogin={onLogin}
             onLogout={onLogout}
             onSignUp={onSignUp}
@@ -531,7 +516,6 @@ export function Header({
         <div className="mt-auto px-6 pb-8 pt-4 flex flex-col gap-3 border-t border-border">
           <MobileAuthButtons
             isAuthenticated={isAuthenticated}
-            isAuthenticating={isAuthenticating}
             onLogin={onLogin}
             onLogout={() => {
               setMobileMenuOpen(false);

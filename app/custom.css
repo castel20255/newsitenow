@@ -200,6 +200,24 @@ body:has(.legal-page) {
   animation: digit-exit-highlight 3s ease-out forwards;
 }
 
+.trade-result-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.trade-result-win {
+  color: #16a34a;
+}
+
+.trade-result-loss {
+  color: #dc2626;
+}
+
+.trade-result-description {
+  color: hsl(var(--muted-foreground));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nocode-drag-hint,
   .digit-lowest-pulse,

@@ -178,21 +178,9 @@ export function calculateMarkerFromPosition(
           type: 'exitSpot',
           direction,
           color: resultColor,
+          ...(profitAndLossText ? { text: profitAndLossText, textType: 'plain' } : {}),
         });
 
-        // profitAndLossLabel — the P&L badge shown above/below the exit dot
-        if (profitAndLossText !== null) {
-          const exitAboveEntry =
-            entrySpotQuote !== null ? exitSpotQuote >= entrySpotQuote : true;
-          markers.push({
-            epoch: exitSpotTime,
-            quote: exitSpotQuote,
-            type: 'profitAndLossLabel',
-            direction,
-            displayOffsetY: exitAboveEntry ? -24 : 24,
-            color: resultColor,
-          });
-        }
       }
     } else {
       // --- Running NonTick/Tick contract markers ---
@@ -249,7 +237,7 @@ export function calculateMarkerFromPosition(
   } else {
     // Accumulator
     if (isContractClosed) {
-      // Closed accumulator: show exit spot and P&L label
+      // Closed accumulator: show the exit spot and signed amount.
       if (exitSpotTime !== null && exitSpotQuote !== null) {
         markers.push({
           epoch: exitSpotTime,
@@ -257,20 +245,8 @@ export function calculateMarkerFromPosition(
           type: 'exitSpot',
           direction,
           color: resultColor,
+          ...(profitAndLossText ? { text: profitAndLossText, textType: 'plain' } : {}),
         });
-
-        if (profitAndLossText !== null) {
-          const exitAboveEntry =
-            entrySpotQuote !== null ? exitSpotQuote >= entrySpotQuote : true;
-          markers.push({
-            epoch: exitSpotTime,
-            quote: exitSpotQuote,
-            type: 'profitAndLossLabel',
-            direction,
-            displayOffsetY: exitAboveEntry ? -24 : 24,
-            color: resultColor,
-          });
-        }
       }
     } else {
       // Running accumulator: show startTime line for the active (last) contract
@@ -297,7 +273,7 @@ export function calculateMarkerFromPosition(
       markerLabel: null,
     },
     direction,
-    profitAndLossText,
+    profitAndLossText: null,
     currentEpoch,
   };
 }
@@ -384,17 +360,14 @@ export function calculateRecordedTradeMarkers(
     }];
 
     if (!isRunning && exitEpoch !== null && exitQuote !== null && Number.isFinite(exitQuote)) {
-      markers.push({ epoch: exitEpoch, quote: exitQuote, type: 'exitSpot', direction, color: resultColor });
-      if (profitAndLossText !== null) {
-        markers.push({
-          epoch: exitEpoch,
-          quote: exitQuote,
-          type: 'profitAndLossLabel',
-          direction,
-          displayOffsetY: exitQuote >= entryQuote ? -24 : 24,
-          color: resultColor,
-        });
-      }
+      markers.push({
+        epoch: exitEpoch,
+        quote: exitQuote,
+        type: 'exitSpot',
+        direction,
+        color: resultColor,
+        ...(profitAndLossText ? { text: profitAndLossText, textType: 'plain' } : {}),
+      });
     } else if (isRunning) {
       markers.push({ epoch: entryEpoch, quote: entryQuote, type: 'startTimeCollapsed', direction });
       if (!DIGIT_CONTRACTS.has(trade.contract_type) && trade.expires_at) {
@@ -415,7 +388,7 @@ export function calculateRecordedTradeMarkers(
         markerLabel: null,
       },
       direction,
-      profitAndLossText,
+      profitAndLossText: null,
       currentEpoch: isRunning ? Math.floor(nowMs / 1000) : exitEpoch,
     }];
   });

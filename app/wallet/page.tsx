@@ -398,6 +398,11 @@ export default function WalletPage() {
   }, [withdrawalConfirmation?.status]);
 
   const handleWalletActionClick = (type: 'deposit' | 'withdraw') => {
+    if (auth.authState !== 'authenticated') {
+      auth.openAuth('login');
+      return;
+    }
+
     if (auth.activeAccount?.account_type !== 'app_wallet') {
       setDemoWarningVisible(true);
       setAction(null);
@@ -604,7 +609,7 @@ export default function WalletPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isStarting || isLoading || !isValidPhone || !isValidAmount || hasOpenDeposit || auth.authState !== 'authenticated'}
+                      disabled={isStarting || !isValidPhone || !isValidAmount || hasOpenDeposit || auth.authState !== 'authenticated'}
                       className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
                     >
                       {isStarting && <LoaderCircle className="h-4 w-4 animate-spin" />}
@@ -664,7 +669,7 @@ export default function WalletPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isSubmittingWithdrawal || isLoading || auth.authState !== 'authenticated'}
+                      disabled={isSubmittingWithdrawal || auth.authState !== 'authenticated'}
                       className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
                     >
                       {isSubmittingWithdrawal && <LoaderCircle className="h-4 w-4 animate-spin" />}
