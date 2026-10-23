@@ -28,16 +28,37 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 export function generateMetadata(): Metadata {
   const faviconUri = buildFaviconUri();
+  const siteName = 'Crypto Binary';
+  const title = `Trade with focus. Grow with confidence. | ${siteName}`;
+  const description = 'Analyze live markets, study price movements, and practice trading strategies in the Crypto Binary workspace.';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
+    || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const shareImage = getLogoSrc() ?? '/pwa-icon-512.png';
+
   return {
-    title: 'Crypto Binary',
-    description: 'Crypto Binary market analysis and demo trading workspace.',
+    metadataBase: new URL(siteUrl),
+    title,
+    description,
+    openGraph: {
+      type: 'website',
+      siteName,
+      title,
+      description,
+      images: [{ url: shareImage, alt: `${siteName} logo` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [{ url: shareImage, alt: `${siteName} logo` }],
+    },
     icons: {
       icon: faviconUri ?? '/icon.svg',
       apple: '/apple-touch-icon.png',
     },
     appleWebApp: {
       capable: true,
-      title: 'Crypto Binary',
+      title: siteName,
       statusBarStyle: 'default',
     },
   };

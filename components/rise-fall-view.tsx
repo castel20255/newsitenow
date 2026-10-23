@@ -13,7 +13,7 @@ import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { useContractMarkers } from '@/hooks/use-contract-markers';
-import { useCallback, useEffect, useMemo, useState, useTransition, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition, type CSSProperties } from 'react';
 import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
@@ -289,6 +289,7 @@ export function RiseFallView({
   const [selectedContract, setSelectedContract] = useState<DigitContractType>('OVER');
   const [digitPercentages, setDigitPercentages] = useState<number[]>(() => Array(10).fill(0));
   const [, startTransition] = useTransition();
+  const pullRefreshStart = useRef<{ x: number; y: number; startedAt: number } | null>(null);
   const handleDigitStatsUpdate = useCallback((statistics: LastDigitStatistics) => {
     startTransition(() => {
       setDigitPercentages(Array.from({ length: 10 }, (_, digit) =>
@@ -594,6 +595,34 @@ export function RiseFallView({
       className={`flex h-dvh min-h-0 w-full flex-col overflow-hidden ${
         editMode ? 'bg-muted/50' : 'bg-background'
       }`}
+      onTouchStart={(event) => {
+        const touch = event.touches[0];
+        const target = event.target;
+        if (
+          event.touches.length !== 1
+          || !touch
+          || touch.clientY > 80
+          || (target instanceof Element && target.closest('button, a, input, textarea, select, [role="button"], canvas'))
+        ) {
+          pullRefreshStart.current = null;
+          return;
+        }
+        pullRefreshStart.current = { x: touch.clientX, y: touch.clientY, startedAt: Date.now() };
+      }}
+      onTouchEnd={(event) => {
+        const start = pullRefreshStart.current;
+        const touch = event.changedTouches[0];
+        pullRefreshStart.current = null;
+        if (!start || !touch) return;
+        const deltaY = touch.clientY - start.y;
+        const deltaX = Math.abs(touch.clientX - start.x);
+        if (deltaY >= 80 && deltaY > deltaX * 1.5 && Date.now() - start.startedAt < 2000) {
+          window.location.reload();
+        }
+      }}
+      onTouchCancel={() => {
+        pullRefreshStart.current = null;
+      }}
     >
       {editMode ? (
         <div className="group/hdr sticky top-0 z-50">
