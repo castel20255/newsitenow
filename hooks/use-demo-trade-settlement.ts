@@ -34,6 +34,7 @@ function notifyTradeResult(
     DIFFER: 'Differs',
   };
   const details = [
+    contractName[trade.contract_type] ?? trade.contract_type,
     won
       ? `Amount paid out: ${payoutMoney.format(Number.isFinite(payout) ? payout : 0)}`
       : `Amount lost: ${payoutMoney.format(Number(trade.stake))}`,
@@ -42,13 +43,20 @@ function notifyTradeResult(
   const toastOptions = {
     description: details,
     duration: 3000,
-    style: won
-      ? { background: '#15803d', border: '1px solid #166534', color: '#ffffff' }
-      : { background: '#b91c1c', border: '1px solid #991b1b', color: '#ffffff' },
+    className: 'trade-result-toast',
+    classNames: {
+      title: won ? 'trade-result-title trade-result-win' : 'trade-result-title trade-result-loss',
+      description: 'trade-result-description',
+    },
+    style: {
+      backgroundColor: 'hsl(var(--background))',
+      border: '1px solid hsl(var(--border))',
+      color: 'hsl(var(--foreground))',
+    },
   };
 
-  if (won) toast.success(`Win on ${contractName[trade.contract_type] ?? trade.contract_type}`, toastOptions);
-  else toast.error(`Loss on ${contractName[trade.contract_type] ?? trade.contract_type}`, toastOptions);
+  if (won) toast.success('WIN', toastOptions);
+  else toast.error('LOSS', toastOptions);
   return true;
 }
 

@@ -77,27 +77,27 @@ export interface ConfigurableBuyButtonProps {
 
 function getDigitPayoutMultiplier(contractType: string, selectedDigit: number): number {
   const overPayouts: Record<number, number> = {
-    0: 22,
-    1: 33,
-    2: 43,
-    3: 54,
-    4: 65,
-    5: 76,
-    6: 93,
-    7: 148,
-    8: 297,
+    0: 15,
+    1: 26,
+    2: 36,
+    3: 47,
+    4: 58,
+    5: 69,
+    6: 86,
+    7: 141,
+    8: 290,
   };
 
   const underPayouts: Record<number, number> = {
-    9: 22,
-    8: 33,
-    7: 43,
-    6: 54,
-    5: 65,
-    4: 76,
-    3: 93,
-    2: 148,
-    1: 297,
+    9: 15,
+    8: 26,
+    7: 36,
+    6: 47,
+    5: 58,
+    4: 69,
+    3: 86,
+    2: 141,
+    1: 290,
   };
 
   switch (contractType) {
