@@ -1,6 +1,104 @@
 /* Custom CSS for this template */
 /* Add your custom styles here */
 
+.simulated-activity-notice {
+  position: fixed;
+  z-index: 120;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  width: min(390px, calc(100vw - 32px));
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 12px 14px 16px;
+  border: 1px solid rgb(22 163 74 / 0.2);
+  border-radius: 12px;
+  background: rgb(22 163 74 / 0.13);
+  color: #17251b;
+  box-shadow: 0 10px 32px rgb(15 23 42 / 0.14);
+  backdrop-filter: blur(12px);
+  animation: simulated-activity-drop 900ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.simulated-activity-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.simulated-activity-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #176b35;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.simulated-activity-indicator {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #22a64f;
+}
+
+.simulated-activity-kind {
+  margin-left: auto;
+  color: #3d6a4a;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.simulated-activity-copy p {
+  margin: 7px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.simulated-activity-detail {
+  display: block;
+  margin-top: 3px;
+  color: #47614e;
+  font-size: 11px;
+}
+
+.simulated-activity-dismiss {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #315b3b;
+  cursor: pointer;
+}
+
+.simulated-activity-dismiss:hover {
+  background: rgb(22 163 74 / 0.12);
+}
+
+@keyframes simulated-activity-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .simulated-activity-notice {
+    animation-duration: 1ms;
+  }
+}
+
 html:has(.legal-page),
 body:has(.legal-page) {
   touch-action: pan-y;
@@ -191,7 +289,7 @@ body:has(.legal-page) {
 }
 
 .digit-exit-won {
-  --digit-exit-color: #16a34a;
+  --digit-exit-color: #22a6f2;
   animation: digit-exit-highlight 3s ease-out forwards;
 }
 
@@ -207,7 +305,7 @@ body:has(.legal-page) {
 }
 
 .trade-result-win {
-  color: #16a34a;
+  color: #22a6f2;
 }
 
 .trade-result-loss {

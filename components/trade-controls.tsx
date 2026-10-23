@@ -8,6 +8,7 @@ import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
+import { getDigitPayoutAmount } from '@/lib/digit-payout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -141,7 +142,7 @@ export function TradeControls({
     { key: 'DIFFER', label: 'Differs' },
   ] as const;
 
-  const [selectedDigit, setSelectedDigit] = useState<number>(0);
+  const [selectedDigit, setSelectedDigit] = useState<number>(5);
   const [isSubmittingDigitTrade, setIsSubmittingDigitTrade] = useState(false);
   const digitTradeLock = useRef(false);
 
@@ -364,6 +365,8 @@ export function TradeControls({
       {tradeMode === 'digits' && (
         <DigitContractActions
           selectedContract={selectedContract}
+          selectedDigit={selectedDigit}
+          stake={stake}
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
           onBuy={contractType => void handleDigitBuy(contractType)}
         />

@@ -465,10 +465,10 @@ export function DigitMarket() {
               </Button>
 
               {tradeState && (
-                <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 text-sm">
+                <div className={`rounded-2xl border p-4 text-sm ${tradeState.win ? 'border-[#22A6F2]/35 bg-[#22A6F2]/10' : 'border-red-500/30 bg-red-500/10'}`}>
                   <div className="flex items-center justify-between gap-4">
                     <span className="font-medium">Last outcome</span>
-                    <span className={tradeState.win ? 'text-primary' : 'text-destructive'}>
+                    <span className={tradeState.win ? 'text-[#22A6F2]' : 'text-red-600 dark:text-red-400'}>
                       {tradeState.win ? 'Win' : 'Loss'}
                     </span>
                   </div>
@@ -479,7 +479,7 @@ export function DigitMarket() {
                     Payout: <span className="font-semibold text-foreground">${tradeState.payout.toFixed(2)}</span>
                   </div>
                   <div className="mt-2 text-muted-foreground">
-                    Profit: <span className={tradeState.profit >= 0 ? 'font-semibold text-primary' : 'font-semibold text-destructive'}>
+                    Profit: <span className={tradeState.profit >= 0 ? 'font-semibold text-[#22A6F2]' : 'font-semibold text-red-600 dark:text-red-400'}>
                       {tradeState.profit >= 0 ? '+' : ''}${tradeState.profit.toFixed(2)}
                     </span>
                   </div>

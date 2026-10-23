@@ -22,6 +22,7 @@ import { recordDigitTrade } from '@/app/actions/digit-trading';
 import { useAppTranslations } from '@/components/custom/i18n-provider';
 import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { MIN_TRADE_STAKE } from '@/lib/trading-constants';
+import { getDigitPayoutAmount } from '@/lib/digit-payout';
 import { useRearrangeDrag } from '@/hooks/use-rearrange-drag';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -75,48 +76,6 @@ export interface ConfigurableBuyButtonProps {
   isSubmitting?: boolean;
 }
 
-function getDigitPayoutMultiplier(contractType: string, selectedDigit: number): number {
-  const overPayouts: Record<number, number> = {
-    0: 15,
-    1: 26,
-    2: 36,
-    3: 47,
-    4: 58,
-    5: 69,
-    6: 86,
-    7: 141,
-    8: 290,
-  };
-
-  const underPayouts: Record<number, number> = {
-    9: 15,
-    8: 26,
-    7: 36,
-    6: 47,
-    5: 58,
-    4: 69,
-    3: 86,
-    2: 141,
-    1: 290,
-  };
-
-  switch (contractType) {
-    case 'EVEN':
-    case 'ODD':
-      return 1 + 87 / 100;
-    case 'MATCH':
-      return 1 + 347.765 / 100;
-    case 'DIFFER':
-      return 1 + 19 / 100;
-    case 'OVER':
-      return 1 + (overPayouts[selectedDigit] ?? 0) / 100;
-    case 'UNDER':
-      return 1 + (underPayouts[selectedDigit] ?? 0) / 100;
-    default:
-      return 1;
-  }
-}
-
 export function ConfigurableBuyButton({
   variant,
   proposal,
@@ -128,12 +87,19 @@ export function ConfigurableBuyButton({
   isSubmitting,
 }: ConfigurableBuyButtonProps) {
   const numericStake = Number(stake ?? '0') || 0;
-  const computedPayout = contractType && selectedDigit !== undefined && numericStake > 0
-    ? numericStake * getDigitPayoutMultiplier(contractType, selectedDigit)
-    : proposal ? proposal.payout : 0;
+  const isDigitContract = ['OVER', 'UNDER', 'EVEN', 'ODD', 'MATCH', 'DIFFER'].includes(contractType ?? '');
+  const digitPayout = isDigitContract && selectedDigit !== undefined
+    ? getDigitPayoutAmount(contractType as DigitContractType, selectedDigit, numericStake)
+    : null;
+  const computedPayout = isDigitContract ? digitPayout : proposal?.payout ?? 0;
   const hasValidStake = Number.isFinite(numericStake) && numericStake >= MIN_TRADE_STAKE;
-  const disabled = (contractType ? !hasValidStake : !proposal && !stake) || isBuying || isSubmitting;
-  const payout = Number.isFinite(computedPayout) ? computedPayout.toFixed(2) : null;
+  const disabled = (contractType ? !hasValidStake : !proposal && !stake)
+    || (isDigitContract && digitPayout === null)
+    || isBuying
+    || isSubmitting;
+  const payout = computedPayout !== null && Number.isFinite(computedPayout)
+    ? computedPayout.toFixed(2)
+    : null;
 
   const variants: Record<StyleVariant, () => React.ReactNode> = {
     // a — pill (default)
@@ -377,7 +343,7 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
     { key: 'DIFFER', label: 'Differs' },
   ] as const;
 
-  const [selectedDigit, setSelectedDigit] = useState<number>(0);
+  const [selectedDigit, setSelectedDigit] = useState<number>(5);
   const digitOptions = Array.from({ length: 10 }, (_, value) => value);
   const contractDisabledForDigits = selectedContract === 'EVEN' || selectedContract === 'ODD';
 
@@ -579,6 +545,8 @@ export function ConfigurableTradeControls(props: ConfigurableTradeControlsProps)
       {!editMode && tradeMode === 'digits' && (
         <DigitContractActions
           selectedContract={selectedContract}
+          selectedDigit={selectedDigit}
+          stake={stake}
           disabled={!Number.isFinite(Number(stake)) || Number(stake) < MIN_TRADE_STAKE || isBuying || isSubmittingDigitTrade}
           onBuy={contractType => void handleDigitBuy(contractType)}
         />

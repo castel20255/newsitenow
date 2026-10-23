@@ -273,7 +273,7 @@ export function calculateMarkerFromPosition(
       markerLabel: null,
     },
     direction,
-    profitAndLossText: null,
+    profitAndLossText: isRunning ? null : profitAndLossText,
     currentEpoch,
   };
 }
@@ -388,7 +388,7 @@ export function calculateRecordedTradeMarkers(
         markerLabel: null,
       },
       direction,
-      profitAndLossText: null,
+      profitAndLossText,
       currentEpoch: isRunning ? Math.floor(nowMs / 1000) : exitEpoch,
     }];
   });
