@@ -14,7 +14,8 @@ type ActivityNotice = {
   contract: string;
 };
 
-const DISPLAY_INTERVALS = [30_000, 50_000, 1 * 60_000 + 20_000];
+const DISPLAY_INTERVAL = 20_000;
+const DISPLAY_DURATION = 7_000;
 const FIRST_NAMES = ['Amara', 'Daniel', 'Hassan', 'Achieng', 'Brian', 'Nadia', 'Kamau', 'Leah', 'Adrian', 'Mercy', 'Victor', 'Zuri'];
 const LAST_NAMES = ['Otieno', 'Mwangi', 'Hussein', 'Wanjiku', 'Kiptoo', 'Njoroge', 'Amani', 'Abdi', 'Mutua', 'Barasa', 'Omondi', 'Kariuki'];
 const MARKETS = ['Volatility 100 Index', 'EUR/USD', 'GBP/USD', 'Bitcoin/USD', 'Gold/USD', 'Volatility 75 Index', 'USD/JPY', 'Ethereum/USD'];
@@ -30,16 +31,9 @@ function maskedName(firstName: string, lastName: string): string {
   return `${firstName.slice(0, firstLength)}xxx${firstName.slice(-1).toLowerCase()} ${lastName.slice(0, lastLength)}xxx${lastName.slice(-1).toLowerCase()}`;
 }
 
-function randomTime(previousTime: string): string {
-  let time = '';
-  while (!time || time === previousTime) {
-    const day = Math.random() < 0.5 ? 'today' : 'yesterday';
-    const hour = Math.floor(Math.random() * 12) + 1;
-    const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
-    const period = Math.random() < 0.5 ? 'AM' : 'PM';
-    time = `${day} at ${hour}:${minute} ${period}`;
-  }
-  return time;
+function currentTimestamp(): string {
+  const time = new Date().toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  return `Today at ${time}`;
 }
 
 function makeNotice(kind: ActivityNotice['kind'], previous: ActivityNotice | null): ActivityNotice {
@@ -57,7 +51,7 @@ function makeNotice(kind: ActivityNotice['kind'], previous: ActivityNotice | nul
     name,
     phone: `+2547${phonePrefix}xxx${phoneSuffix}`,
     amount: (5 + Math.random() * 2295).toFixed(2),
-    time: randomTime(previous?.time ?? ''),
+    time: currentTimestamp(),
     market: randomItem(MARKETS),
     contract: randomItem(CONTRACTS),
   };
@@ -70,17 +64,14 @@ export function SimulatedActivityNotice() {
   useEffect(() => {
     let displayTimer = 0;
     let dismissTimer = 0;
-    let intervalIndex = 1;
-
     const showNext = () => {
       setNotice((previous) => makeNotice(nextKind.current, previous));
       nextKind.current = nextKind.current === 'withdrawal' ? 'trade' : 'withdrawal';
-      dismissTimer = window.setTimeout(() => setNotice(null), 8500);
-      displayTimer = window.setTimeout(showNext, DISPLAY_INTERVALS[intervalIndex]);
-      intervalIndex = (intervalIndex + 1) % DISPLAY_INTERVALS.length;
+      dismissTimer = window.setTimeout(() => setNotice(null), DISPLAY_DURATION);
+      displayTimer = window.setTimeout(showNext, DISPLAY_INTERVAL);
     };
 
-    displayTimer = window.setTimeout(showNext, DISPLAY_INTERVALS[0]);
+    displayTimer = window.setTimeout(showNext, DISPLAY_INTERVAL);
     return () => {
       window.clearTimeout(displayTimer);
       window.clearTimeout(dismissTimer);
@@ -95,13 +86,13 @@ export function SimulatedActivityNotice() {
       className="simulated-activity-notice"
       role="status"
       aria-live="polite"
-      aria-label="Demo trading activity"
+      aria-label="Trading activity"
     >
       <div className="simulated-activity-copy">
         <div className="simulated-activity-heading">
           <span className="simulated-activity-indicator" aria-hidden="true" />
           <span>ACTIVITY</span>
-          <span className="simulated-activity-kind">DEMO · {notice.kind}</span>
+          <span className="simulated-activity-kind">{notice.kind}</span>
         </div>
         {notice.kind === 'withdrawal' ? (
           <p>
@@ -118,7 +109,7 @@ export function SimulatedActivityNotice() {
       <button
         type="button"
         className="simulated-activity-dismiss"
-        aria-label="Dismiss simulated activity message"
+        aria-label="Dismiss activity message"
         title="Dismiss"
         onClick={() => setNotice(null)}
       >
