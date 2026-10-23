@@ -167,7 +167,6 @@ export function SmartChartWrapper({
         isMobile={isMobile}
         isVerticalScrollEnabled={false}
         {...(endEpoch !== undefined && { endEpoch })}
-        maxTick={isMobile ? (granularity === 0 ? 8 : 32) : undefined}
         onSettingsChange={() => {}}
         settings={chartSettings}
         stateChangeListener={() => {}}

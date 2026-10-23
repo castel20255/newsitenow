@@ -41,6 +41,10 @@ export interface SitePaperTrade {
   contract_type: SiteTradeContractType;
   stake: number | string;
   entry_quote: number | string | null;
+  market_symbol?: string;
+  entry_epoch?: number | null;
+  duration_ticks?: number;
+  outcome_digit?: number;
   price_precision?: number;
   expected_payout: number | string;
   duration_seconds: number;
@@ -151,6 +155,10 @@ export function SiteAuthProvider({
         account_id: typeof (trade as Record<string, unknown>).account_id === 'string'
           ? String((trade as Record<string, unknown>).account_id)
           : null,
+        market_symbol: String((trade as Record<string, unknown>).market_symbol ?? ''),
+        entry_epoch: Number((trade as Record<string, unknown>).entry_epoch ?? 0) || null,
+        duration_ticks: Number((trade as Record<string, unknown>).duration_ticks ?? 1),
+        outcome_digit: Number((trade as Record<string, unknown>).outcome_digit ?? 0),
         funding_source: String((trade as Record<string, unknown>).funding_source ?? 'demo') as 'demo' | 'app_wallet',
         symbol: String((trade as Record<string, unknown>).market_name ?? (trade as Record<string, unknown>).market_symbol ?? ''),
         contract_type: String((trade as Record<string, unknown>).contract_type ?? 'OVER'),

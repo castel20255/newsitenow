@@ -38,7 +38,7 @@ export interface OpenPosition {
 
 // How long (ms) to keep a just-closed position in state so SmartCharts can
 // render the exit spot and P&L label markers before removing it.
-const CLOSED_POSITION_TTL_MS = 1500;
+const CLOSED_POSITION_TTL_MS = 60_000;
 
 export function useOpenPositions(
   ws: DerivWS | null,
