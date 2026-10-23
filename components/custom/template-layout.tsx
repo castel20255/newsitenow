@@ -5,6 +5,7 @@ import { SiteAuthDialog } from './site-auth-dialog';
 import { SiteAuthProvider } from './site-auth-provider';
 import { AdminRouteRedirect } from './admin-route-redirect';
 import ViewportScaler from './ViewportScaler';
+import { SimulatedActivityNotice } from './simulated-activity-notice';
 import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
 
 /**
@@ -45,6 +46,7 @@ export function TemplateLayout({
         <SiteAuthDialog />
       </SiteAuthProvider>
       <Toaster position="top-center" duration={3000} />
+      <SimulatedActivityNotice />
     </Providers>
   );
 }

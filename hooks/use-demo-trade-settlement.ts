@@ -43,14 +43,14 @@ function notifyTradeResult(
   const toastOptions = {
     description: details,
     duration: 3000,
-    className: 'trade-result-toast',
+    className: won ? 'trade-result-toast trade-result-toast-win' : 'trade-result-toast trade-result-toast-loss',
     classNames: {
       title: won ? 'trade-result-title trade-result-win' : 'trade-result-title trade-result-loss',
       description: 'trade-result-description',
     },
     style: {
-      backgroundColor: 'hsl(var(--background))',
-      border: '1px solid hsl(var(--border))',
+      backgroundColor: won ? 'rgb(34 166 242 / 0.14)' : 'rgb(220 38 38 / 0.12)',
+      border: won ? '1px solid rgb(34 166 242 / 0.34)' : '1px solid rgb(220 38 38 / 0.3)',
       color: 'hsl(var(--foreground))',
     },
   };
