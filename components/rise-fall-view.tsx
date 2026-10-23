@@ -13,7 +13,7 @@ import { ThemeToggle } from '@/components/custom/theme-toggle';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { useContractMarkers } from '@/hooks/use-contract-markers';
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useState, useTransition, type CSSProperties } from 'react';
 import { Ban } from 'lucide-react';
 import { toast } from 'sonner';
 import { TradeControls } from './trade-controls';
@@ -288,10 +288,13 @@ export function RiseFallView({
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
   const [selectedContract, setSelectedContract] = useState<DigitContractType>('OVER');
   const [digitPercentages, setDigitPercentages] = useState<number[]>(() => Array(10).fill(0));
+  const [, startTransition] = useTransition();
   const handleDigitStatsUpdate = useCallback((statistics: LastDigitStatistics) => {
-    setDigitPercentages(Array.from({ length: 10 }, (_, digit) =>
-      statistics.digits[String(digit) as keyof LastDigitStatistics['digits']].percentage
-    ));
+    startTransition(() => {
+      setDigitPercentages(Array.from({ length: 10 }, (_, digit) =>
+        statistics.digits[String(digit) as keyof LastDigitStatistics['digits']].percentage
+      ));
+    });
   }, []);
   const digitExtremes = useMemo(() => {
     const highestPercentage = Math.max(...digitPercentages);
