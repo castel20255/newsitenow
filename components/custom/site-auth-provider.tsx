@@ -180,6 +180,7 @@ export function SiteAuthProvider({
         if (selected) window.localStorage.setItem(ACTIVE_ACCOUNT_KEY, selected.id);
         return selected?.id ?? null;
       });
+      setAuthDialogOpen(false);
       setAuthState('authenticated');
     } catch {
       setAuthState('error');
@@ -230,9 +231,10 @@ export function SiteAuthProvider({
 
   const activeAccount = accounts.find(account => account.id === activeAccountId) ?? null;
   const openAuth = useCallback((mode: 'login' | 'signup') => {
+    if (authState === 'authenticated') return;
     setAuthDialogMode(mode);
     setAuthDialogOpen(true);
-  }, []);
+  }, [authState]);
   const closeAuth = useCallback(() => setAuthDialogOpen(false), []);
   const switchAccount = useCallback((accountId: string) => {
     if (!accounts.some(account => account.id === accountId && account.account_type !== 'real')) return;

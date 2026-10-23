@@ -62,7 +62,7 @@ const sections = [
 
 export default function TermsPage() {
   return (
-    <main className="min-h-dvh bg-background text-foreground">
+    <main className="legal-page flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-background text-foreground">
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
         <Link href="/" className="text-sm font-medium text-primary hover:underline">← Back to home</Link>
         <header className="mt-8 border-b border-border pb-6">

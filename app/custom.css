@@ -1,6 +1,11 @@
 /* Custom CSS for this template */
 /* Add your custom styles here */
 
+html:has(.legal-page),
+body:has(.legal-page) {
+  touch-action: pan-y;
+}
+
 .rf-workspace-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
