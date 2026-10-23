@@ -29,7 +29,7 @@ export function DigitPredictionButton({
         selected
           ? 'border-[#0C1B2A] bg-[#0C1B2A] text-white hover:bg-[#0C1B2A]/90 hover:text-white'
           : 'bg-background',
-        highest && 'border-2 !border-emerald-500',
+        highest && 'digit-highest-pulse border-2 !border-emerald-500',
         lowest && 'digit-lowest-pulse border-2 !border-[#9F0409]'
       )}
       onClick={onSelect}

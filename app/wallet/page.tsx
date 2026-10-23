@@ -608,7 +608,7 @@ export default function WalletPage() {
                       className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
                     >
                       {isStarting && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                      {isStarting ? 'Sending STK push…' : 'Pay with M-Pesa'}
+                      {isStarting ? 'Sending STK push…' : 'PROCEED TO DEPOSIT'}
                     </button>
                     {!isValidPhone && (
                       <p className="text-xs text-muted-foreground">Enter a valid Kenyan mobile number to enable M-Pesa payment.</p>
@@ -622,8 +622,8 @@ export default function WalletPage() {
               {action === 'withdraw' && (
                 <>
                   <DialogHeader>
-                    <DialogTitle>Request an M-Pesa withdrawal</DialogTitle>
-                    <DialogDescription>Enter the amount and M-Pesa details for your request.</DialogDescription>
+                    <DialogTitle>Withdraw funds to your M-Pesa wallet. </DialogTitle>
+                    <DialogDescription>Enter the amount and M-Pesa details to withdraw. </DialogDescription>
                   </DialogHeader>
                   <p className="text-sm leading-6 text-muted-foreground">
                     The withdrawal will be sent to the M-Pesa wallet you provide.

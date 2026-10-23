@@ -9,6 +9,13 @@ import {
   type LastDigitStatistics,
 } from '@/lib/last-digit-statistics';
 
+export interface DigitExitHighlight {
+  id: string;
+  digit: number;
+  status: 'won' | 'lost';
+  settled_at: string;
+}
+
 interface DigitSpreadProps {
   symbol?: string | null;
   currentPrice?: number | null;
@@ -16,6 +23,7 @@ interface DigitSpreadProps {
   windowSize?: number;
   onStatsUpdate?: (statistics: LastDigitStatistics) => void;
   floating?: boolean;
+  exitHighlight?: DigitExitHighlight | null;
 }
 
 type FeedStatus = 'connecting' | 'live' | 'reconnecting' | 'unavailable';
@@ -74,6 +82,7 @@ export function DigitSpread({
   windowSize = DEFAULT_DIGIT_WINDOW_SIZE,
   onStatsUpdate,
   floating = false,
+  exitHighlight = null,
 }: DigitSpreadProps) {
   const resolvedWindowSize = Number.isSafeInteger(windowSize) && windowSize > 0
     ? windowSize
@@ -82,8 +91,26 @@ export function DigitSpread({
     () => new LastDigitStatisticsCalculator(resolvedWindowSize).getStatistics()
   );
   const [feedStatus, setFeedStatus] = useState<FeedStatus>('connecting');
+  const [visibleExitId, setVisibleExitId] = useState<string | null>(null);
   const onStatsUpdateRef = useRef(onStatsUpdate);
   onStatsUpdateRef.current = onStatsUpdate;
+
+  useEffect(() => {
+    if (!exitHighlight) {
+      setVisibleExitId(null);
+      return;
+    }
+    const expiresAt = Date.parse(exitHighlight.settled_at) + 3000;
+    const remaining = expiresAt - Date.now();
+    if (!Number.isFinite(expiresAt) || remaining <= 0) {
+      setVisibleExitId(null);
+      return;
+    }
+
+    setVisibleExitId(exitHighlight.id);
+    const timer = window.setTimeout(() => setVisibleExitId(null), remaining);
+    return () => window.clearTimeout(timer);
+  }, [exitHighlight]);
 
   useEffect(() => {
     if (!symbol) {
@@ -253,6 +280,7 @@ export function DigitSpread({
           const isActive = digit === activeDigit;
           const isHighest = digit === extremeDigits.highest;
           const isLowest = digit === extremeDigits.lowest;
+          const isExitDigit = visibleExitId === exitHighlight?.id && digit === exitHighlight.digit;
           const entry = statistics.digits[String(digit) as keyof LastDigitStatistics['digits']];
           return (
             <div
@@ -273,7 +301,9 @@ export function DigitSpread({
                     />
                   </svg>
                 )}
-                <div className="flex h-full w-full items-center justify-center rounded-full border border-border bg-background text-xs font-semibold tabular-nums text-foreground">
+                <div className={`flex h-full w-full items-center justify-center rounded-full border border-border bg-background text-xs font-semibold tabular-nums text-foreground ${
+                  isExitDigit ? exitHighlight.status === 'won' ? 'digit-exit-won' : 'digit-exit-lost' : ''
+                }`}>
                   {digit}
                 </div>
               </div>

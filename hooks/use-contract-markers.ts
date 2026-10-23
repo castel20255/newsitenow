@@ -1,8 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { OpenPosition } from '@/hooks/use-open-positions';
-import { calculateContractMarkers, type ContractMarker } from '@/lib/chart-markers';
+import {
+  calculateContractMarkers,
+  calculateRecordedTradeMarkers,
+  type ContractMarker,
+  type RecordedTradeMarkerInput,
+} from '@/lib/chart-markers';
 
 /**
  * Hook that computes chart contract markers from open positions.
@@ -18,10 +23,30 @@ import { calculateContractMarkers, type ContractMarker } from '@/lib/chart-marke
 export function useContractMarkers(
   positions: OpenPosition[],
   activeSymbol: string | undefined,
-  isMobile = false
+  isMobile = false,
+  trades: RecordedTradeMarkerInput[] = []
 ): ContractMarker[] {
+  const [nowMs, setNowMs] = useState(() => Date.now());
+
+  useEffect(() => {
+    const nextExpiry = trades.reduce<number | null>((earliest, trade) => {
+      if (trade.status === 'open') return earliest;
+      const settledAt = Date.parse(trade.settled_at ?? trade.created_at);
+      const expiresAt = settledAt + 60_000;
+      if (!Number.isFinite(expiresAt) || expiresAt <= nowMs) return earliest;
+      return earliest === null ? expiresAt : Math.min(earliest, expiresAt);
+    }, null);
+    if (nextExpiry === null) return;
+
+    const timer = window.setTimeout(() => setNowMs(Date.now()), Math.max(0, nextExpiry - nowMs));
+    return () => window.clearTimeout(timer);
+  }, [trades, nowMs]);
+
   return useMemo(
-    () => calculateContractMarkers(positions, activeSymbol, isMobile),
-    [positions, activeSymbol, isMobile]
+    () => [
+      ...calculateContractMarkers(positions, activeSymbol, isMobile),
+      ...calculateRecordedTradeMarkers(trades, activeSymbol, isMobile, nowMs),
+    ],
+    [positions, activeSymbol, isMobile, trades, nowMs]
   );
 }

@@ -258,8 +258,33 @@ export function RiseFallView({
     : activeTab === 'rise-fall'
       ? 'rise-fall'
       : 'digits';
-  const contractMarkers = useContractMarkers(openPositions, activeSymbol?.underlying_symbol, isMobile);
-  const { openAuth, refresh: refreshSiteAuth } = useSiteAuth();
+  const { openAuth, refresh: refreshSiteAuth, paperTrades, digitTrades } = useSiteAuth();
+  const recordedTrades = useMemo(() => [...paperTrades, ...digitTrades], [paperTrades, digitTrades]);
+  const digitExitHighlight = useMemo(() => {
+    const latest = digitTrades
+      .filter((trade) =>
+        trade.market_symbol === activeSymbol?.underlying_symbol
+        && (trade.status === 'won' || trade.status === 'lost')
+        && Number.isInteger(trade.outcome_digit)
+        && Number(trade.outcome_digit) >= 0
+        && Number(trade.outcome_digit) <= 9
+        && Boolean(trade.settled_at)
+      )
+      .sort((a, b) => Date.parse(b.settled_at ?? '') - Date.parse(a.settled_at ?? ''))[0];
+    if (!latest?.settled_at) return null;
+    return {
+      id: latest.id,
+      digit: Number(latest.outcome_digit),
+      status: latest.status as 'won' | 'lost',
+      settled_at: latest.settled_at,
+    };
+  }, [digitTrades, activeSymbol?.underlying_symbol]);
+  const contractMarkers = useContractMarkers(
+    openPositions,
+    activeSymbol?.underlying_symbol,
+    isMobile,
+    recordedTrades
+  );
   const [isPlacingDemoTrade, setIsPlacingDemoTrade] = useState(false);
   const [selectedContract, setSelectedContract] = useState<DigitContractType>('OVER');
   const [digitPercentages, setDigitPercentages] = useState<number[]>(() => Array(10).fill(0));
@@ -451,6 +476,7 @@ export function RiseFallView({
                 currentPrice={prices?.at(-1) ?? null}
                 currentPrecision={pipSize}
                 onStatsUpdate={handleDigitStatsUpdate}
+                exitHighlight={digitExitHighlight}
                 floating
               />
             </div>
@@ -553,6 +579,7 @@ export function RiseFallView({
         highestDigit={digitExtremes.highestDigit}
         lowestDigit={digitExtremes.lowestDigit}
         onDigitStatsUpdate={handleDigitStatsUpdate}
+        digitExitHighlight={digitExitHighlight}
         isForexBasket={isForexBasket}
         onRiseFallBuy={handleRiseFallBuy}
       />
@@ -692,6 +719,7 @@ export function RiseFallView({
                   highestDigit={digitExtremes.highestDigit}
                   lowestDigit={digitExtremes.lowestDigit}
                   onDigitStatsUpdate={handleDigitStatsUpdate}
+                  digitExitHighlight={digitExitHighlight}
                   isForexBasket={isForexBasket}
                   onRiseFallBuy={direction => void handleRiseFallBuy(direction)}
                 />
