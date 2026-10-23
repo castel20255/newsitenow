@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState, useTransition, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, useTransition, type FormEvent } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Eye, EyeOff, Search } from 'lucide-react';
 import { getCountries, getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
 import type { CountryCode } from 'libphonenumber-js';
@@ -133,6 +134,7 @@ function CountryPicker({
 }
 
 export function SiteAuthDialog() {
+  const pathname = usePathname();
   const {
     authDialogOpen,
     authDialogMode,
@@ -152,6 +154,10 @@ export function SiteAuthDialog() {
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    closeAuth();
+  }, [pathname, closeAuth]);
 
   const selectedCountry = countries.find(country => country.code === countryCode);
   const loginReady = Boolean(identifier.trim() && password.length > 0);
@@ -318,9 +324,9 @@ export function SiteAuthDialog() {
                   I agree to the Terms of Service and Privacy Policy. Demo funds are virtual; Real Wallet payments use supported methods.
                 </Label>
                 <p className="text-xs leading-5">
-                  <Link href="/terms" className="font-medium text-primary underline underline-offset-2">Read the Terms of Service</Link>
+                  <Link href="/terms" onClick={closeAuth} className="font-medium text-primary underline underline-offset-2">Read the Terms of Service</Link>
                   <span className="text-muted-foreground"> · </span>
-                  <Link href="/privacy" className="font-medium text-primary underline underline-offset-2">Read the Privacy Policy</Link>
+                  <Link href="/privacy" onClick={closeAuth} className="font-medium text-primary underline underline-offset-2">Read the Privacy Policy</Link>
                 </p>
               </div>
             </div>
