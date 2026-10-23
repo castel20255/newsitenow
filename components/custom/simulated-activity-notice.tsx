@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 
 type ActivityNotice = {
   id: number;
-  kind: 'withdrawal' | 'trade';
+  kind: 'withdrawal' | 'trade' | 'deposit';
   name: string;
   phone: string;
   amount: string;
@@ -26,14 +26,18 @@ function randomItem<T>(items: T[]): T {
 }
 
 function maskedName(firstName: string, lastName: string): string {
-  const firstLength = Math.min(firstName.length, 2 + Math.floor(Math.random() * 3));
-  const lastLength = Math.min(lastName.length, 2 + Math.floor(Math.random() * 3));
-  return `${firstName.slice(0, firstLength)}xxx${firstName.slice(-1).toLowerCase()} ${lastName.slice(0, lastLength)}xxx${lastName.slice(-1).toLowerCase()}`;
+  return `${firstName.slice(0, 2)}*** ${lastName[0]}.`;
 }
 
 function currentTimestamp(): string {
-  const time = new Date().toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-  return `Today at ${time}`;
+  const now = new Date();
+  const day = now.getHours() < 4 ? 'Yesterday' : 'Today';
+  const time = now.toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  return `${day} at ${time}`;
 }
 
 function makeNotice(kind: ActivityNotice['kind'], previous: ActivityNotice | null): ActivityNotice {
@@ -50,8 +54,8 @@ function makeNotice(kind: ActivityNotice['kind'], previous: ActivityNotice | nul
     kind,
     name,
     phone: `+2547${phonePrefix}xxx${phoneSuffix}`,
-    amount: (5 + Math.random() * 2295).toFixed(2),
-    time: currentTimestamp(),
+    amount: (kind === 'deposit' ? 2 + Math.random() * 498 : 5 + Math.random() * 2295).toFixed(2),
+    time: kind === 'withdrawal' ? currentTimestamp() : '',
     market: randomItem(MARKETS),
     contract: randomItem(CONTRACTS),
   };
@@ -66,7 +70,11 @@ export function SimulatedActivityNotice() {
     let dismissTimer = 0;
     const showNext = () => {
       setNotice((previous) => makeNotice(nextKind.current, previous));
-      nextKind.current = nextKind.current === 'withdrawal' ? 'trade' : 'withdrawal';
+      nextKind.current = nextKind.current === 'withdrawal'
+        ? 'trade'
+        : nextKind.current === 'trade'
+          ? 'deposit'
+          : 'withdrawal';
       dismissTimer = window.setTimeout(() => setNotice(null), DISPLAY_DURATION);
       displayTimer = window.setTimeout(showNext, DISPLAY_INTERVAL);
     };
@@ -99,10 +107,14 @@ export function SimulatedActivityNotice() {
             <strong>{notice.name}</strong> withdrew <strong>${notice.amount}</strong> USD
             <span className="simulated-activity-detail">{notice.phone} · {notice.time}</span>
           </p>
-        ) : (
+        ) : notice.kind === 'trade' ? (
           <p>
             <strong>{notice.name}</strong> is trading now: <strong>{notice.contract}</strong> on {notice.market}
-            <span className="simulated-activity-detail">{notice.time}</span>
+          </p>
+        ) : (
+          <p>
+            <strong>{notice.name}</strong> deposited <strong>${notice.amount}</strong> USD
+            <span className="simulated-activity-detail">{notice.phone}</span>
           </p>
         )}
       </div>
