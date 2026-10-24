@@ -48,8 +48,8 @@ export async function signUpAccount(
   if (!parsedPhone?.isValid()) {
     return { status: 'error', message: 'Enter a valid phone number for the selected country.' };
   }
-  if (password.length < 10 || password.length > 128) {
-    return { status: 'error', message: 'Use a password between 10 and 128 characters.' };
+  if (password.length < 6 || password.length > 128) {
+    return { status: 'error', message: 'Use a password between 6 and 128 characters.' };
   }
   if (password !== passwordConfirmation) {
     return { status: 'error', message: 'The passwords do not match.' };
