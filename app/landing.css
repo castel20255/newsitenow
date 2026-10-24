@@ -231,11 +231,18 @@
   gap: 12px 14px;
   max-width: 530px;
   margin-top: 21px;
-  border: 1px solid rgba(101, 239, 181, 0.3);
+  border: 1px solid rgba(101, 239, 181, 0.48);
+  border-radius: 16px;
   padding: 15px;
-  background: linear-gradient(115deg, rgba(36, 83, 59, 0.78), rgba(30, 40, 35, 0.88) 57%, rgba(102, 74, 30, 0.42));
-  box-shadow: 0 0 32px rgba(35, 240, 173, 0.12), inset 0 0 25px rgba(246, 190, 72, 0.045);
+  background:
+    radial-gradient(ellipse at 93% 0%, rgba(236, 190, 86, 0.2), transparent 38%),
+    linear-gradient(115deg, rgba(20, 83, 61, 0.88), rgba(20, 42, 37, 0.94) 57%, rgba(74, 61, 31, 0.68));
+  box-shadow: 0 0 25px rgba(35, 240, 173, 0.2), inset 0 0 25px rgba(246, 190, 72, 0.045);
+  animation: welcome-bonus-float 5s ease-in-out infinite, welcome-bonus-glow 4.6s ease-in-out infinite;
+  transition: filter 200ms ease;
 }
+
+.cb-welcome-card:hover { filter: brightness(1.08); }
 
 .cb-welcome-icon {
   display: flex;
@@ -244,6 +251,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(238, 204, 113, 0.48);
+  border-radius: 12px;
   background: rgba(238, 204, 113, 0.12);
   color: #f2d983;
 }
@@ -253,7 +261,11 @@
 .cb-welcome-copy strong { display: block; margin-top: 3px; color: #f2d983; font-size: 21px; font-weight: 700; }
 .cb-welcome-copy p { margin: 4px 0 0; color: #c0cdc5; font-size: 10px; line-height: 1.6; }
 .cb-welcome-actions { display: flex; grid-column: 2; flex-wrap: wrap; gap: 8px; }
-.cb-welcome-actions button { min-height: 35px; padding-inline: 12px; font-size: 10px; }
+.cb-welcome-actions button { min-height: 35px; border-radius: 10px; padding-inline: 12px; font-size: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cb-welcome-card { animation: none; }
+}
 
 .cb-hero-actions {
   display: grid;

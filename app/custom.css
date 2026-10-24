@@ -1,16 +1,32 @@
 
 @keyframes welcome-bonus-glow {
-  0%, 100% { box-shadow: 0 0 32px rgba(35, 240, 173, 0.18), inset 0 0 26px rgba(246, 190, 72, 0.045); }
-  50% { box-shadow: 0 0 44px rgba(35, 240, 173, 0.3), inset 0 0 30px rgba(246, 190, 72, 0.08); }
+  0%, 100% {
+    border-color: rgba(101, 239, 181, 0.4);
+    box-shadow: 0 0 25px rgba(35, 240, 173, 0.2), 0 0 48px rgba(35, 240, 173, 0.08), inset 0 0 26px rgba(246, 190, 72, 0.045);
+  }
+  50% {
+    border-color: rgba(98, 240, 224, 0.75);
+    box-shadow: 0 0 36px rgba(35, 240, 205, 0.38), 0 0 70px rgba(35, 190, 240, 0.15), inset 0 0 30px rgba(246, 190, 72, 0.09);
+  }
+}
+
+@keyframes welcome-bonus-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 .welcome-bonus-card {
   border: 1px solid rgba(101, 239, 181, 0.42);
-  border-radius: 8px;
+  border-radius: 18px;
   background:
     radial-gradient(ellipse at 93% 0%, rgba(236, 190, 86, 0.2), transparent 38%),
     linear-gradient(135deg, #0b3023 0%, #10231d 48%, #1d261a 100%);
-  animation: welcome-bonus-glow 3.8s ease-in-out infinite;
+  animation: welcome-bonus-float 5s ease-in-out infinite, welcome-bonus-glow 4.6s ease-in-out infinite;
+}
+
+.welcome-bonus-card button {
+  border-radius: 11px;
+  box-shadow: 0 0 22px rgba(101, 239, 181, 0.24);
 }
 
 @media (prefers-reduced-motion: reduce) {
