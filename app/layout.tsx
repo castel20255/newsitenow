@@ -29,11 +29,11 @@ const ibmPlexSans = IBM_Plex_Sans({
 export function generateMetadata(): Metadata {
   const faviconUri = buildFaviconUri();
   const siteName = 'Crypto Binary';
-  const title = `Trade with focus. Grow with confidence. | ${siteName}`;
-  const description = 'Analyze live markets, study price movements, and practice trading strategies in the Crypto Binary workspace.';
+  const title = `Get a $20 Welcome Bonus | ${siteName}`;
+  const description = 'Join Crypto Binary and unlock a one-time $20 withdrawable, tradable welcome bonus with your first deposit of at least $5.';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
     || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-  const shareImage = getLogoSrc() ?? '/pwa-icon-512.png';
+  const shareImage = getLogoSrc() ?? '/logo.jpg';
 
   return {
     metadataBase: new URL(siteUrl),
