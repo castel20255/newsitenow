@@ -574,7 +574,7 @@ export default function WalletPage() {
                 setIsWelcomeBonusDeposit(true);
                 setAmountUsd(Math.max(minimumDepositUsd, 5).toFixed(2));
                 setAction('deposit');
-              }} className="inline-flex h-11 shrink-0 items-center justify-center gap-2 bg-emerald-300 px-5 text-sm font-bold text-emerald-950 transition-colors hover:bg-emerald-200">
+              }} className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 text-sm font-bold text-emerald-950 shadow-[0_0_20px_rgba(101,239,181,0.24)] transition-colors hover:bg-emerald-200">
                 Deposit now <ArrowDownToLine className="h-4 w-4" />
               </button>
             </section>
