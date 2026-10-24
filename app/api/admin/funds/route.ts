@@ -76,7 +76,7 @@ export async function GET() {
         username: profile?.username ?? '',
         fullName: profile?.full_name ?? '',
         isAdmin: adminEmails.has((user.email ?? '').toLowerCase()),
-        minimumDepositUsd: depositMinimums.get(user.id) ?? 1,
+        minimumDepositUsd: Math.max(depositMinimums.get(user.id) ?? 5, 5),
         lastSeenAt: profile?.last_seen_at ?? user.last_sign_in_at ?? null,
         demoBalance: demoBalances.get(user.id) ?? 0,
         siteWalletBalance: siteBalances.get(user.id) ?? 0,
@@ -105,8 +105,8 @@ export async function PATCH(request: Request) {
         return Response.json({ error: 'Enter a valid minimum deposit with up to two decimal places.' }, { status: 400 });
       }
       const minimumDepositUsd = Number(body.minimumDepositUsd);
-      if (!Number.isFinite(minimumDepositUsd) || minimumDepositUsd < 1 || minimumDepositUsd > 1_000_000) {
-        return Response.json({ error: 'Minimum deposit must be between $1 and $1,000,000.' }, { status: 400 });
+      if (!Number.isFinite(minimumDepositUsd) || minimumDepositUsd < 5 || minimumDepositUsd > 1_000_000) {
+        return Response.json({ error: 'Minimum deposit must be between $5 and $1,000,000.' }, { status: 400 });
       }
 
       const admin = createSupabaseAdminClient();

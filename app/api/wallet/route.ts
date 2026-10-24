@@ -129,7 +129,9 @@ export async function GET(request: Request) {
       ...(appTransactionsResult.data ?? []).map(transaction => ({
         ...transaction,
         account: 'app_wallet' as const,
-        description: transaction.transaction_type === 'admin_deposit'
+        description: transaction.transaction_type === 'welcome_bonus'
+          ? 'Welcome bonus'
+          : transaction.transaction_type === 'admin_deposit'
           ? 'M-Pesa deposit'
           : transaction.transaction_type === 'admin_withdrawal'
             ? 'M-Pesa withdrawal'
@@ -176,7 +178,8 @@ export async function GET(request: Request) {
 
     return Response.json({
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
-      minimumDepositUsd: Number(depositSettingsResult.data?.minimum_deposit_usd ?? 1),
+      minimumDepositUsd: Math.max(Number(depositSettingsResult.data?.minimum_deposit_usd ?? 5), 5),
+      welcomeBonusClaimed: (appTransactionsResult.data ?? []).some(transaction => transaction.transaction_type === 'welcome_bonus'),
       latestDeposit: deposits[0] ?? null,
       deposits,
       withdrawals: withdrawalResult.data ?? [],
@@ -211,11 +214,13 @@ export async function POST(request: Request) {
       .maybeSingle();
     if (settingsError) return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
 
-    const minimumDepositUsd = Number(depositSettings?.minimum_deposit_usd ?? 1);
+    const minimumDepositUsd = Math.max(Number(depositSettings?.minimum_deposit_usd ?? 5), 5);
     const amountUsd = Number(body.amountUsd);
+    const isWelcomeBonusDeposit = body.welcomeBonus === true;
+    const requiredMinimumUsd = minimumDepositUsd;
     const amountCents = Math.round(amountUsd * 100);
-    if (!Number.isFinite(amountUsd) || amountCents < minimumDepositUsd * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
-      return Response.json({ error: `The minimum deposit is $${minimumDepositUsd.toFixed(2)} USD.` }, { status: 400 });
+    if (!Number.isFinite(amountUsd) || amountCents < requiredMinimumUsd * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
+      return Response.json({ error: `The minimum deposit is $${requiredMinimumUsd.toFixed(2)} USD.` }, { status: 400 });
     }
 
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');
@@ -266,6 +271,7 @@ export async function POST(request: Request) {
         msisdn: phoneNumber.number,
         reference,
         status: 'initiating',
+        welcome_bonus_eligible: isWelcomeBonusDeposit,
       })
       .select('id, created_at')
       .single();

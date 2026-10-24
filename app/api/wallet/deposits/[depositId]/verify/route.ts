@@ -34,12 +34,16 @@ export async function POST(
     if (!deposit) return Response.json({ error: 'Deposit not found.' }, { status: 404 });
 
     if (deposit.status === 'completed') {
-      const { data: wallet } = await admin
-        .from('app_wallets')
-        .select('balance_usd')
-        .eq('user_id', auth.user.id)
-        .maybeSingle();
-      return Response.json({ status: 'completed', balanceUsd: Number(wallet?.balance_usd ?? 0) });
+        const [{ data: wallet }, { data: bonusTransaction }] = await Promise.all([
+          admin.from('app_wallets').select('balance_usd').eq('user_id', auth.user.id).maybeSingle(),
+          admin.from('app_wallet_transactions').select('amount').eq('user_id', auth.user.id)
+            .eq('transaction_type', 'welcome_bonus').eq('reference_id', deposit.id).maybeSingle(),
+        ]);
+        return Response.json({
+          status: 'completed',
+          balanceUsd: Number(wallet?.balance_usd ?? 0),
+          welcomeBonusUsd: Number(bonusTransaction?.amount ?? 0),
+        });
     }
     if (!['pending', 'expired'].includes(deposit.status) || !deposit.provider_request_id) {
       return Response.json({ status: deposit.status });
@@ -128,10 +132,19 @@ export async function POST(
       return Response.json({ error: 'Payment was verified, but the wallet balance could not be confirmed.' }, { status: 503 });
     }
 
+    const { data: bonusTransaction } = await admin
+      .from('app_wallet_transactions')
+      .select('amount')
+      .eq('user_id', auth.user.id)
+      .eq('transaction_type', 'welcome_bonus')
+      .eq('reference_id', deposit.id)
+      .maybeSingle();
+
     return Response.json({
       status: 'completed',
       balanceUsd: Number(result.balance_usd),
       creditedUsd: Number(result.credited_usd),
+      welcomeBonusUsd: Number(bonusTransaction?.amount ?? 0),
     });
   } catch {
     return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Crypto Binary',
     short_name: 'Crypto Binary',
-    description: 'Crypto Binary demo trading and market analysis workspace.',
+    description: 'Unlock a one-time $20 withdrawable, tradable welcome bonus with your first deposit of at least $5.',
     id: '/',
     scope: '/',
     start_url: '/',

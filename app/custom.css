@@ -1,3 +1,21 @@
+
+@keyframes welcome-bonus-glow {
+  0%, 100% { box-shadow: 0 0 32px rgba(35, 240, 173, 0.18), inset 0 0 26px rgba(246, 190, 72, 0.045); }
+  50% { box-shadow: 0 0 44px rgba(35, 240, 173, 0.3), inset 0 0 30px rgba(246, 190, 72, 0.08); }
+}
+
+.welcome-bonus-card {
+  border: 1px solid rgba(101, 239, 181, 0.42);
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse at 93% 0%, rgba(236, 190, 86, 0.2), transparent 38%),
+    linear-gradient(135deg, #0b3023 0%, #10231d 48%, #1d261a 100%);
+  animation: welcome-bonus-glow 3.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-bonus-card { animation: none; }
+}
 /* Custom CSS for this template */
 /* Add your custom styles here */
 

@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
+  Gift,
   Bitcoin,
   CircleCheck,
   History,
@@ -86,15 +87,19 @@ export default function WalletPage() {
   const auth = useSiteAuth();
   const logoSrc = useLogoSrc();
   const router = useRouter();
+  const handledWelcomeBonus = useRef(false);
   const [action, setAction] = useState<WalletAction>(null);
   const [method, setMethod] = useState<PaymentMethod>('mpesa');
-  const [amountUsd, setAmountUsd] = useState('1.00');
+  const [amountUsd, setAmountUsd] = useState('5.00');
   const [msisdn, setMsisdn] = useState('');
   const [withdrawalName, setWithdrawalName] = useState('');
   const [withdrawalMsisdn, setWithdrawalMsisdn] = useState('');
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
-  const [minimumDepositUsd, setMinimumDepositUsd] = useState(1);
+  const [minimumDepositUsd, setMinimumDepositUsd] = useState(5);
+  const [welcomeBonusClaimed, setWelcomeBonusClaimed] = useState(false);
+  const [isWelcomeBonusDeposit, setIsWelcomeBonusDeposit] = useState(false);
+  const [welcomeBonusAwarded, setWelcomeBonusAwarded] = useState(false);
   const [deposit, setDeposit] = useState<WalletDeposit | null>(null);
   const [transactions, setTransactions] = useState<WalletActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -133,8 +138,9 @@ export default function WalletPage() {
         if (!response.ok || !isRecord(data)) throw new Error('Could not load wallet details.');
         if (cancelled) return;
         setBalanceUsd(Number(data.balanceUsd ?? 0));
-        const savedMinimum = Number(data.minimumDepositUsd ?? 1);
+        const savedMinimum = Number(data.minimumDepositUsd ?? 5);
         setMinimumDepositUsd(savedMinimum);
+        setWelcomeBonusClaimed(Boolean(data.welcomeBonusClaimed));
         setAmountUsd(current => Number(current) < savedMinimum ? savedMinimum.toFixed(2) : current);
         const recentDeposits = Array.isArray(data.deposits)
           ? data.deposits.filter(isRecord) as unknown as WalletDeposit[]
@@ -158,6 +164,19 @@ export default function WalletPage() {
       cancelled = true;
     };
   }, [auth.authState]);
+
+  useEffect(() => {
+    if (
+      auth.authState !== 'authenticated' ||
+      new URLSearchParams(window.location.search).get('welcomeBonus') !== '1' ||
+      handledWelcomeBonus.current
+    ) return;
+    handledWelcomeBonus.current = true;
+    auth.switchAccount('app-wallet');
+    setIsWelcomeBonusDeposit(true);
+    setAmountUsd(current => Math.max(Number(current), minimumDepositUsd, 5).toFixed(2));
+    setAction('deposit');
+  }, [auth.authState, auth.switchAccount, minimumDepositUsd]);
 
   useEffect(() => {
     if (auth.profile?.phone_e164) {
@@ -207,7 +226,7 @@ export default function WalletPage() {
       const response = await fetch('/api/wallet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amountUsd, msisdn }),
+        body: JSON.stringify({ amountUsd, msisdn, welcomeBonus: isWelcomeBonusDeposit }),
       });
       const data: unknown = await response.json().catch(() => null);
       if (!response.ok || !isRecord(data)) {
@@ -222,6 +241,7 @@ export default function WalletPage() {
         created_at: typeof data.createdAt === 'string' ? data.createdAt : new Date().toISOString(),
       };
       setDeposit(nextDeposit);
+      setIsWelcomeBonusDeposit(false);
       setTransactions(current => [{
         id: nextDeposit.id,
         account: 'app_wallet',
@@ -315,9 +335,16 @@ export default function WalletPage() {
         nextStatus = 'completed';
         nextCreditedUsd = Number(data.creditedUsd ?? 0);
         if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
+        const bonusAmount = Number(data.welcomeBonusUsd ?? 0);
+        if (bonusAmount > 0) {
+          setWelcomeBonusAwarded(true);
+          setWelcomeBonusClaimed(true);
+        }
         await auth.refresh();
         auth.switchAccount('app-wallet');
-        setMessage('Payment confirmed and Real Wallet credited. Opening the trading workspace.');
+        setMessage(bonusAmount > 0
+          ? `Congratulations! Your $${bonusAmount.toFixed(2)} welcome bonus is now in your Real Wallet.`
+          : 'Payment confirmed and Real Wallet credited. Opening the trading workspace.');
         setIsRedirecting(true);
         window.setTimeout(() => router.push('/'), 1200);
       } else if (data.status === 'failed' || data.status === 'expired') {
@@ -437,10 +464,12 @@ export default function WalletPage() {
               <LoaderCircle className="h-7 w-7 shrink-0 animate-spin text-primary" />
             )}
             <div>
-              <p className="font-semibold">{isRedirecting ? 'Payment confirmed' : 'Processing payment'}</p>
+                <p className="font-semibold">{isRedirecting ? (welcomeBonusAwarded ? 'Congratulations!' : 'Payment confirmed') : 'Processing payment'}</p>
               <p className="mt-1 text-sm leading-5 text-muted-foreground">
                 {isRedirecting
-                  ? 'Your Real Wallet has been updated. Opening the trading workspace.'
+                  ? welcomeBonusAwarded
+                    ? '$20 welcome bonus unlocked. Your Real Wallet is ready.'
+                    : 'Your Real Wallet has been updated. Opening the trading workspace.'
                   : isStarting
                     ? 'Sending your payment request. Approve it on your phone.'
                     : 'Waiting for payment confirmation.'}
@@ -530,6 +559,27 @@ export default function WalletPage() {
             </div>
           </section>
 
+          {!welcomeBonusClaimed && (
+            <section className="welcome-bonus-card mb-8 flex flex-col gap-5 p-5 text-white shadow-[0_0_38px_rgba(35,240,173,0.16)] sm:flex-row sm:items-center sm:justify-between sm:p-6" aria-label="Welcome deposit bonus">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-emerald-200/50 bg-emerald-300/15 text-emerald-200"><Gift className="h-5 w-5" /></div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-200">One-time welcome bonus</p>
+                  <h2 className="mt-1 text-2xl font-semibold">Get $20 USD</h2>
+                  <p className="mt-1 max-w-xl text-sm leading-6 text-white/70">Make a first deposit of at least {money.format(Math.max(minimumDepositUsd, 5))} through this offer to unlock withdrawable and tradable funds.</p>
+                </div>
+              </div>
+              <button type="button" onClick={() => {
+                auth.switchAccount('app-wallet');
+                setIsWelcomeBonusDeposit(true);
+                setAmountUsd(Math.max(minimumDepositUsd, 5).toFixed(2));
+                setAction('deposit');
+              }} className="inline-flex h-11 shrink-0 items-center justify-center gap-2 bg-emerald-300 px-5 text-sm font-bold text-emerald-950 transition-colors hover:bg-emerald-200">
+                Deposit now <ArrowDownToLine className="h-4 w-4" />
+              </button>
+            </section>
+          )}
+
           <section className="mb-10 border-y border-border py-4" aria-labelledby="wallet-activity-heading">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
@@ -591,7 +641,7 @@ export default function WalletPage() {
                         onChange={event => setAmountUsd(event.target.value)}
                         className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
-                      <p className="mt-2 text-xs text-muted-foreground">Minimum {money.format(minimumDepositUsd)}. M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
+                      <p className="mt-2 text-xs text-muted-foreground">Minimum {money.format(minimumDepositUsd)}. {isWelcomeBonusDeposit && 'This payment will qualify for the one-time $20 welcome bonus after confirmation.'} M-Pesa will be charged approximately KES {getKesAmount(amountUsd).toLocaleString('en-KE')} (rounded up to the next shilling).</p>
                     </div>
                     <div>
                       <label htmlFor="wallet-msisdn" className="mb-2 block text-sm font-medium">Kenyan M-Pesa phone number</label>

@@ -6,6 +6,7 @@ import { SiteAuthProvider } from './site-auth-provider';
 import { AdminRouteRedirect } from './admin-route-redirect';
 import ViewportScaler from './ViewportScaler';
 import { SimulatedActivityNotice } from './simulated-activity-notice';
+import { WelcomeBonusPrompt } from './welcome-bonus-prompt';
 import type { SupabaseBrowserConfig } from '@/lib/supabase/types';
 
 /**
@@ -44,6 +45,7 @@ export function TemplateLayout({
           <ViewportScaler>{children}</ViewportScaler>
         </DerivWSProvider>
         <SiteAuthDialog />
+        <WelcomeBonusPrompt />
       </SiteAuthProvider>
       <Toaster position="top-center" duration={3000} />
       <SimulatedActivityNotice />

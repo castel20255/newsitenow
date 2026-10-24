@@ -7,6 +7,7 @@ import {
   ArrowDownToLine,
   ArrowRight,
   ArrowUpRight,
+  Gift,
   Clock3,
   LineChart,
   ShieldCheck,
@@ -242,6 +243,18 @@ export function CryptoBinaryLanding() {
             <p className="cb-hero-subtitle">
               Follow market charts, place Rise/Fall and digit trades, and manage activity across Demo and Real Wallet accounts.
             </p>
+            <aside className="cb-welcome-card" aria-label="Welcome deposit bonus">
+              <div className="cb-welcome-icon"><Gift size={19} /></div>
+              <div className="cb-welcome-copy">
+                <span className="cb-welcome-label">A one-time welcome gift</span>
+                <strong>$20 USD bonus</strong>
+                <p>Make your first deposit of at least $5 to unlock withdrawable, tradable funds.</p>
+              </div>
+              <div className="cb-welcome-actions">
+                <button className="cb-button-primary" onClick={() => openAuth('login')}>Login</button>
+                <button className="cb-button-secondary" onClick={() => openAuth('signup')}>Create account</button>
+              </div>
+            </aside>
             <div className="cb-hero-actions">
               <button className="cb-button-primary" onClick={() => openAuth('login')}>
                 Login <ArrowRight size={17} />
