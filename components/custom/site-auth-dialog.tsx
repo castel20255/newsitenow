@@ -33,12 +33,14 @@ function PasswordField({
   value,
   onChange,
   autoComplete,
+  minLength,
 }: {
   id: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
   autoComplete: string;
+  minLength?: number;
 }) {
   const [visible, setVisible] = useState(false);
   return (
@@ -50,6 +52,7 @@ function PasswordField({
           name={id}
           type={visible ? 'text' : 'password'}
           autoComplete={autoComplete}
+          minLength={minLength}
           value={value}
           onChange={event => onChange(event.target.value)}
           className="pr-11"
@@ -171,7 +174,7 @@ export function SiteAuthDialog() {
     && countryCode
     && selectedCountry
     && isValidPhoneNumber(phoneNumber, countryCode)
-    && password.length >= 10
+    && password.length >= 6
     && password === passwordConfirmation
     && termsAccepted
   );
@@ -301,6 +304,7 @@ export function SiteAuthDialog() {
                 value={password}
                 onChange={setPassword}
                 autoComplete="new-password"
+                minLength={6}
               />
               <PasswordField
                 id="passwordConfirmation"
@@ -308,9 +312,10 @@ export function SiteAuthDialog() {
                 value={passwordConfirmation}
                 onChange={setPasswordConfirmation}
                 autoComplete="new-password"
+                minLength={6}
               />
             </div>
-            <p className="text-xs text-muted-foreground">Use a strong password.</p>
+            <p className="text-xs text-muted-foreground">Use at least 6 characters for your password.</p>
             <div className="flex items-start gap-2.5">
               <Checkbox
                 id="termsAccepted"
