@@ -15,7 +15,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from('wallet_withdrawals')
-      .select('id, user_id, full_name, amount_usd, msisdn, status, admin_note, payout_reference, reviewed_by, created_at, reviewed_at, paid_at')
+      .select('id, user_id, full_name, amount_usd, msisdn, status, admin_note, payout_reference, payout_provider, payout_provider_request_id, payout_amount_kes, payout_status, reviewed_by, created_at, reviewed_at, paid_at')
       .order('created_at', { ascending: false })
       .limit(500);
     if (error) return Response.json({ error: 'Could not load withdrawal requests.' }, { status: 503 });

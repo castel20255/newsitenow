@@ -10,6 +10,7 @@ import { useSiteAuth } from '@/components/custom/site-auth-provider';
 import { cn } from '@/lib/utils';
 
 type WithdrawalStatus = 'pending' | 'approved' | 'rejected' | 'paid';
+type PayoutStatus = 'not_started' | 'initiating' | 'queued' | 'failed' | 'success';
 
 interface WithdrawalRequest {
   id: string;
@@ -20,6 +21,10 @@ interface WithdrawalRequest {
   status: WithdrawalStatus;
   admin_note: string | null;
   payout_reference: string | null;
+  payout_provider: string | null;
+  payout_provider_request_id: string | null;
+  payout_amount_kes: number | null;
+  payout_status: PayoutStatus;
   reviewed_by: string | null;
   created_at: string;
   reviewed_at: string | null;
@@ -48,7 +53,6 @@ export default function AdminPage() {
   const [section, setSection] = useState<'funds' | 'withdrawals'>('funds');
   const [withdrawals, setWithdrawals] = useState<WithdrawalRequest[]>([]);
   const [users, setUsers] = useState<FundUser[]>([]);
-  const [payoutReferences, setPayoutReferences] = useState<Record<string, string>>({});
   const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [balanceDraft, setBalanceDraft] = useState('');
@@ -176,7 +180,7 @@ export default function AdminPage() {
     }
   };
 
-  const updateWithdrawal = async (withdrawal: WithdrawalRequest, action: 'approve' | 'reject' | 'paid') => {
+  const updateWithdrawal = async (withdrawal: WithdrawalRequest, action: 'approve' | 'reject' | 'check') => {
     setBusyId(withdrawal.id);
     setError('');
     try {
@@ -186,7 +190,6 @@ export default function AdminPage() {
         body: JSON.stringify({
           action,
           adminNote: adminNotes[withdrawal.id] ?? '',
-          payoutReference: payoutReferences[withdrawal.id] ?? '',
         }),
       });
       const data: unknown = await response.json().catch(() => null);
@@ -260,7 +263,7 @@ export default function AdminPage() {
                       <p className="mb-2 flex items-center gap-2 text-sm font-medium text-emerald-600"><Shield className="h-4 w-4" /> Administration</p>
                       <h1 className="text-3xl font-semibold">{section === 'funds' ? 'Funds Management' : 'Withdrawal requests'}</h1>
                       {section === 'funds' && <p className="mt-2 text-sm text-muted-foreground">{isLoading && users.length === 0 ? 'Loading users from the database…' : error && users.length === 0 ? 'Could not load users' : `${users.length} users loaded`}</p>}
-                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">Approve requests, send M-Pesa manually, then record the payout reference.</p>}
+                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">Approve requests to send M-Pesa through PayHero, then check the payout status.</p>}
                     </div>
                     <button type="button" onClick={() => void (section === 'funds' ? loadFunds() : loadWithdrawals())} disabled={isLoading} className="flex h-10 items-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50">
                       {isLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
@@ -428,6 +431,7 @@ export default function AdminPage() {
                                   withdrawal.status === 'approved' ? 'border-blue-500/30 text-blue-700' : 'border-amber-500/30 text-amber-700'
                             )}>{withdrawal.status}</span>
                             {withdrawal.payout_reference && <span className="mt-2 block text-xs text-muted-foreground">Ref: {withdrawal.payout_reference}</span>}
+                            {withdrawal.payout_status !== 'not_started' && <span className="mt-2 block text-xs capitalize text-muted-foreground">PayHero: {withdrawal.payout_status}</span>}
                           </td>
                           <td className="w-72 px-3 py-4">
                             {withdrawal.status === 'pending' && (
@@ -451,15 +455,24 @@ export default function AdminPage() {
                             )}
                             {withdrawal.status === 'approved' && (
                               <div className="space-y-2">
-                                <input
-                                  value={payoutReferences[withdrawal.id] ?? ''}
-                                  onChange={event => setPayoutReferences(current => ({ ...current, [withdrawal.id]: event.target.value }))}
-                                  placeholder="Manual M-Pesa payout reference"
-                                  className="h-9 w-full border border-input bg-background px-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                />
-                                <button type="button" disabled={busyId === withdrawal.id || !payoutReferences[withdrawal.id]?.trim()} onClick={() => void updateWithdrawal(withdrawal, 'paid')} className="flex h-8 items-center gap-1 bg-emerald-600 px-2.5 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">
-                                  {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <CircleDollarSign className="h-3.5 w-3.5" />} Mark paid
-                                </button>
+                                {withdrawal.payout_status === 'not_started' && (
+                                  <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'approve')} className="flex h-8 items-center gap-1 bg-primary px-2.5 text-xs font-semibold text-primary-foreground disabled:opacity-50">
+                                    {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <CircleDollarSign className="h-3.5 w-3.5" />} Send PayHero payout
+                                  </button>
+                                )}
+                                {['initiating', 'queued'].includes(withdrawal.payout_status) && (
+                                  <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'check')} className="flex h-8 items-center gap-1 border border-border px-2.5 text-xs font-medium hover:bg-muted disabled:opacity-50">
+                                    {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />} Check PayHero status
+                                  </button>
+                                )}
+                                {withdrawal.payout_status === 'failed' && (
+                                  <>
+                                    <p className="text-xs text-destructive">PayHero failed. Refund the reserved wallet balance by rejecting this request.</p>
+                                    <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'reject')} className="flex h-8 items-center gap-1 border border-border px-2.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50">
+                                      <X className="h-3.5 w-3.5" /> Reject / refund
+                                    </button>
+                                  </>
+                                )}
                               </div>
                             )}
                             {withdrawal.admin_note && <p className="mt-2 text-xs text-muted-foreground">{withdrawal.admin_note}</p>}

@@ -1,6 +1,8 @@
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
+import { getPayHeroConfig, getPayHeroTransactionStatus } from '@/lib/payhero';
+import type { WalletPaymentProvider } from '@/lib/wallet-payment-provider';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -25,7 +27,7 @@ export async function POST(
     const admin = createSupabaseAdminClient();
     const { data: deposit, error: depositError } = await admin
       .from('wallet_deposits')
-      .select('id, amount_kes, provider_request_id, status, created_at')
+      .select('id, amount_kes, provider_request_id, payment_provider, status, created_at')
       .eq('id', depositId)
       .eq('user_id', auth.user.id)
       .maybeSingle();
@@ -49,16 +51,22 @@ export async function POST(
       return Response.json({ status: deposit.status });
     }
 
-    const config = getMegaPayConfig();
-    if (!config) return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
+    const paymentProvider = deposit.payment_provider as WalletPaymentProvider;
+    const megaPayConfig = paymentProvider === 'megapay' ? getMegaPayConfig() : null;
+    const payHeroConfig = paymentProvider === 'payhero' ? getPayHeroConfig() : null;
+    if ((!megaPayConfig && paymentProvider === 'megapay') || (!payHeroConfig && paymentProvider === 'payhero')) {
+      return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
+    }
 
     let providerResponse: unknown;
     try {
-      providerResponse = await postMegaPay('transactionstatus', {
-        api_key: config.apiKey,
-        email: config.email,
-        transaction_request_id: deposit.provider_request_id,
-      });
+      providerResponse = paymentProvider === 'payhero' && payHeroConfig
+        ? await getPayHeroTransactionStatus(payHeroConfig, deposit.provider_request_id)
+        : await postMegaPay('transactionstatus', {
+            api_key: megaPayConfig!.apiKey,
+            email: megaPayConfig!.email,
+            transaction_request_id: deposit.provider_request_id,
+          });
     } catch {
       return Response.json({ error: 'Could not check payment status. Try again shortly.' }, { status: 502 });
     }
@@ -67,18 +75,20 @@ export async function POST(
       return Response.json({ error: 'The payment service returned an invalid status.' }, { status: 502 });
     }
 
-    const providerStatus = typeof providerResponse.TransactionStatus === 'string'
-      ? providerResponse.TransactionStatus.toLowerCase()
-      : '';
+    const rawProviderStatus = paymentProvider === 'payhero'
+      ? providerResponse.status ?? providerResponse.TransactionStatus
+      : providerResponse.TransactionStatus;
+    const providerStatus = typeof rawProviderStatus === 'string' ? rawProviderStatus.toLowerCase() : '';
     const rawResultCode = providerResponse.ResultCode;
     const rawTransactionCode = providerResponse.TransactionCode;
     const hasSuccessfulResultCode = rawResultCode === undefined || rawResultCode === null || rawResultCode === '' || String(rawResultCode) === '200';
     const hasSuccessfulTransactionCode = rawTransactionCode === undefined || rawTransactionCode === null || rawTransactionCode === '' || String(rawTransactionCode) === '0';
+    const isSuccessfulStatus = paymentProvider === 'payhero'
+      ? providerStatus === 'success'
+      : providerStatus === 'completed' && hasSuccessfulResultCode && hasSuccessfulTransactionCode;
 
     if (
-      providerStatus !== 'completed' ||
-      !hasSuccessfulResultCode ||
-      !hasSuccessfulTransactionCode
+      !isSuccessfulStatus
     ) {
       if (['failed', 'cancelled', 'canceled', 'expired', 'rejected'].includes(providerStatus)) {
         const { error } = await admin
@@ -102,11 +112,19 @@ export async function POST(
       return Response.json({ status: timedOut ? 'expired' : 'pending' });
     }
 
-    const rawTransactionId = providerResponse.TransactionID;
+    const rawTransactionId = paymentProvider === 'payhero'
+      ? providerResponse.transaction_id ?? providerResponse.merchant_reference ?? providerResponse.CheckoutRequestID ?? providerResponse.reference
+      : providerResponse.TransactionID;
     const transactionId = (typeof rawTransactionId === 'string' || typeof rawTransactionId === 'number')
       ? String(rawTransactionId).trim() || deposit.provider_request_id
       : deposit.provider_request_id;
-    const reportedAmountKes = Number(providerResponse.TransactionAmount);
+    const rawAmountKes = paymentProvider === 'payhero'
+      ? providerResponse.amount ?? providerResponse.transaction_amount
+      : providerResponse.TransactionAmount;
+    const reportedAmountKes = Number(rawAmountKes);
+    if (paymentProvider === 'payhero' && (!Number.isFinite(reportedAmountKes) || reportedAmountKes !== Number(deposit.amount_kes))) {
+      return Response.json({ error: 'The verified PayHero amount does not match this deposit.' }, { status: 502 });
+    }
     if (Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
       console.warn('Completed payment amount differs from the requested amount', {
         depositId: deposit.id,
@@ -115,8 +133,11 @@ export async function POST(
       });
     }
 
-    const receipt = typeof providerResponse.TransactionReceipt === 'string'
-      ? providerResponse.TransactionReceipt
+    const rawReceipt = paymentProvider === 'payhero'
+      ? providerResponse.receipt ?? providerResponse.transaction_receipt ?? providerResponse.reference
+      : providerResponse.TransactionReceipt;
+    const receipt = typeof rawReceipt === 'string'
+      ? rawReceipt
       : '';
     const { data: creditResult, error: creditError } = await admin.rpc('complete_megapay_deposit', {
       p_deposit_id: deposit.id,
