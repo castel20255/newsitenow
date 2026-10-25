@@ -3,6 +3,8 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
+import { getPayHeroConfig, initiatePayHeroPayment } from '@/lib/payhero';
+import { getWalletPaymentProvider } from '@/lib/wallet-payment-provider';
 
 const USD_TO_KES = 131.21;
 const HOURLY_DEPOSIT_LIMIT = 5;
@@ -196,8 +198,10 @@ export async function POST(request: Request) {
     const user = await getAuthenticatedUser();
     if (!user) return Response.json({ error: 'Sign in before making a deposit.' }, { status: 401 });
 
-    const config = getMegaPayConfig();
-    if (!config) {
+    const paymentProvider = getWalletPaymentProvider();
+    const megaPayConfig = paymentProvider === 'megapay' ? getMegaPayConfig() : null;
+    const payHeroConfig = paymentProvider === 'payhero' ? getPayHeroConfig() : null;
+    if (!paymentProvider || (!megaPayConfig && !payHeroConfig)) {
       return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
     }
 
@@ -270,6 +274,7 @@ export async function POST(request: Request) {
         fx_rate: USD_TO_KES,
         msisdn: phoneNumber.number,
         reference,
+        payment_provider: paymentProvider,
         status: 'initiating',
         welcome_bonus_eligible: isWelcomeBonusDeposit,
       })
@@ -282,18 +287,29 @@ export async function POST(request: Request) {
 
     let providerResponse: unknown;
     try {
-      providerResponse = await postMegaPay('initiatestk', {
-        api_key: config.apiKey,
-        email: config.email,
-        amount: amountKes,
-        msisdn: phoneNumber.number.slice(1),
-        reference,
-      });
+      providerResponse = paymentProvider === 'megapay' && megaPayConfig
+        ? await postMegaPay('initiatestk', {
+            api_key: megaPayConfig.apiKey,
+            email: megaPayConfig.email,
+            amount: amountKes,
+            msisdn: phoneNumber.number.slice(1),
+            reference,
+          })
+        : await initiatePayHeroPayment(payHeroConfig!, {
+            amount: amountKes,
+            phoneNumber: phoneNumber.number,
+            reference,
+          });
     } catch {
       return Response.json({ error: 'The payment request was interrupted. Check your wallet status or contact support before retrying to avoid a duplicate charge.' }, { status: 502 });
     }
 
-    const transactionRequestId = extractTransactionRequestId(providerResponse);
+    const payHeroRejected = paymentProvider === 'payhero' && isRecord(providerResponse) && (
+      providerResponse.success === false || String(providerResponse.status ?? '').toLowerCase() === 'failed'
+    );
+    const transactionRequestId = paymentProvider === 'payhero'
+      ? (payHeroRejected ? null : reference)
+      : extractTransactionRequestId(providerResponse);
     if (!isRecord(providerResponse) || !transactionRequestId) {
       console.warn('Payment initiation response could not be tracked', {
         keys: isRecord(providerResponse) ? Object.keys(providerResponse) : [],
