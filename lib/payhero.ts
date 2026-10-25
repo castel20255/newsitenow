@@ -22,7 +22,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 export function getPayHeroConfig(): PayHeroConfig | null {
-  const authToken = process.env.PAYHERO_AUTH_TOKEN?.trim();
+  const authToken = (process.env.PAYHERO_AUTH_TOKEN || process.env.PAYHERO_API_KEY)?.trim();
   const channelId = Number(process.env.PAYHERO_CHANNEL_ID?.trim());
   const networkCode = Number(process.env.PAYHERO_NETWORK_CODE?.trim() || '63902');
   if (!authToken || !Number.isSafeInteger(channelId) || channelId <= 0 || !Number.isSafeInteger(networkCode) || networkCode <= 0) return null;

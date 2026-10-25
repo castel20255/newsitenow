@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const { data: auth, error: authError } = await supabase.auth.getUser();
     if (authError || !auth.user) return Response.json({ error: 'Sign in to request a withdrawal.' }, { status: 401 });
     const config = getPayHeroConfig();
-    if (!config) return Response.json({ error: 'PayHero payments are not configured. Check PAYHERO_AUTH_TOKEN and PAYHERO_CHANNEL_ID.' }, { status: 503 });
+    if (!config) return Response.json({ error: 'PayHero payments are not configured. Check PAYHERO_AUTH_TOKEN (or PAYHERO_API_KEY) and the numeric PAYHERO_CHANNEL_ID.' }, { status: 503 });
 
     const body: unknown = await request.json().catch(() => null);
     if (
