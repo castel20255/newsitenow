@@ -34,7 +34,7 @@ Apply every SQL migration in `supabase/migrations/` in filename order before ena
 
 The wallet is a separate app-owned USD ledger and does not fund or read a Deriv account. Deposits require at least the configured user minimum (at least $5.00) and use the fixed rate of $1 = KES 131.21; the STK amount is rounded up to whole KES, and USD is credited only after PayHero confirms payment through the transaction-status endpoint. Status checks use the provider's server-to-server endpoint.
 
-Set `PAYHERO_AUTH_TOKEN` to the Basic auth token from PayHero, `PAYHERO_CHANNEL_ID` to the numeric channel ID, and `PAYHERO_NETWORK_CODE` to `63902` for M-Pesa. `PAYHERO_C2B_PROVIDER` defaults to `m-pesa`. Ensure the PayHero account and channel are enabled and funded for B2C withdrawals. User withdrawals are sent through PayHero B2C immediately after the wallet balance is reserved; users can check status, and confirmed failures automatically refund the reserved balance.
+Set `PAYHERO_AUTH_TOKEN` to the Basic auth token copied from PayHero. `PAYHERO_API_KEY` is also accepted as an alias if that variable contains the same Basic auth token. The request adds the `Basic` authorization scheme; do not store the word `Basic` twice. Set `PAYHERO_CHANNEL_ID` to the numeric channel ID and `PAYHERO_NETWORK_CODE` to `63902` for M-Pesa. `PAYHERO_C2B_PROVIDER` defaults to `m-pesa`. Ensure the PayHero account and channel are enabled and funded for B2C withdrawals. User withdrawals are sent through PayHero B2C immediately after the wallet balance is reserved; users can check status, and confirmed failures automatically refund the reserved balance.
 
 ## Admin and Withdrawals
 
