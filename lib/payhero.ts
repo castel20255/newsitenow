@@ -74,7 +74,7 @@ export function initiatePayHeroPayment(
   config: PayHeroConfig,
   input: { amount: number; phoneNumber: string; reference: string }
 ): Promise<unknown> {
-  return requestPayHero(config, 'payments', {
+  return requestPayHero(config, 'payments?is_active=true', {
     method: 'POST',
     payload: {
       amount: input.amount,
