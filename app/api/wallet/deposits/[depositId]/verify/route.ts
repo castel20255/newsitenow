@@ -113,7 +113,7 @@ export async function POST(
     }
 
     const rawTransactionId = paymentProvider === 'payhero'
-      ? providerResponse.transaction_id ?? providerResponse.merchant_reference ?? providerResponse.CheckoutRequestID ?? providerResponse.reference
+      ? providerResponse.transaction_id ?? providerResponse.merchant_reference ?? providerResponse.CheckoutRequestID ?? providerResponse.provider_reference ?? providerResponse.reference
       : providerResponse.TransactionID;
     const transactionId = (typeof rawTransactionId === 'string' || typeof rawTransactionId === 'number')
       ? String(rawTransactionId).trim() || deposit.provider_request_id
@@ -122,7 +122,7 @@ export async function POST(
       ? providerResponse.amount ?? providerResponse.transaction_amount
       : providerResponse.TransactionAmount;
     const reportedAmountKes = Number(rawAmountKes);
-    if (paymentProvider === 'payhero' && (!Number.isFinite(reportedAmountKes) || reportedAmountKes !== Number(deposit.amount_kes))) {
+    if (paymentProvider === 'payhero' && Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
       return Response.json({ error: 'The verified PayHero amount does not match this deposit.' }, { status: 502 });
     }
     if (Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
@@ -134,7 +134,7 @@ export async function POST(
     }
 
     const rawReceipt = paymentProvider === 'payhero'
-      ? providerResponse.receipt ?? providerResponse.transaction_receipt ?? providerResponse.reference
+      ? providerResponse.receipt ?? providerResponse.transaction_receipt ?? providerResponse.provider_reference ?? providerResponse.reference
       : providerResponse.TransactionReceipt;
     const receipt = typeof rawReceipt === 'string'
       ? rawReceipt

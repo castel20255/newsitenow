@@ -2,8 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
-import { getPayHeroConfig, initiatePayHeroPayment } from '@/lib/payhero';
+import { getPayHeroConfig, initiatePayHeroPayment, PayHeroApiError } from '@/lib/payhero';
 import { getWalletPaymentProvider } from '@/lib/wallet-payment-provider';
 
 const USD_TO_KES = 131.21;
@@ -19,6 +18,7 @@ function extractTransactionRequestId(value: unknown, depth = 0): string | null {
   if (!isRecord(value) || depth > 4) return null;
 
   for (const key of [
+    'reference',
     'transaction_request_id',
     'transactionRequestId',
     'TransactionRequestID',
@@ -199,9 +199,8 @@ export async function POST(request: Request) {
     if (!user) return Response.json({ error: 'Sign in before making a deposit.' }, { status: 401 });
 
     const paymentProvider = getWalletPaymentProvider();
-    const megaPayConfig = paymentProvider === 'megapay' ? getMegaPayConfig() : null;
-    const payHeroConfig = paymentProvider === 'payhero' ? getPayHeroConfig() : null;
-    if (!paymentProvider || (!megaPayConfig && !payHeroConfig)) {
+    const payHeroConfig = getPayHeroConfig();
+    if (!payHeroConfig) {
       return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
     }
 
@@ -287,29 +286,44 @@ export async function POST(request: Request) {
 
     let providerResponse: unknown;
     try {
-      providerResponse = paymentProvider === 'megapay' && megaPayConfig
-        ? await postMegaPay('initiatestk', {
-            api_key: megaPayConfig.apiKey,
-            email: megaPayConfig.email,
-            amount: amountKes,
-            msisdn: phoneNumber.number.slice(1),
-            reference,
-          })
-        : await initiatePayHeroPayment(payHeroConfig!, {
-            amount: amountKes,
-            phoneNumber: phoneNumber.number,
-            reference,
-          });
-    } catch {
-      return Response.json({ error: 'The payment request was interrupted. Check your wallet status or contact support before retrying to avoid a duplicate charge.' }, { status: 502 });
+      providerResponse = await initiatePayHeroPayment(payHeroConfig, {
+        amount: amountKes,
+        phoneNumber: phoneNumber.number,
+        reference,
+      });
+    } catch (error) {
+      if (paymentProvider === 'payhero' && error instanceof PayHeroApiError && error.status >= 400 && error.status < 500) {
+        await admin
+          .from('wallet_deposits')
+          .update({ status: 'failed', updated_at: new Date().toISOString() })
+          .eq('id', deposit.id)
+          .eq('status', 'initiating');
+      }
+      const message = error instanceof PayHeroApiError
+        ? `PayHero rejected the deposit request (${error.status}): ${error.message}`
+        : 'The payment provider could not be reached. Check the server logs and wallet status before retrying to avoid a duplicate charge.';
+      return Response.json({ error: message }, { status: 502 });
     }
 
     const payHeroRejected = paymentProvider === 'payhero' && isRecord(providerResponse) && (
       providerResponse.success === false || String(providerResponse.status ?? '').toLowerCase() === 'failed'
     );
-    const transactionRequestId = paymentProvider === 'payhero'
-      ? (payHeroRejected ? null : reference)
-      : extractTransactionRequestId(providerResponse);
+    if (payHeroRejected && isRecord(providerResponse)) {
+      const { error: failureUpdateError } = await admin
+        .from('wallet_deposits')
+        .update({ status: 'failed', updated_at: new Date().toISOString() })
+        .eq('id', deposit.id)
+        .eq('status', 'initiating');
+      if (failureUpdateError) {
+        return Response.json({ error: 'PayHero rejected the request, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
+      }
+      const rejection = [providerResponse.error_message, providerResponse.message, providerResponse.error]
+        .find(value => typeof value === 'string');
+      return Response.json({
+        error: typeof rejection === 'string' ? `PayHero rejected the deposit: ${rejection.slice(0, 240)}` : 'PayHero rejected the deposit request.',
+      }, { status: 502 });
+    }
+    const transactionRequestId = extractTransactionRequestId(providerResponse);
     if (!isRecord(providerResponse) || !transactionRequestId) {
       console.warn('Payment initiation response could not be tracked', {
         keys: isRecord(providerResponse) ? Object.keys(providerResponse) : [],

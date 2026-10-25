@@ -4,22 +4,34 @@ const PAYHERO_API_URL = 'https://backend.payhero.co.ke/api/v2';
 
 export interface PayHeroConfig {
   authToken: string;
-  channelId: string;
+  channelId: number;
   provider: string;
-  networkCode: string;
+  networkCode: number;
   callbackUrl?: string;
+}
+
+export class PayHeroApiError extends Error {
+  constructor(readonly status: number, message: string) {
+    super(message);
+    this.name = 'PayHeroApiError';
+  }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export function getPayHeroConfig(): PayHeroConfig | null {
   const authToken = process.env.PAYHERO_AUTH_TOKEN?.trim();
-  const channelId = process.env.PAYHERO_CHANNEL_ID?.trim();
-  if (!authToken || !channelId) return null;
+  const channelId = Number(process.env.PAYHERO_CHANNEL_ID?.trim());
+  const networkCode = Number(process.env.PAYHERO_NETWORK_CODE?.trim() || '63902');
+  if (!authToken || !Number.isSafeInteger(channelId) || channelId <= 0 || !Number.isSafeInteger(networkCode) || networkCode <= 0) return null;
 
   return {
     authToken: authToken.replace(/^Basic\s+/i, ''),
     channelId,
     provider: process.env.PAYHERO_C2B_PROVIDER?.trim() || 'm-pesa',
-    networkCode: process.env.PAYHERO_NETWORK_CODE?.trim() || '63902',
+    networkCode,
     callbackUrl: process.env.PAYHERO_CALLBACK_URL?.trim() || undefined,
   };
 }
@@ -47,7 +59,14 @@ async function requestPayHero(
   });
 
   const result: unknown = await response.json().catch(() => null);
-  if (!response.ok) throw new Error('PayHero request failed');
+  if (!response.ok) {
+    const errorMessage = isRecord(result)
+      ? ['error_message', 'message', 'error'].map(key => result[key]).find(value => typeof value === 'string')
+      : null;
+    const message = typeof errorMessage === 'string' ? errorMessage.slice(0, 240) : 'PayHero rejected the request.';
+    console.warn('PayHero API request failed', { endpoint, status: response.status });
+    throw new PayHeroApiError(response.status, message);
+  }
   return result;
 }
 
@@ -59,7 +78,7 @@ export function initiatePayHeroPayment(
     method: 'POST',
     payload: {
       amount: input.amount,
-      phone_number: input.phoneNumber,
+      phone_number: input.phoneNumber.replace(/^\+254/, '0').replace(/\D/g, ''),
       channel_id: config.channelId,
       provider: config.provider,
       external_reference: input.reference,
@@ -77,7 +96,7 @@ export function initiatePayHeroWithdrawal(
     payload: {
       external_reference: input.reference,
       amount: input.amount,
-      phone_number: input.phoneNumber,
+      phone_number: input.phoneNumber.replace(/\D/g, ''),
       network_code: config.networkCode,
       ...(config.callbackUrl ? { callback_url: config.callbackUrl } : {}),
       channel: 'mobile',

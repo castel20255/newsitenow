@@ -1,8 +1,27 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getPayHeroConfig, initiatePayHeroWithdrawal, PayHeroApiError } from '@/lib/payhero';
+
+const USD_TO_KES = 131.21;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function getStringField(value: unknown, keys: string[], depth = 0): string | null {
+  if (!isRecord(value) || depth > 4) return null;
+  for (const key of keys) {
+    const candidate = value[key];
+    if ((typeof candidate === 'string' || typeof candidate === 'number') && String(candidate).trim()) {
+      return String(candidate).trim();
+    }
+  }
+  for (const key of ['data', 'result', 'response', 'transaction']) {
+    const nested = getStringField(value[key], keys, depth + 1);
+    if (nested) return nested;
+  }
+  return null;
 }
 
 export async function POST(request: Request) {
@@ -10,6 +29,8 @@ export async function POST(request: Request) {
     const supabase = await createSupabaseServerClient();
     const { data: auth, error: authError } = await supabase.auth.getUser();
     if (authError || !auth.user) return Response.json({ error: 'Sign in to request a withdrawal.' }, { status: 401 });
+    const config = getPayHeroConfig();
+    if (!config) return Response.json({ error: 'PayHero payments are not configured. Check PAYHERO_AUTH_TOKEN and PAYHERO_CHANNEL_ID.' }, { status: 503 });
 
     const body: unknown = await request.json().catch(() => null);
     if (
@@ -34,6 +55,7 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Enter a valid Kenyan M-Pesa number.' }, { status: 400 });
     }
 
+    const admin = createSupabaseAdminClient();
     const { data, error } = await supabase.rpc('request_wallet_withdrawal', {
       p_full_name: fullName,
       p_amount_usd: amountCents / 100,
@@ -49,10 +71,82 @@ export async function POST(request: Request) {
     const result = Array.isArray(data) ? data[0] : data;
     if (!isRecord(result)) return Response.json({ error: 'Could not confirm the withdrawal request.' }, { status: 503 });
 
+    const withdrawalId = String(result.withdrawal_id);
+    const amountKes = Math.ceil((amountCents / 100) * USD_TO_KES - 0.0000001);
+    const { data: claimed, error: claimError } = await admin
+      .from('wallet_withdrawals')
+      .update({
+        payout_provider: 'payhero',
+        payout_request_reference: withdrawalId,
+        payout_provider_reference: withdrawalId,
+        payout_amount_kes: amountKes,
+        payout_status: 'initiating',
+      })
+      .eq('id', withdrawalId)
+      .eq('user_id', auth.user.id)
+      .eq('payout_status', 'not_started')
+      .select('id')
+      .maybeSingle();
+    if (claimError || !claimed) {
+      return Response.json({ error: 'Your withdrawal is reserved, but payout setup did not finish. Contact support before submitting another withdrawal.' }, { status: 503 });
+    }
+
+    let providerResponse: unknown;
+    try {
+      providerResponse = await initiatePayHeroWithdrawal(config, {
+        amount: amountKes,
+        phoneNumber: phoneNumber.number,
+        reference: withdrawalId,
+      });
+    } catch (error) {
+      if (error instanceof PayHeroApiError && error.status >= 400 && error.status < 500) {
+        const { data: refundResult, error: refundError } = await admin.rpc('fail_payhero_wallet_withdrawal', {
+          p_withdrawal_id: withdrawalId,
+        });
+        if (refundError) return Response.json({ error: 'PayHero rejected the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
+        const refund = Array.isArray(refundResult) ? refundResult[0] : refundResult;
+        return Response.json({
+          error: `PayHero rejected the withdrawal (${error.status}): ${error.message}`,
+          balanceUsd: isRecord(refund) ? Number(refund.wallet_balance_usd) : Number(result.wallet_balance_usd),
+        }, { status: 502 });
+      }
+      return Response.json({
+        withdrawalId,
+        balanceUsd: Number(result.wallet_balance_usd),
+        status: 'pending',
+        payoutStatus: 'initiating',
+      }, { status: 202 });
+    }
+
+    const providerStatus = getStringField(providerResponse, ['status', 'TransactionStatus'])?.toLowerCase();
+    if ((isRecord(providerResponse) && providerResponse.success === false) || providerStatus === 'failed') {
+      const { data: refundResult, error: refundError } = await admin.rpc('fail_payhero_wallet_withdrawal', {
+        p_withdrawal_id: withdrawalId,
+      });
+      if (refundError) return Response.json({ error: 'PayHero rejected the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
+      const refund = Array.isArray(refundResult) ? refundResult[0] : refundResult;
+      return Response.json({
+        error: 'PayHero could not start the withdrawal. The reserved balance has been refunded.',
+        balanceUsd: isRecord(refund) ? Number(refund.wallet_balance_usd) : Number(result.wallet_balance_usd),
+      }, { status: 502 });
+    }
+
+    const providerReference = getStringField(providerResponse, ['reference', 'merchant_reference', 'external_reference']) || withdrawalId;
+    const providerRequestId = getStringField(providerResponse, ['checkout_request_id', 'CheckoutRequestID', 'conversation_id', 'conversationId']);
+    const { error: saveError } = await admin
+      .from('wallet_withdrawals')
+      .update({ payout_provider_reference: providerReference, payout_provider_request_id: providerRequestId, payout_status: 'queued' })
+      .eq('id', withdrawalId)
+      .eq('payout_status', 'initiating');
+    if (saveError) {
+      return Response.json({ error: 'PayHero may have accepted the withdrawal. Check its status before submitting another.' }, { status: 503 });
+    }
+
     return Response.json({
-      withdrawalId: result.withdrawal_id,
+      withdrawalId,
       balanceUsd: Number(result.wallet_balance_usd),
       status: 'pending',
+      payoutStatus: 'queued',
     });
   } catch {
     return Response.json({ error: 'Withdrawal service is unavailable.' }, { status: 503 });
