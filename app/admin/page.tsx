@@ -263,7 +263,7 @@ export default function AdminPage() {
                       <p className="mb-2 flex items-center gap-2 text-sm font-medium text-emerald-600"><Shield className="h-4 w-4" /> Administration</p>
                       <h1 className="text-3xl font-semibold">{section === 'funds' ? 'Funds Management' : 'Withdrawal requests'}</h1>
                       {section === 'funds' && <p className="mt-2 text-sm text-muted-foreground">{isLoading && users.length === 0 ? 'Loading users from the database…' : error && users.length === 0 ? 'Could not load users' : `${users.length} users loaded`}</p>}
-                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">Approve requests to send M-Pesa through PayHero, then check the payout status.</p>}
+                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">PayHero sends withdrawals automatically. Check pending payout status or reject a request before payout starts.</p>}
                     </div>
                     <button type="button" onClick={() => void (section === 'funds' ? loadFunds() : loadWithdrawals())} disabled={isLoading} className="flex h-10 items-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50">
                       {isLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
@@ -434,7 +434,7 @@ export default function AdminPage() {
                             {withdrawal.payout_status !== 'not_started' && <span className="mt-2 block text-xs capitalize text-muted-foreground">PayHero: {withdrawal.payout_status}</span>}
                           </td>
                           <td className="w-72 px-3 py-4">
-                            {withdrawal.status === 'pending' && (
+                            {withdrawal.status === 'pending' && withdrawal.payout_status === 'not_started' && (
                               <div className="space-y-2">
                                 <textarea
                                   value={adminNotes[withdrawal.id] ?? ''}
@@ -452,6 +452,11 @@ export default function AdminPage() {
                                   </button>
                                 </div>
                               </div>
+                            )}
+                            {withdrawal.status === 'pending' && ['initiating', 'queued'].includes(withdrawal.payout_status) && (
+                              <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'check')} className="flex h-8 items-center gap-1 border border-border px-2.5 text-xs font-medium hover:bg-muted disabled:opacity-50">
+                                {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />} Check PayHero status
+                              </button>
                             )}
                             {withdrawal.status === 'approved' && (
                               <div className="space-y-2">

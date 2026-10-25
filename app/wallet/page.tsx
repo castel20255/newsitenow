@@ -12,6 +12,7 @@ import {
   History,
   Landmark,
   LoaderCircle,
+  RefreshCw,
   Smartphone,
   X,
 } from 'lucide-react';
@@ -32,7 +33,8 @@ type WalletAction = 'deposit' | 'withdraw' | null;
 type PaymentMethod = 'bank-agent' | 'crypto' | 'mpesa';
 type DepositStatus = 'initiating' | 'pending' | 'completed' | 'failed' | 'expired' | 'review';
 type WithdrawalConfirmation = {
-  status: 'processing' | 'pending';
+  withdrawalId: string;
+  status: 'processing' | 'pending' | 'paid' | 'failed';
   amountUsd: number;
   fullName: string;
   msisdn: string;
@@ -59,7 +61,7 @@ interface WalletActivity {
 }
 
 const USD_TO_KES = 131.21;
-const WITHDRAWAL_USD_TO_KES = 127;
+const WITHDRAWAL_USD_TO_KES = 131.21;
 const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 const kesMoney = new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 2 });
 
@@ -105,6 +107,7 @@ export default function WalletPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [isSubmittingWithdrawal, setIsSubmittingWithdrawal] = useState(false);
+  const [isCheckingWithdrawal, setIsCheckingWithdrawal] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [demoWarningVisible, setDemoWarningVisible] = useState(false);
@@ -275,6 +278,7 @@ export default function WalletPage() {
       });
       const data: unknown = await response.json().catch(() => null);
       if (!response.ok || !isRecord(data)) {
+        if (isRecord(data) && typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
         throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not submit withdrawal request.');
       }
       setBalanceUsd(Number(data.balanceUsd));
@@ -291,6 +295,7 @@ export default function WalletPage() {
       setTransactions(current => [withdrawalActivity, ...current]);
       setAction(null);
       setWithdrawalConfirmation({
+        withdrawalId: String(data.withdrawalId),
         status: 'processing',
         amountUsd: Number(withdrawalAmount),
         fullName: submittedFullName,
@@ -302,6 +307,41 @@ export default function WalletPage() {
       setMessageIsError(true);
     } finally {
       setIsSubmittingWithdrawal(false);
+    }
+  };
+
+  const checkWithdrawalStatus = async () => {
+    if (!withdrawalConfirmation) return;
+    setIsCheckingWithdrawal(true);
+    setMessage('');
+    setMessageIsError(false);
+    try {
+      const response = await fetch(`/api/wallet/withdrawals/${withdrawalConfirmation.withdrawalId}`, { method: 'POST' });
+      const data: unknown = await response.json().catch(() => null);
+      if (!isRecord(data) || !response.ok) {
+        throw new Error(isRecord(data) && typeof data.error === 'string' ? data.error : 'Could not check withdrawal status.');
+      }
+      if (typeof data.balanceUsd === 'number') setBalanceUsd(data.balanceUsd);
+      if (data.status === 'paid') {
+        setWithdrawalConfirmation(current => current ? { ...current, status: 'paid' } : current);
+        setTransactions(current => current.map(item => item.id === withdrawalConfirmation.withdrawalId
+          ? { ...item, status: 'paid' }
+          : item));
+        void auth.refresh().catch(() => {});
+      } else if (data.status === 'rejected') {
+        setWithdrawalConfirmation(current => current ? { ...current, status: 'failed' } : current);
+        setTransactions(current => current.map(item => item.id === withdrawalConfirmation.withdrawalId
+          ? { ...item, status: 'rejected', transaction_type: 'withdrawal_reversed', amount: Math.abs(Number(item.amount)) }
+          : item));
+        void auth.refresh().catch(() => {});
+      } else {
+        setMessage('PayHero is still processing the withdrawal. Check again shortly.');
+      }
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not check withdrawal status.');
+      setMessageIsError(true);
+    } finally {
+      setIsCheckingWithdrawal(false);
     }
   };
 
@@ -481,7 +521,7 @@ export default function WalletPage() {
       {withdrawalConfirmation && (
         <div className="fixed inset-0 z-[130] flex items-center justify-center bg-background/65 px-4 backdrop-blur-sm" role="presentation">
           <section className="relative w-full max-w-md border border-border bg-background p-6 text-center shadow-2xl sm:p-8" role="status" aria-live="polite">
-            {withdrawalConfirmation.status === 'pending' && (
+            {withdrawalConfirmation.status !== 'processing' && (
               <button
                 type="button"
                 aria-label="Close withdrawal confirmation"
@@ -510,11 +550,27 @@ export default function WalletPage() {
                   </div>
                 </dl>
               </>
+            ) : withdrawalConfirmation.status === 'paid' ? (
+              <>
+                <CircleCheck className="mx-auto h-20 w-20 text-emerald-600" strokeWidth={3} aria-hidden="true" />
+                <h2 className="mt-4 text-2xl font-semibold">Withdrawal sent</h2>
+                <p className="mt-2 text-base text-muted-foreground">PayHero confirmed the M-Pesa payout.</p>
+              </>
+            ) : withdrawalConfirmation.status === 'failed' ? (
+              <>
+                <X className="mx-auto h-16 w-16 text-destructive" aria-hidden="true" />
+                <h2 className="mt-4 text-2xl font-semibold">Withdrawal failed</h2>
+                <p className="mt-2 text-base text-muted-foreground">PayHero failed the payout. The reserved balance has been returned to your wallet.</p>
+              </>
             ) : (
               <>
                 <CircleCheck className="mx-auto h-20 w-20 text-emerald-600" strokeWidth={3} aria-hidden="true" />
-                <h2 className="mt-4 text-2xl font-semibold">Congratulations!</h2>
-                <p className="mt-2 text-base text-muted-foreground">Your withdrawal is pending.</p>
+                <h2 className="mt-4 text-2xl font-semibold">Withdrawal processing</h2>
+                <p className="mt-2 text-base text-muted-foreground">Your balance is reserved while PayHero processes the M-Pesa payout.</p>
+                <button type="button" disabled={isCheckingWithdrawal} onClick={() => void checkWithdrawalStatus()} className="mt-5 inline-flex h-10 items-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50">
+                  {isCheckingWithdrawal ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Check PayHero status
+                </button>
+                {message && <p className={cn('mt-3 text-sm', messageIsError ? 'text-destructive' : 'text-muted-foreground')}>{message}</p>}
               </>
             )}
           </section>

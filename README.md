@@ -18,11 +18,8 @@ A self-hosted Rise/Fall trading app with site-owned accounts, Supabase authentic
 SUPABASE_URL=https://your-project-ref.supabase.co
 SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
-MEGAPAY_API_KEY=your-server-only-megapay-api-key
-MEGAPAY_EMAIL=your-megapay-account-email
-PAYMENT_PROVIDER=payhero
 PAYHERO_AUTH_TOKEN=your-server-only-payhero-basic-auth-token
-PAYHERO_CHANNEL_ID=your-payhero-channel-id
+PAYHERO_CHANNEL_ID=123
 PAYHERO_C2B_PROVIDER=m-pesa
 PAYHERO_NETWORK_CODE=63902
 ```
@@ -31,26 +28,25 @@ PAYHERO_NETWORK_CODE=63902
 
 Without the Supabase URL and anon key, the site's account forms still open but submission is disabled. The username login lookup also requires the service-role key.
 
-## Wallet Deposits: PayHero or MegaPay
+## PayHero Wallet Payments
 
-Apply every SQL migration in `supabase/migrations/` in filename order before enabling wallet payments. This includes `202610250001_wallet_payment_provider.sql` for provider selection and `202610250002_payhero_withdrawals.sql` for PayHero payout tracking. `PAYMENT_PROVIDER` defaults to `payhero`; set it to `megapay` to use MegaPay for deposits instead. Configure the selected provider's required server-side credentials. Never expose payment credentials to browser code or commit real credentials.
+Apply every SQL migration in `supabase/migrations/` in filename order before enabling wallet payments, including `202610250001_wallet_payment_provider.sql`, `202610250002_payhero_withdrawals.sql`, and `202610250003_payhero_withdrawal_automation.sql`. New deposits always use PayHero C2B; historical deposits retain their stored provider for verification. Never expose payment credentials to browser code or commit real credentials.
 
-The wallet is a separate app-owned USD ledger and does not fund or read a Deriv account. MegaPay's documented API supports Kenyan M-Pesa STK deposits and transaction-status checks; the documented wallet section says wallet-operation APIs are not yet available. Bank-agent, crypto, and withdrawals therefore remain unavailable. Deposits require at least $2.00 and use the configured fixed rate of $1 = KES 131.21; the STK amount is rounded up to whole KES, and the selected USD amount is credited only after verifying that exact KES payment. Status checks use MegaPay's server-to-server transaction-status endpoint because the documented webhook payload has no signature-verification mechanism.
-The wallet is a separate app-owned USD ledger and does not fund or read a Deriv account. MegaPay's documented API supports Kenyan M-Pesa STK deposits and transaction-status checks; the documented wallet section says wallet-operation APIs are not yet available. Bank-agent, crypto, and withdrawals therefore remain unavailable. Deposits require at least $1.00 and use the configured fixed rate of $1 = KES 131.21; the STK amount is rounded up to whole KES, and the selected USD amount is credited only after verifying that exact KES payment. Status checks use MegaPay's server-to-server transaction-status endpoint because the documented webhook payload has no signature-verification mechanism.
+The wallet is a separate app-owned USD ledger and does not fund or read a Deriv account. Deposits require at least the configured user minimum (at least $5.00) and use the fixed rate of $1 = KES 131.21; the STK amount is rounded up to whole KES, and USD is credited only after PayHero confirms payment through the transaction-status endpoint. Status checks use the provider's server-to-server endpoint.
 
-For MegaPay, set `MEGAPAY_API_KEY` and `MEGAPAY_EMAIL`. For PayHero, set `PAYHERO_AUTH_TOKEN` (the token for the `Authorization: Basic` header) and `PAYHERO_CHANNEL_ID`; `PAYHERO_C2B_PROVIDER` defaults to `m-pesa`, and `PAYHERO_NETWORK_CODE` defaults to `63902`. Ensure the PayHero account and channel are enabled and funded for B2C withdrawals. Withdrawals remain admin-approved; approval starts a PayHero B2C payout, and the admin checks PayHero status before the request is marked paid. After changing `PAYMENT_PROVIDER` or provider credentials in the deployment environment, redeploy the site. Each deposit retains its original provider so pending payments remain verifiable if the selected provider later changes.
+Set `PAYHERO_AUTH_TOKEN` to the Basic auth token from PayHero, `PAYHERO_CHANNEL_ID` to the numeric channel ID, and `PAYHERO_NETWORK_CODE` to `63902` for M-Pesa. `PAYHERO_C2B_PROVIDER` defaults to `m-pesa`. Ensure the PayHero account and channel are enabled and funded for B2C withdrawals. User withdrawals are sent through PayHero B2C immediately after the wallet balance is reserved; users can check status, and confirmed failures automatically refund the reserved balance.
 
-## Admin and Manual Withdrawals
+## Admin and Withdrawals
 
 Apply every SQL migration in `supabase/migrations/` in filename order. Admins are managed in `public.site_admins`; no user or email is hardcoded in migrations. To grant one existing Supabase user access, resolve their email from `auth.users` using their UUID in a one-time SQL statement. This does not create an account or set a password; manage credentials in Supabase Auth.
 
-Users can request an M-Pesa withdrawal from Real Wallet. The amount is reserved immediately; admin rejection restores it. Admin approval does not claim money was sent: after the manual M-Pesa transfer, the admin must enter its payout reference to mark the request paid. Real Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
+Users can request an M-Pesa withdrawal from Real Wallet. The amount is reserved immediately and PayHero B2C is initiated automatically. The user or admin can check the PayHero status; successful payouts are recorded as paid, and confirmed failures refund the reserved balance. Real Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
 
 ## Deploy to Vercel
 
 Import this repository into Vercel with the repository root as the Root Directory and `main` as the Production Branch. Vercel detects Next.js automatically; the build command is `npm run build` and the install command is `npm install`.
 
-Add `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PAYMENT_PROVIDER`, and the selected provider's credentials in the Vercel project's **Production** Environment Variables, then redeploy. Add the same values to Preview if preview deployments need account functionality. Never upload or commit `.env.production`; `.env.example` lists the supported variables. Both the service-role key and payment credentials must remain server-only.
+Add `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PAYHERO_AUTH_TOKEN`, `PAYHERO_CHANNEL_ID` (numeric), `PAYHERO_C2B_PROVIDER=m-pesa`, and `PAYHERO_NETWORK_CODE=63902` in Vercel **Production** Environment Variables, then redeploy. New deposits always use PayHero; no provider-selection variable is required. Add the same values to Preview if preview deployments need account functionality. Never upload or commit `.env.production`; `.env.example` lists the supported variables. The service-role key and PayHero token must remain server-only.
 
 In Supabase **Authentication → URL Configuration**, set the Site URL to the production deployment's domain. A successful build without Supabase variables can still deploy, but account form submissions and username login lookup will not work.
 

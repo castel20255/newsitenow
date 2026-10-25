@@ -1,6 +1,6 @@
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { getPayHeroConfig, getPayHeroTransactionStatus, initiatePayHeroWithdrawal } from '@/lib/payhero';
+import { getPayHeroConfig, getPayHeroTransactionStatus, initiatePayHeroWithdrawal, PayHeroApiError } from '@/lib/payhero';
 
 const USD_TO_KES = 131.21;
 
@@ -52,7 +52,7 @@ export async function PATCH(
     const admin = createSupabaseAdminClient();
     const { data: withdrawal, error: withdrawalError } = await admin
       .from('wallet_withdrawals')
-      .select('id, amount_usd, msisdn, status, payout_provider, payout_request_reference, payout_provider_request_id, payout_amount_kes, payout_status')
+      .select('id, amount_usd, msisdn, status, payout_provider, payout_request_reference, payout_provider_reference, payout_provider_request_id, payout_amount_kes, payout_status')
       .eq('id', withdrawalId)
       .maybeSingle();
     if (withdrawalError) return Response.json({ error: 'Could not load withdrawal request.' }, { status: 503 });
@@ -86,7 +86,7 @@ export async function PATCH(
       withdrawal.status = 'approved';
     }
 
-    if (withdrawal.status !== 'approved') {
+    if (withdrawal.status !== 'approved' && !(action === 'check' && withdrawal.status === 'pending')) {
       return Response.json({ error: 'Only approved withdrawals can be sent or checked.' }, { status: 409 });
     }
 
@@ -119,40 +119,54 @@ export async function PATCH(
           phoneNumber: withdrawal.msisdn,
           reference: payoutReference,
         });
-      } catch {
-        return Response.json({ error: 'PayHero did not confirm whether the payout was accepted. Check its status before retrying.' }, { status: 502 });
+      } catch (error) {
+        if (error instanceof PayHeroApiError && error.status >= 400 && error.status < 500) {
+          const { error: updateError } = await admin
+            .from('wallet_withdrawals')
+            .update({ payout_status: 'failed' })
+            .eq('id', withdrawalId)
+            .eq('payout_status', 'initiating');
+          if (updateError) return Response.json({ error: 'PayHero rejected the payout, but the failure could not be saved. Check status before retrying.' }, { status: 503 });
+          return Response.json({ error: `PayHero rejected the payout (${error.status}): ${error.message}` }, { status: 502 });
+        }
+        return Response.json({ error: 'PayHero did not confirm whether the payout was accepted. Check status before retrying.' }, { status: 502 });
       }
 
       const providerStatus = getStringField(providerResponse, ['status', 'TransactionStatus'])?.toLowerCase();
       const providerRequestId = getStringField(providerResponse, [
         'checkout_request_id', 'CheckoutRequestID', 'conversation_id', 'conversationId', 'merchant_reference', 'reference',
       ]);
+      const providerReference = getStringField(providerResponse, ['reference', 'merchant_reference', 'external_reference']);
       const payoutStatus = providerStatus === 'failed' || (isRecord(providerResponse) && providerResponse.success === false)
         ? 'failed'
         : 'queued';
       const { error: saveError } = await admin
         .from('wallet_withdrawals')
-        .update({ payout_provider_request_id: providerRequestId, payout_status: payoutStatus })
+        .update({ payout_provider_reference: providerReference, payout_provider_request_id: providerRequestId, payout_status: payoutStatus })
         .eq('id', withdrawalId)
         .eq('payout_status', 'initiating');
       if (saveError) return Response.json({ error: 'PayHero may have accepted the payout, but its status could not be saved. Check status before retrying.' }, { status: 503 });
       return Response.json({ id: withdrawal.id, status: withdrawal.status, payoutStatus });
     }
 
-    if (!withdrawal.payout_request_reference || !['initiating', 'queued'].includes(withdrawal.payout_status)) {
+    if (!withdrawal.payout_provider_reference || !['initiating', 'queued'].includes(withdrawal.payout_status)) {
       return Response.json({ error: 'There is no pending PayHero payout to check.' }, { status: 409 });
     }
 
     let statusResponse: unknown;
     try {
-      statusResponse = await getPayHeroTransactionStatus(config, withdrawal.payout_request_reference);
-    } catch {
+      statusResponse = await getPayHeroTransactionStatus(config, withdrawal.payout_provider_reference);
+    } catch (error) {
+      if (error instanceof PayHeroApiError) {
+        return Response.json({ error: `PayHero could not check payout status (${error.status}): ${error.message}` }, { status: 502 });
+      }
       return Response.json({ error: 'Could not check PayHero payout status. Try again shortly.' }, { status: 502 });
     }
     const providerStatus = getStringField(statusResponse, ['status', 'TransactionStatus'])?.toLowerCase();
     if (providerStatus === 'success') {
-      const reportedAmountKes = Number(getStringField(statusResponse, ['amount', 'transaction_amount', 'TransactionAmount']));
-      if (!Number.isFinite(reportedAmountKes) || reportedAmountKes !== Number(withdrawal.payout_amount_kes)) {
+      const amountValue = getStringField(statusResponse, ['amount', 'transaction_amount', 'TransactionAmount']);
+      const reportedAmountKes = amountValue === null ? null : Number(amountValue);
+      if (reportedAmountKes !== null && (!Number.isFinite(reportedAmountKes) || reportedAmountKes !== Number(withdrawal.payout_amount_kes))) {
         return Response.json({ error: 'PayHero reported success, but the payout amount did not match. Review it before recording payment.' }, { status: 502 });
       }
       const paidReference = getStringField(statusResponse, [

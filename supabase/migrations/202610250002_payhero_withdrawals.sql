@@ -2,6 +2,7 @@ alter table public.wallet_withdrawals
   add column if not exists payout_provider text
     check (payout_provider is null or payout_provider = 'payhero'),
   add column if not exists payout_request_reference text,
+  add column if not exists payout_provider_reference text,
   add column if not exists payout_provider_request_id text,
   add column if not exists payout_amount_kes integer
     check (payout_amount_kes is null or payout_amount_kes > 0),
