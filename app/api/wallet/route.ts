@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { getPayHeroConfig, initiatePayHeroPayment, PayHeroApiError } from '@/lib/payhero';
+import { DarajaApiError, ensureDarajaAccessToken, getDarajaConfig, initiateStkPush } from '@/lib/daraja';
 import { getWalletPaymentProvider } from '@/lib/wallet-payment-provider';
 
 const USD_TO_KES = 131.21;
@@ -12,35 +12,6 @@ const WALLET_ACTIVITY_PAGE_SIZE = 1000;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function extractTransactionRequestId(value: unknown, depth = 0): string | null {
-  if (!isRecord(value) || depth > 4) return null;
-
-  for (const key of [
-    'reference',
-    'transaction_request_id',
-    'transactionRequestId',
-    'TransactionRequestID',
-    'transaction_id',
-    'TransactionID',
-    'checkout_request_id',
-    'CheckoutRequestID',
-    'request_id',
-    'requestId',
-  ]) {
-    const candidate = value[key];
-    if ((typeof candidate === 'string' || typeof candidate === 'number') && String(candidate).trim()) {
-      return String(candidate).trim();
-    }
-  }
-
-  for (const key of ['data', 'result', 'response', 'transaction']) {
-    const nestedId = extractTransactionRequestId(value[key], depth + 1);
-    if (nestedId) return nestedId;
-  }
-
-  return null;
 }
 
 async function getAuthenticatedUser() {
@@ -199,9 +170,9 @@ export async function POST(request: Request) {
     if (!user) return Response.json({ error: 'Sign in before making a deposit.' }, { status: 401 });
 
     const paymentProvider = getWalletPaymentProvider();
-    const payHeroConfig = getPayHeroConfig();
-    if (!payHeroConfig) {
-      return Response.json({ error: 'Site payments are not configured yet.' }, { status: 503 });
+    const darajaConfig = getDarajaConfig();
+    if (!darajaConfig) {
+      return Response.json({ error: 'M-Pesa Daraja is not configured. Check the server-side MPESA variables and HTTPS callback URL.' }, { status: 503 });
     }
 
     const body: unknown = await request.json().catch(() => null);
@@ -229,6 +200,15 @@ export async function POST(request: Request) {
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');
     if (!phoneNumber?.isValid() || phoneNumber.country !== 'KE') {
       return Response.json({ error: 'Enter a valid Kenyan M-Pesa phone number.' }, { status: 400 });
+    }
+
+    try {
+      await ensureDarajaAccessToken(darajaConfig);
+    } catch (error) {
+      const message = error instanceof DarajaApiError
+        ? `Daraja OAuth failed (${error.status}): ${error.message}`
+        : 'Could not connect to Daraja OAuth. No deposit was created; retry later.';
+      return Response.json({ error: message }, { status: 502 });
     }
 
     const amountKes = Math.ceil((amountCents / 100) * USD_TO_KES - 0.0000001);
@@ -284,63 +264,68 @@ export async function POST(request: Request) {
       return Response.json({ error: 'A deposit is already in progress or the wallet service is unavailable.' }, { status: 409 });
     }
 
+    const { error: pendingError } = await admin
+      .from('wallet_deposits')
+      .update({ status: 'pending', updated_at: new Date().toISOString() })
+      .eq('id', deposit.id)
+      .eq('status', 'initiating');
+    if (pendingError) return Response.json({ error: 'Could not prepare the Daraja payment request.' }, { status: 503 });
+
     let providerResponse: unknown;
     try {
-      providerResponse = await initiatePayHeroPayment(payHeroConfig, {
+      providerResponse = await initiateStkPush(darajaConfig, {
         amount: amountKes,
         phoneNumber: phoneNumber.number,
         reference,
       });
     } catch (error) {
-      if (paymentProvider === 'payhero' && error instanceof PayHeroApiError && error.status >= 400 && error.status < 500) {
+      if (error instanceof DarajaApiError && error.status >= 400 && error.status < 500) {
         await admin
           .from('wallet_deposits')
           .update({ status: 'failed', updated_at: new Date().toISOString() })
           .eq('id', deposit.id)
-          .eq('status', 'initiating');
+          .in('status', ['initiating', 'pending']);
       }
-      const message = error instanceof PayHeroApiError
-        ? `PayHero rejected the deposit request (${error.status}): ${error.message}`
-        : 'The payment provider could not be reached. Check the server logs and wallet status before retrying to avoid a duplicate charge.';
+      const message = error instanceof DarajaApiError
+        ? `M-Pesa Daraja rejected the STK request (${error.status}): ${error.message}`
+        : 'Could not reach M-Pesa Daraja. Check wallet status before retrying to avoid a duplicate charge.';
       return Response.json({ error: message }, { status: 502 });
     }
 
-    const payHeroRejected = paymentProvider === 'payhero' && isRecord(providerResponse) && (
-      providerResponse.success === false || String(providerResponse.status ?? '').toLowerCase() === 'failed'
-    );
-    if (payHeroRejected && isRecord(providerResponse)) {
+    const darajaResponseCode = isRecord(providerResponse) ? providerResponse.ResponseCode : undefined;
+    if (isRecord(providerResponse) && darajaResponseCode !== undefined && String(darajaResponseCode) !== '0') {
       const { error: failureUpdateError } = await admin
         .from('wallet_deposits')
         .update({ status: 'failed', updated_at: new Date().toISOString() })
         .eq('id', deposit.id)
-        .eq('status', 'initiating');
+        .in('status', ['initiating', 'pending']);
       if (failureUpdateError) {
-        return Response.json({ error: 'PayHero rejected the request, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
+        return Response.json({ error: 'Daraja rejected the STK request, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
       }
-      const rejection = [providerResponse.error_message, providerResponse.message, providerResponse.error]
+      const rejection = [providerResponse.errorMessage, providerResponse.ResponseDescription, providerResponse.error]
         .find(value => typeof value === 'string');
       return Response.json({
-        error: typeof rejection === 'string' ? `PayHero rejected the deposit: ${rejection.slice(0, 240)}` : 'PayHero rejected the deposit request.',
+        error: typeof rejection === 'string' ? `M-Pesa Daraja rejected the STK request: ${rejection.slice(0, 240)}` : 'M-Pesa Daraja rejected the STK request.',
       }, { status: 502 });
     }
-    const transactionRequestId = extractTransactionRequestId(providerResponse);
+    const transactionRequestId = isRecord(providerResponse) && typeof providerResponse.CheckoutRequestID === 'string'
+      ? providerResponse.CheckoutRequestID.trim()
+      : '';
     if (!isRecord(providerResponse) || !transactionRequestId) {
-      console.warn('Payment initiation response could not be tracked', {
+      console.warn('Daraja STK response could not be tracked', {
         keys: isRecord(providerResponse) ? Object.keys(providerResponse) : [],
-        hasTransactionRequestId: Boolean(transactionRequestId),
       });
-      return Response.json({ error: 'The payment service returned an unclear result. Check your wallet status or contact support before retrying.' }, { status: 502 });
+      return Response.json({ error: 'Daraja accepted an unclear response. Check your wallet status or contact support before retrying.' }, { status: 502 });
     }
 
     const { error: updateError } = await admin
       .from('wallet_deposits')
       .update({
         provider_request_id: transactionRequestId,
-        status: 'pending',
         updated_at: new Date().toISOString(),
       })
       .eq('id', deposit.id)
-      .eq('status', 'initiating');
+      .eq('status', 'pending');
 
     if (updateError) return Response.json({ error: 'The request was sent, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
 

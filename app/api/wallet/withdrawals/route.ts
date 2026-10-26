@@ -1,7 +1,8 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { randomUUID } from 'node:crypto';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { getPayHeroConfig, initiatePayHeroWithdrawal, PayHeroApiError } from '@/lib/payhero';
+import { DarajaApiError, ensureDarajaB2CReady, getDarajaB2CConfig, initiateB2CPayment } from '@/lib/daraja';
 
 const USD_TO_KES = 131.21;
 
@@ -29,8 +30,8 @@ export async function POST(request: Request) {
     const supabase = await createSupabaseServerClient();
     const { data: auth, error: authError } = await supabase.auth.getUser();
     if (authError || !auth.user) return Response.json({ error: 'Sign in to request a withdrawal.' }, { status: 401 });
-    const config = getPayHeroConfig();
-    if (!config) return Response.json({ error: 'PayHero payments are not configured. Check PAYHERO_AUTH_TOKEN (or PAYHERO_API_KEY) and the numeric PAYHERO_CHANNEL_ID.' }, { status: 503 });
+    const config = getDarajaB2CConfig();
+    if (!config) return Response.json({ error: 'M-Pesa Daraja B2C is not configured. Check the consumer credentials, initiator credentials, certificate, and HTTPS callback URLs.' }, { status: 503 });
 
     const body: unknown = await request.json().catch(() => null);
     if (
@@ -55,6 +56,15 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Enter a valid Kenyan M-Pesa number.' }, { status: 400 });
     }
 
+    try {
+      await ensureDarajaB2CReady(config);
+    } catch (error) {
+      const message = error instanceof DarajaApiError
+        ? `Daraja OAuth failed (${error.status}): ${error.message}`
+        : 'Could not connect to Daraja OAuth. No withdrawal was submitted; retry later.';
+      return Response.json({ error: message }, { status: 502 });
+    }
+
     const admin = createSupabaseAdminClient();
     const { data, error } = await supabase.rpc('request_wallet_withdrawal', {
       p_full_name: fullName,
@@ -73,17 +83,20 @@ export async function POST(request: Request) {
 
     const withdrawalId = String(result.withdrawal_id);
     const amountKes = Math.ceil((amountCents / 100) * USD_TO_KES - 0.0000001);
+    const callbackToken = randomUUID();
     const { data: claimed, error: claimError } = await admin
       .from('wallet_withdrawals')
       .update({
-        payout_provider: 'payhero',
+        payout_provider: 'daraja',
         payout_request_reference: withdrawalId,
         payout_provider_reference: withdrawalId,
+        payout_callback_token: callbackToken,
         payout_amount_kes: amountKes,
         payout_status: 'initiating',
       })
       .eq('id', withdrawalId)
       .eq('user_id', auth.user.id)
+      .eq('status', 'pending')
       .eq('payout_status', 'not_started')
       .select('id')
       .maybeSingle();
@@ -93,20 +106,21 @@ export async function POST(request: Request) {
 
     let providerResponse: unknown;
     try {
-      providerResponse = await initiatePayHeroWithdrawal(config, {
+      providerResponse = await initiateB2CPayment(config, {
         amount: amountKes,
         phoneNumber: phoneNumber.number,
         reference: withdrawalId,
+        callbackToken,
       });
     } catch (error) {
-      if (error instanceof PayHeroApiError && error.status >= 400 && error.status < 500) {
-        const { data: refundResult, error: refundError } = await admin.rpc('fail_payhero_wallet_withdrawal', {
+      if (error instanceof DarajaApiError && error.status >= 400 && error.status < 500) {
+        const { data: refundResult, error: refundError } = await admin.rpc('fail_daraja_wallet_withdrawal', {
           p_withdrawal_id: withdrawalId,
         });
-        if (refundError) return Response.json({ error: 'PayHero rejected the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
+        if (refundError) return Response.json({ error: 'Daraja rejected the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
         const refund = Array.isArray(refundResult) ? refundResult[0] : refundResult;
         return Response.json({
-          error: `PayHero rejected the withdrawal (${error.status}): ${error.message}`,
+          error: `M-Pesa Daraja rejected the withdrawal (${error.status}): ${error.message}`,
           balanceUsd: isRecord(refund) ? Number(refund.wallet_balance_usd) : Number(result.wallet_balance_usd),
         }, { status: 502 });
       }
@@ -118,28 +132,32 @@ export async function POST(request: Request) {
       }, { status: 202 });
     }
 
-    const providerStatus = getStringField(providerResponse, ['status', 'TransactionStatus'])?.toLowerCase();
-    if ((isRecord(providerResponse) && providerResponse.success === false) || providerStatus === 'failed') {
-      const { data: refundResult, error: refundError } = await admin.rpc('fail_payhero_wallet_withdrawal', {
+    const providerResponseCode = isRecord(providerResponse) ? providerResponse.ResponseCode : undefined;
+    if (providerResponseCode !== undefined && String(providerResponseCode) !== '0') {
+      const { data: refundResult, error: refundError } = await admin.rpc('fail_daraja_wallet_withdrawal', {
         p_withdrawal_id: withdrawalId,
       });
-      if (refundError) return Response.json({ error: 'PayHero rejected the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
+      if (refundError) return Response.json({ error: 'Daraja rejected the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
       const refund = Array.isArray(refundResult) ? refundResult[0] : refundResult;
       return Response.json({
-        error: 'PayHero could not start the withdrawal. The reserved balance has been refunded.',
+        error: 'M-Pesa Daraja could not start the withdrawal. The reserved balance has been refunded.',
         balanceUsd: isRecord(refund) ? Number(refund.wallet_balance_usd) : Number(result.wallet_balance_usd),
       }, { status: 502 });
     }
 
-    const providerReference = getStringField(providerResponse, ['reference', 'merchant_reference', 'external_reference']) || withdrawalId;
-    const providerRequestId = getStringField(providerResponse, ['checkout_request_id', 'CheckoutRequestID', 'conversation_id', 'conversationId']);
+    const providerReference = isRecord(providerResponse) && typeof providerResponse.ConversationID === 'string'
+      ? providerResponse.ConversationID
+      : withdrawalId;
+    const providerRequestId = isRecord(providerResponse) && typeof providerResponse.OriginatorConversationID === 'string'
+      ? providerResponse.OriginatorConversationID
+      : null;
     const { error: saveError } = await admin
       .from('wallet_withdrawals')
       .update({ payout_provider_reference: providerReference, payout_provider_request_id: providerRequestId, payout_status: 'queued' })
       .eq('id', withdrawalId)
       .eq('payout_status', 'initiating');
     if (saveError) {
-      return Response.json({ error: 'PayHero may have accepted the withdrawal. Check its status before submitting another.' }, { status: 503 });
+      return Response.json({ error: 'Daraja may have accepted the withdrawal. Check the wallet status before submitting another.' }, { status: 503 });
     }
 
     return Response.json({
