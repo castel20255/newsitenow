@@ -389,7 +389,11 @@ export default function WalletPage() {
         window.setTimeout(() => router.push('/'), 1200);
       } else if (data.status === 'failed' || data.status === 'expired') {
         nextStatus = data.status;
-        setMessage(data.status === 'expired' ? 'This payment request expired. Start a new deposit to try again.' : 'The payment was not completed. Start a new deposit to try again.');
+        setMessage(data.status === 'expired'
+          ? 'This payment request expired. Start a new deposit to try again.'
+          : typeof data.message === 'string'
+            ? `Payment failed: ${data.message}`
+            : 'The payment was not completed. Start a new deposit to try again.');
         setMessageIsError(true);
       } else {
         if (data.status === 'pending') nextStatus = 'pending';
