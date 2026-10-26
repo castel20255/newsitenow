@@ -1,7 +1,7 @@
 import 'server-only';
 
-export type WalletPaymentProvider = 'megapay' | 'payhero';
+export type WalletPaymentProvider = 'megapay' | 'payhero' | 'daraja';
 
 export function getWalletPaymentProvider(): WalletPaymentProvider {
-  return 'payhero';
+  return 'daraja';
 }

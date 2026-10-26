@@ -36,7 +36,7 @@ export async function POST(
     const admin = createSupabaseAdminClient();
     const { data: withdrawal, error: withdrawalError } = await admin
       .from('wallet_withdrawals')
-      .select('id, user_id, status, payout_request_reference, payout_provider_reference, payout_amount_kes, payout_status, payout_provider_request_id, payout_reference')
+      .select('id, user_id, status, payout_provider, payout_request_reference, payout_provider_reference, payout_amount_kes, payout_status, payout_provider_request_id, payout_reference')
       .eq('id', withdrawalId)
       .eq('user_id', auth.user.id)
       .maybeSingle();
@@ -49,6 +49,9 @@ export async function POST(
       .eq('user_id', auth.user.id)
       .maybeSingle();
     if (withdrawal.status === 'paid' || withdrawal.status === 'rejected') {
+      return Response.json({ status: withdrawal.status, payoutStatus: withdrawal.payout_status, balanceUsd: Number(wallet?.balance_usd ?? 0) });
+    }
+    if (withdrawal.payout_provider === 'daraja') {
       return Response.json({ status: withdrawal.status, payoutStatus: withdrawal.payout_status, balanceUsd: Number(wallet?.balance_usd ?? 0) });
     }
     if (!['initiating', 'queued'].includes(withdrawal.payout_status)) {

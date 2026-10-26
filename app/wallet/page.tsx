@@ -335,7 +335,7 @@ export default function WalletPage() {
           : item));
         void auth.refresh().catch(() => {});
       } else {
-        setMessage('PayHero is still processing the withdrawal. Check again shortly.');
+        setMessage('M-Pesa is still processing the withdrawal. Check again shortly.');
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not check withdrawal status.');
@@ -554,21 +554,21 @@ export default function WalletPage() {
               <>
                 <CircleCheck className="mx-auto h-20 w-20 text-emerald-600" strokeWidth={3} aria-hidden="true" />
                 <h2 className="mt-4 text-2xl font-semibold">Withdrawal sent</h2>
-                <p className="mt-2 text-base text-muted-foreground">PayHero confirmed the M-Pesa payout.</p>
+                <p className="mt-2 text-base text-muted-foreground">Daraja confirmed the M-Pesa payout.</p>
               </>
             ) : withdrawalConfirmation.status === 'failed' ? (
               <>
                 <X className="mx-auto h-16 w-16 text-destructive" aria-hidden="true" />
                 <h2 className="mt-4 text-2xl font-semibold">Withdrawal failed</h2>
-                <p className="mt-2 text-base text-muted-foreground">PayHero failed the payout. The reserved balance has been returned to your wallet.</p>
+                <p className="mt-2 text-base text-muted-foreground">Daraja failed the payout. The reserved balance has been returned to your wallet.</p>
               </>
             ) : (
               <>
                 <CircleCheck className="mx-auto h-20 w-20 text-emerald-600" strokeWidth={3} aria-hidden="true" />
                 <h2 className="mt-4 text-2xl font-semibold">Withdrawal processing</h2>
-                <p className="mt-2 text-base text-muted-foreground">Your balance is reserved while PayHero processes the M-Pesa payout.</p>
+                <p className="mt-2 text-base text-muted-foreground">Your balance is reserved while Daraja processes the M-Pesa payout.</p>
                 <button type="button" disabled={isCheckingWithdrawal} onClick={() => void checkWithdrawalStatus()} className="mt-5 inline-flex h-10 items-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50">
-                  {isCheckingWithdrawal ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Check PayHero status
+                  {isCheckingWithdrawal ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Check M-Pesa status
                 </button>
                 {message && <p className={cn('mt-3 text-sm', messageIsError ? 'text-destructive' : 'text-muted-foreground')}>{message}</p>}
               </>

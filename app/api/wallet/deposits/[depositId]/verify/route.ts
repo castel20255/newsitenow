@@ -1,5 +1,6 @@
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { DarajaApiError, getDarajaConfig, queryStkPush } from '@/lib/daraja';
 import { getMegaPayConfig, postMegaPay } from '@/lib/megapay';
 import { getPayHeroConfig, getPayHeroTransactionStatus } from '@/lib/payhero';
 import type { WalletPaymentProvider } from '@/lib/wallet-payment-provider';
@@ -52,6 +53,34 @@ export async function POST(
     }
 
     const paymentProvider = deposit.payment_provider as WalletPaymentProvider;
+    if (paymentProvider === 'daraja') {
+      const config = getDarajaConfig();
+      if (!config) return Response.json({ error: 'M-Pesa Daraja is not configured.' }, { status: 503 });
+      let queryResponse: unknown;
+      try {
+        queryResponse = await queryStkPush(config, deposit.provider_request_id);
+      } catch (error) {
+        const message = error instanceof DarajaApiError
+          ? `Daraja status query failed (${error.status}): ${error.message}`
+          : 'Could not reach M-Pesa Daraja to check this deposit.';
+        return Response.json({ error: message }, { status: 502 });
+      }
+
+      if (!isRecord(queryResponse)) return Response.json({ error: 'Daraja returned an invalid status response.' }, { status: 502 });
+      const resultCode = queryResponse.ResultCode;
+      if (resultCode !== undefined && resultCode !== null && String(resultCode) !== '0') {
+        const { error } = await admin
+          .from('wallet_deposits')
+          .update({ status: 'failed', updated_at: new Date().toISOString() })
+          .eq('id', deposit.id)
+          .in('status', ['pending', 'expired']);
+        if (error) return Response.json({ error: 'Could not save the Daraja payment result.' }, { status: 503 });
+        return Response.json({ status: 'failed' });
+      }
+
+      return Response.json({ status: 'pending', message: 'Waiting for Daraja payment callback.' });
+    }
+
     const megaPayConfig = paymentProvider === 'megapay' ? getMegaPayConfig() : null;
     const payHeroConfig = paymentProvider === 'payhero' ? getPayHeroConfig() : null;
     if ((!megaPayConfig && paymentProvider === 'megapay') || (!payHeroConfig && paymentProvider === 'payhero')) {
