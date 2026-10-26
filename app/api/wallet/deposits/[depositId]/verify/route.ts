@@ -104,13 +104,17 @@ export async function POST(
 
     let providerResponse: unknown;
     try {
-      providerResponse = paymentProvider === 'payhero' && payHeroConfig
-        ? await getPayHeroTransactionStatus(payHeroConfig, deposit.provider_request_id)
-        : await postMegaPay('transactionstatus', {
+      if (paymentProvider === 'payhero' && payHeroConfig) {
+        providerResponse = await getPayHeroTransactionStatus(payHeroConfig, deposit.provider_request_id);
+      } else if (paymentProvider === 'megapay' && megaPayConfig) {
+        providerResponse = await postMegaPay('transactionstatus', {
             api_key: megaPayConfig!.apiKey,
             email: megaPayConfig!.email,
             transaction_request_id: deposit.provider_request_id,
           });
+      } else {
+        return Response.json({ error: 'Could not select the payment provider for this deposit.' }, { status: 503 });
+      }
     } catch {
       return Response.json({ error: 'Could not check payment status. Try again shortly.' }, { status: 502 });
     }
