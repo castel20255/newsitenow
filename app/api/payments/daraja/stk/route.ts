@@ -71,9 +71,20 @@ export async function POST(request: Request) {
     }
 
     if (resultCode !== 0) {
+      const resultDescription = typeof queryResponse.ResultDesc === 'string'
+        ? queryResponse.ResultDesc.slice(0, 300)
+        : typeof callback.ResultDesc === 'string'
+          ? callback.ResultDesc.slice(0, 300)
+          : 'M-Pesa payment was not completed.';
       const { error } = await admin
         .from('wallet_deposits')
-        .update({ status: 'failed', provider_request_id: callback.CheckoutRequestID, updated_at: new Date().toISOString() })
+        .update({
+          status: 'failed',
+          provider_request_id: callback.CheckoutRequestID,
+          provider_result_code: String(resultCode),
+          provider_result_description: resultDescription,
+          updated_at: new Date().toISOString(),
+        })
         .eq('id', deposit.id)
         .in('status', ['initiating', 'pending']);
       if (error) return darajaCallbackResponse(1, 'Could not save failed payment');

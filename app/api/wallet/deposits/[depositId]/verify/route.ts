@@ -28,7 +28,7 @@ export async function POST(
     const admin = createSupabaseAdminClient();
     const { data: deposit, error: depositError } = await admin
       .from('wallet_deposits')
-      .select('id, amount_kes, provider_request_id, payment_provider, status, created_at')
+      .select('id, amount_kes, provider_request_id, payment_provider, provider_result_code, provider_result_description, status, created_at')
       .eq('id', depositId)
       .eq('user_id', auth.user.id)
       .maybeSingle();
@@ -48,6 +48,13 @@ export async function POST(
           welcomeBonusUsd: Number(bonusTransaction?.amount ?? 0),
         });
     }
+      if (deposit.status === 'failed') {
+        return Response.json({
+          status: 'failed',
+          resultCode: deposit.provider_result_code,
+          message: deposit.provider_result_description || 'M-Pesa reported that the payment was not completed.',
+        });
+      }
     if (!['pending', 'expired'].includes(deposit.status) || !deposit.provider_request_id) {
       return Response.json({ status: deposit.status });
     }
@@ -69,13 +76,21 @@ export async function POST(
       if (!isRecord(queryResponse)) return Response.json({ error: 'Daraja returned an invalid status response.' }, { status: 502 });
       const resultCode = queryResponse.ResultCode;
       if (resultCode !== undefined && resultCode !== null && String(resultCode) !== '0') {
+        const resultDescription = typeof queryResponse.ResultDesc === 'string'
+          ? queryResponse.ResultDesc.slice(0, 300)
+          : 'M-Pesa payment was not completed.';
         const { error } = await admin
           .from('wallet_deposits')
-          .update({ status: 'failed', updated_at: new Date().toISOString() })
+          .update({
+            status: 'failed',
+            provider_result_code: String(resultCode),
+            provider_result_description: resultDescription,
+            updated_at: new Date().toISOString(),
+          })
           .eq('id', deposit.id)
           .in('status', ['pending', 'expired']);
         if (error) return Response.json({ error: 'Could not save the Daraja payment result.' }, { status: 503 });
-        return Response.json({ status: 'failed' });
+        return Response.json({ status: 'failed', resultCode: String(resultCode), message: resultDescription });
       }
 
       return Response.json({ status: 'pending', message: 'Waiting for Daraja payment callback.' });
