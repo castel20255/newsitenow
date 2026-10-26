@@ -53,6 +53,7 @@ export default function AdminPage() {
   const [section, setSection] = useState<'funds' | 'withdrawals'>('funds');
   const [withdrawals, setWithdrawals] = useState<WithdrawalRequest[]>([]);
   const [users, setUsers] = useState<FundUser[]>([]);
+  const [payoutReferences, setPayoutReferences] = useState<Record<string, string>>({});
   const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [balanceDraft, setBalanceDraft] = useState('');
@@ -180,7 +181,7 @@ export default function AdminPage() {
     }
   };
 
-  const updateWithdrawal = async (withdrawal: WithdrawalRequest, action: 'reject' | 'check') => {
+  const updateWithdrawal = async (withdrawal: WithdrawalRequest, action: 'approve' | 'reject' | 'paid' | 'check') => {
     setBusyId(withdrawal.id);
     setError('');
     try {
@@ -190,6 +191,7 @@ export default function AdminPage() {
         body: JSON.stringify({
           action,
           adminNote: adminNotes[withdrawal.id] ?? '',
+          payoutReference: payoutReferences[withdrawal.id] ?? '',
         }),
       });
       const data: unknown = await response.json().catch(() => null);
@@ -431,7 +433,7 @@ export default function AdminPage() {
                                   withdrawal.status === 'approved' ? 'border-blue-500/30 text-blue-700' : 'border-amber-500/30 text-amber-700'
                             )}>{withdrawal.status}</span>
                             {withdrawal.payout_reference && <span className="mt-2 block text-xs text-muted-foreground">Ref: {withdrawal.payout_reference}</span>}
-                            {withdrawal.payout_status !== 'not_started' && <span className="mt-2 block text-xs capitalize text-muted-foreground">Daraja: {withdrawal.payout_status}</span>}
+                            {withdrawal.payout_status !== 'not_started' && <span className="mt-2 block text-xs capitalize text-muted-foreground">Payout: {withdrawal.payout_status}</span>}
                           </td>
                           <td className="w-72 px-3 py-4">
                             {withdrawal.status === 'pending' && withdrawal.payout_status === 'not_started' && (
@@ -444,6 +446,9 @@ export default function AdminPage() {
                                   className="w-full resize-y border border-input bg-background px-2 py-1.5 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                 />
                                 <div className="flex gap-2">
+                                  <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'approve')} className="flex h-8 items-center gap-1 bg-primary px-2.5 text-xs font-semibold text-primary-foreground disabled:opacity-50">
+                                    {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />} Approve
+                                  </button>
                                   <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'reject')} className="flex h-8 items-center gap-1 border border-border px-2.5 text-xs font-medium hover:bg-muted/50 disabled:opacity-50">
                                     <X className="h-3.5 w-3.5" /> Reject / refund
                                   </button>
@@ -457,16 +462,15 @@ export default function AdminPage() {
                             )}
                             {withdrawal.status === 'approved' && (
                               <div className="space-y-2">
-                                {['initiating', 'queued'].includes(withdrawal.payout_status) && (
-                                  <button type="button" disabled={busyId === withdrawal.id} onClick={() => void updateWithdrawal(withdrawal, 'check')} className="flex h-8 items-center gap-1 border border-border px-2.5 text-xs font-medium hover:bg-muted disabled:opacity-50">
-                                    {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />} Refresh payout status
-                                  </button>
-                                )}
-                                {withdrawal.payout_status === 'failed' && (
-                                  <>
-                                    <p className="text-xs text-destructive">Daraja reported a failed payout. Confirm the wallet refund is recorded.</p>
-                                  </>
-                                )}
+                                <input
+                                  value={payoutReferences[withdrawal.id] ?? ''}
+                                  onChange={event => setPayoutReferences(current => ({ ...current, [withdrawal.id]: event.target.value }))}
+                                  placeholder="Manual M-Pesa payout reference"
+                                  className="h-9 w-full border border-input bg-background px-2 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                />
+                                <button type="button" disabled={busyId === withdrawal.id || !payoutReferences[withdrawal.id]?.trim()} onClick={() => void updateWithdrawal(withdrawal, 'paid')} className="flex h-8 items-center gap-1 bg-emerald-600 px-2.5 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50">
+                                  {busyId === withdrawal.id ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <CircleDollarSign className="h-3.5 w-3.5" />} Mark paid
+                                </button>
                               </div>
                             )}
                             {withdrawal.admin_note && <p className="mt-2 text-xs text-muted-foreground">{withdrawal.admin_note}</p>}

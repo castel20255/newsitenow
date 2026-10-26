@@ -27,7 +27,7 @@ export async function PATCH(
     }
 
     const body: unknown = await request.json().catch(() => null);
-    if (!isRecord(body) || !['reject', 'check'].includes(String(body.action))) {
+    if (!isRecord(body) || !['approve', 'reject', 'paid', 'check'].includes(String(body.action))) {
       return Response.json({ error: 'Choose a valid withdrawal action.' }, { status: 400 });
     }
     const action = String(body.action);
@@ -57,6 +57,24 @@ export async function PATCH(
         p_payout_reference: null,
       });
       if (error) return Response.json({ error: 'Could not reject this withdrawal. A payout may already be in progress.' }, { status: 409 });
+      const result = Array.isArray(data) ? data[0] : data;
+      return isRecord(result)
+        ? Response.json({ id: result.withdrawal_id, status: result.withdrawal_status })
+        : Response.json({ error: 'Could not confirm the withdrawal update.' }, { status: 503 });
+    }
+
+    if (action === 'approve' || action === 'paid') {
+      const payoutReference = typeof body.payoutReference === 'string' ? body.payoutReference.trim() : '';
+      if (action === 'paid' && !payoutReference) {
+        return Response.json({ error: 'Enter the M-Pesa payout reference before marking this request paid.' }, { status: 400 });
+      }
+      const { data, error } = await supabase.rpc('admin_update_wallet_withdrawal', {
+        p_withdrawal_id: withdrawalId,
+        p_action: action,
+        p_admin_note: typeof body.adminNote === 'string' ? body.adminNote.trim() : null,
+        p_payout_reference: payoutReference || null,
+      });
+      if (error) return Response.json({ error: 'Could not update this withdrawal request.' }, { status: 409 });
       const result = Array.isArray(data) ? data[0] : data;
       return isRecord(result)
         ? Response.json({ id: result.withdrawal_id, status: result.withdrawal_status })

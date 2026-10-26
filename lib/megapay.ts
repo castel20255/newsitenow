@@ -7,6 +7,13 @@ export interface MegaPayConfig {
   email: string;
 }
 
+export class MegaPayApiError extends Error {
+  constructor(readonly status: number, message: string) {
+    super(message);
+    this.name = 'MegaPayApiError';
+  }
+}
+
 export function getMegaPayConfig(): MegaPayConfig | null {
   const apiKey = process.env.MEGAPAY_API_KEY?.trim();
   const email = process.env.MEGAPAY_EMAIL?.trim();
@@ -26,6 +33,15 @@ export async function postMegaPay(
   });
 
   const result: unknown = await response.json().catch(() => null);
-  if (!response.ok) throw new Error('MegaPay request failed');
+  if (!response.ok) {
+    const errorMessage = isRecord(result)
+      ? ['error_message', 'message', 'error'].map(key => result[key]).find(value => typeof value === 'string')
+      : null;
+    throw new MegaPayApiError(response.status, typeof errorMessage === 'string' ? errorMessage.slice(0, 240) : 'MegaPay rejected the request.');
+  }
   return result;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

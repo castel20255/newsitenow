@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { DarajaApiError, ensureDarajaAccessToken, getDarajaConfig, initiateStkPush } from '@/lib/daraja';
+import { getMegaPayConfig, MegaPayApiError, postMegaPay } from '@/lib/megapay';
 import { getWalletPaymentProvider } from '@/lib/wallet-payment-provider';
 
 const USD_TO_KES = 131.21;
@@ -12,6 +12,25 @@ const WALLET_ACTIVITY_PAGE_SIZE = 1000;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function extractTransactionRequestId(value: unknown, depth = 0): string | null {
+  if (!isRecord(value) || depth > 4) return null;
+  for (const key of [
+    'transaction_request_id', 'transactionRequestId', 'TransactionRequestID',
+    'transaction_id', 'TransactionID', 'checkout_request_id', 'CheckoutRequestID',
+    'request_id', 'requestId',
+  ]) {
+    const candidate = value[key];
+    if ((typeof candidate === 'string' || typeof candidate === 'number') && String(candidate).trim()) {
+      return String(candidate).trim();
+    }
+  }
+  for (const key of ['data', 'result', 'response', 'transaction']) {
+    const nestedId = extractTransactionRequestId(value[key], depth + 1);
+    if (nestedId) return nestedId;
+  }
+  return null;
 }
 
 async function getAuthenticatedUser() {
@@ -170,10 +189,8 @@ export async function POST(request: Request) {
     if (!user) return Response.json({ error: 'Sign in before making a deposit.' }, { status: 401 });
 
     const paymentProvider = getWalletPaymentProvider();
-    const darajaConfig = getDarajaConfig();
-    if (!darajaConfig) {
-      return Response.json({ error: 'M-Pesa Daraja is not configured. Check the server-side MPESA variables and HTTPS callback URL.' }, { status: 503 });
-    }
+    const megaPayConfig = getMegaPayConfig();
+    if (!megaPayConfig) return Response.json({ error: 'MegaPay is not configured. Check MEGAPAY_API_KEY and MEGAPAY_EMAIL.' }, { status: 503 });
 
     const body: unknown = await request.json().catch(() => null);
     if (!isRecord(body) || typeof body.msisdn !== 'string') {
@@ -200,15 +217,6 @@ export async function POST(request: Request) {
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');
     if (!phoneNumber?.isValid() || phoneNumber.country !== 'KE') {
       return Response.json({ error: 'Enter a valid Kenyan M-Pesa phone number.' }, { status: 400 });
-    }
-
-    try {
-      await ensureDarajaAccessToken(darajaConfig);
-    } catch (error) {
-      const message = error instanceof DarajaApiError
-        ? `Daraja OAuth failed (${error.status}): ${error.message}`
-        : 'Could not connect to Daraja OAuth. No deposit was created; retry later.';
-      return Response.json({ error: message }, { status: 502 });
     }
 
     const amountKes = Math.ceil((amountCents / 100) * USD_TO_KES - 0.0000001);
@@ -264,68 +272,76 @@ export async function POST(request: Request) {
       return Response.json({ error: 'A deposit is already in progress or the wallet service is unavailable.' }, { status: 409 });
     }
 
-    const { error: pendingError } = await admin
-      .from('wallet_deposits')
-      .update({ status: 'pending', updated_at: new Date().toISOString() })
-      .eq('id', deposit.id)
-      .eq('status', 'initiating');
-    if (pendingError) return Response.json({ error: 'Could not prepare the Daraja payment request.' }, { status: 503 });
-
     let providerResponse: unknown;
     try {
-      providerResponse = await initiateStkPush(darajaConfig, {
+      providerResponse = await postMegaPay('initiatestk', {
+        api_key: megaPayConfig.apiKey,
+        email: megaPayConfig.email,
         amount: amountKes,
-        phoneNumber: phoneNumber.number,
+        msisdn: `0${phoneNumber.nationalNumber}`,
         reference,
       });
     } catch (error) {
-      if (error instanceof DarajaApiError && error.status >= 400 && error.status < 500) {
-        await admin
+      if (error instanceof MegaPayApiError && error.status >= 400 && error.status < 500) {
+        const { error: failedUpdateError } = await admin
           .from('wallet_deposits')
           .update({ status: 'failed', updated_at: new Date().toISOString() })
           .eq('id', deposit.id)
-          .in('status', ['initiating', 'pending']);
+          .eq('status', 'initiating');
+        if (failedUpdateError) return Response.json({ error: 'MegaPay rejected the request, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
+      } else {
+        await admin
+          .from('wallet_deposits')
+          .update({ status: 'pending', updated_at: new Date().toISOString() })
+          .eq('id', deposit.id)
+          .eq('status', 'initiating');
       }
-      const message = error instanceof DarajaApiError
-        ? `M-Pesa Daraja rejected the STK request (${error.status}): ${error.message}`
-        : 'Could not reach M-Pesa Daraja. Check wallet status before retrying to avoid a duplicate charge.';
+      const message = error instanceof MegaPayApiError
+        ? `MegaPay rejected the STK request (${error.status}): ${error.message}`
+        : 'Could not reach MegaPay. The request may have been received; check your wallet or contact support before retrying.';
       return Response.json({ error: message }, { status: 502 });
     }
 
-    const darajaResponseCode = isRecord(providerResponse) ? providerResponse.ResponseCode : undefined;
-    if (isRecord(providerResponse) && darajaResponseCode !== undefined && String(darajaResponseCode) !== '0') {
+    const megaPayRejected = isRecord(providerResponse) && (
+      providerResponse.success === false || String(providerResponse.status ?? '').toLowerCase() === 'failed'
+    );
+    if (megaPayRejected && isRecord(providerResponse)) {
       const { error: failureUpdateError } = await admin
         .from('wallet_deposits')
         .update({ status: 'failed', updated_at: new Date().toISOString() })
         .eq('id', deposit.id)
-        .in('status', ['initiating', 'pending']);
+        .eq('status', 'initiating');
       if (failureUpdateError) {
-        return Response.json({ error: 'Daraja rejected the STK request, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
+        return Response.json({ error: 'MegaPay rejected the STK request, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
       }
-      const rejection = [providerResponse.errorMessage, providerResponse.ResponseDescription, providerResponse.error]
+      const rejection = [providerResponse.error_message, providerResponse.message, providerResponse.error]
         .find(value => typeof value === 'string');
       return Response.json({
-        error: typeof rejection === 'string' ? `M-Pesa Daraja rejected the STK request: ${rejection.slice(0, 240)}` : 'M-Pesa Daraja rejected the STK request.',
+        error: typeof rejection === 'string' ? `MegaPay rejected the STK request: ${rejection.slice(0, 240)}` : 'MegaPay rejected the STK request.',
       }, { status: 502 });
     }
-    const transactionRequestId = isRecord(providerResponse) && typeof providerResponse.CheckoutRequestID === 'string'
-      ? providerResponse.CheckoutRequestID.trim()
-      : '';
+    const transactionRequestId = extractTransactionRequestId(providerResponse);
     if (!isRecord(providerResponse) || !transactionRequestId) {
-      console.warn('Daraja STK response could not be tracked', {
+      console.warn('MegaPay STK response could not be tracked', {
         keys: isRecord(providerResponse) ? Object.keys(providerResponse) : [],
       });
-      return Response.json({ error: 'Daraja accepted an unclear response. Check your wallet status or contact support before retrying.' }, { status: 502 });
+      await admin
+        .from('wallet_deposits')
+        .update({ status: 'pending', updated_at: new Date().toISOString() })
+        .eq('id', deposit.id)
+        .eq('status', 'initiating');
+      return Response.json({ error: 'MegaPay returned an unclear response. Check your wallet status or contact support before retrying.' }, { status: 502 });
     }
 
     const { error: updateError } = await admin
       .from('wallet_deposits')
       .update({
         provider_request_id: transactionRequestId,
+        status: 'pending',
         updated_at: new Date().toISOString(),
       })
       .eq('id', deposit.id)
-      .eq('status', 'pending');
+      .eq('status', 'initiating');
 
     if (updateError) return Response.json({ error: 'The request was sent, but its status could not be saved. Contact support before retrying.' }, { status: 503 });
 
