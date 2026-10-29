@@ -1,5 +1,6 @@
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getUserFacingWithdrawalReason } from '@/lib/wallet-withdrawals';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -49,7 +50,9 @@ export async function POST(request: Request) {
       withdrawalId: result.withdrawal_id,
       balanceUsd: Number(result.wallet_balance_usd),
       status: result.withdrawal_status,
-      rejectionReason: typeof result.rejection_reason === 'string' ? result.rejection_reason : null,
+      rejectionReason: getUserFacingWithdrawalReason(
+        typeof result.rejection_reason === 'string' ? result.rejection_reason : null
+      ),
     });
   } catch {
     return Response.json({ error: 'Withdrawal service is unavailable.' }, { status: 503 });
