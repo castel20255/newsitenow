@@ -37,6 +37,7 @@ interface WalletWithdrawal {
   status: string;
   created_at: string;
   payout_reference?: string | null;
+  admin_note?: string | null;
 }
 
 interface WalletTrade {
@@ -188,16 +189,24 @@ export default function WalletHistoryPage() {
       amountLabel: money.format(Number(deposit.credited_usd ?? deposit.amount_usd)),
     })),
     ...history.withdrawals.map(withdrawal => {
-      const amount = withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd);
+      const rejectedForTradeVolume = withdrawal.status === 'rejected' && withdrawal.admin_note?.startsWith('Withdrawal auto-rejected:');
+      const amount = rejectedForTradeVolume
+        ? 0
+        : withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd);
+      const detail = withdrawal.status === 'rejected'
+        ? `Reason: ${withdrawal.admin_note || 'No rejection reason was recorded.'}${rejectedForTradeVolume ? ' No funds were deducted.' : ''}`
+        : withdrawal.payout_reference
+          ? `Real Wallet · Ref ${withdrawal.payout_reference}`
+          : 'Real Wallet';
       return {
         id: `withdrawal-${withdrawal.id}`,
         category: 'withdrawals' as const,
-        title: withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
-        detail: withdrawal.payout_reference ? `Real Wallet · Ref ${withdrawal.payout_reference}` : 'Real Wallet',
+        title: rejectedForTradeVolume ? 'Rejected withdrawal request' : withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
+        detail,
         date: withdrawal.created_at,
         status: withdrawal.status,
         amount,
-        amountLabel: money.format(amount),
+        amountLabel: rejectedForTradeVolume ? 'Not deducted' : money.format(amount),
       };
     }),
     ...history.trades.map(trade => {

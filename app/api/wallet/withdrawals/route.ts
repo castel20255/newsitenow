@@ -36,10 +36,9 @@ export async function POST(request: Request) {
       p_msisdn: phoneNumber.number.slice(1),
     });
     if (error) {
-      const minimumMessage = error.message.match(/Minimum withdrawal is \$\d+(?:\.\d{2}) USD/)?.[0];
       const message = error.message.includes('Insufficient')
         ? 'Your Real Wallet balance is insufficient.'
-        : minimumMessage ?? 'Could not submit the withdrawal request.';
+        : 'Could not submit the withdrawal request.';
       return Response.json({ error: message }, { status: 400 });
     }
 
@@ -49,7 +48,8 @@ export async function POST(request: Request) {
     return Response.json({
       withdrawalId: result.withdrawal_id,
       balanceUsd: Number(result.wallet_balance_usd),
-      status: 'pending',
+      status: result.withdrawal_status,
+      rejectionReason: typeof result.rejection_reason === 'string' ? result.rejection_reason : null,
     });
   } catch {
     return Response.json({ error: 'Withdrawal service is unavailable.' }, { status: 503 });

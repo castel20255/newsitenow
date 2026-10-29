@@ -62,18 +62,18 @@ export async function POST(
     const paymentProvider = deposit.payment_provider as WalletPaymentProvider;
     if (paymentProvider === 'daraja') {
       const config = getDarajaConfig();
-      if (!config) return Response.json({ error: 'M-Pesa Daraja is not configured.' }, { status: 503 });
+      if (!config) return Response.json({ error: 'M-Pesa deposits are not configured.' }, { status: 503 });
       let queryResponse: unknown;
       try {
         queryResponse = await queryStkPush(config, deposit.provider_request_id);
       } catch (error) {
         const message = error instanceof DarajaApiError
-          ? `Daraja status query failed (${error.status}): ${error.message}`
-          : 'Could not reach M-Pesa Daraja to check this deposit.';
+          ? `M-Pesa deposit status check failed (${error.status}): ${error.message}`
+          : 'Could not reach M-Pesa to check this deposit.';
         return Response.json({ error: message }, { status: 502 });
       }
 
-      if (!isRecord(queryResponse)) return Response.json({ error: 'Daraja returned an invalid status response.' }, { status: 502 });
+      if (!isRecord(queryResponse)) return Response.json({ error: 'M-Pesa returned an invalid deposit status.' }, { status: 502 });
       const resultCode = queryResponse.ResultCode;
       if (resultCode !== undefined && resultCode !== null && String(resultCode) !== '0') {
         const resultDescription = typeof queryResponse.ResultDesc === 'string'
@@ -89,11 +89,11 @@ export async function POST(
           })
           .eq('id', deposit.id)
           .in('status', ['pending', 'expired']);
-        if (error) return Response.json({ error: 'Could not save the Daraja payment result.' }, { status: 503 });
+        if (error) return Response.json({ error: 'Could not save the M-Pesa deposit result.' }, { status: 503 });
         return Response.json({ status: 'failed', resultCode: String(resultCode), message: resultDescription });
       }
 
-      return Response.json({ status: 'pending', message: 'Waiting for Daraja payment callback.' });
+      return Response.json({ status: 'pending', message: 'Waiting for M-Pesa deposit confirmation.' });
     }
 
     const megaPayConfig = paymentProvider === 'megapay' ? getMegaPayConfig() : null;
@@ -171,7 +171,7 @@ export async function POST(
       : providerResponse.TransactionAmount;
     const reportedAmountKes = Number(rawAmountKes);
     if (paymentProvider === 'payhero' && Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
-      return Response.json({ error: 'The verified PayHero amount does not match this deposit.' }, { status: 502 });
+      return Response.json({ error: 'The verified M-Pesa amount does not match this deposit.' }, { status: 502 });
     }
     if (Number.isFinite(reportedAmountKes) && reportedAmountKes !== Number(deposit.amount_kes)) {
       console.warn('Completed payment amount differs from the requested amount', {

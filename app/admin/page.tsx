@@ -38,7 +38,6 @@ interface FundUser {
   fullName: string;
   isAdmin: boolean;
   minimumDepositUsd: number;
-  minimumWithdrawalUsd: number;
   lastSeenAt: string | null;
   demoBalance: number;
   siteWalletBalance: number;
@@ -61,8 +60,6 @@ export default function AdminPage() {
   const [balanceNote, setBalanceNote] = useState('');
   const [editingDepositUserId, setEditingDepositUserId] = useState<string | null>(null);
   const [minimumDepositDraft, setMinimumDepositDraft] = useState('');
-  const [editingWithdrawalUserId, setEditingWithdrawalUserId] = useState<string | null>(null);
-  const [minimumWithdrawalDraft, setMinimumWithdrawalDraft] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -174,34 +171,6 @@ export default function AdminPage() {
     }
   };
 
-  const saveMinimumWithdrawal = async (user: FundUser) => {
-    setBusyId(user.id);
-    setError('');
-    try {
-      const response = await fetch('/api/admin/funds', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, minimumWithdrawalUsd: minimumWithdrawalDraft }),
-      });
-      const data: unknown = await response.json().catch(() => null);
-      if (!response.ok || typeof data !== 'object' || data === null || !('minimumWithdrawalUsd' in data)) {
-        const message = typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string'
-          ? data.error
-          : 'Could not update the minimum withdrawal.';
-        throw new Error(message);
-      }
-      setUsers(current => current.map(item => item.id === user.id
-        ? { ...item, minimumWithdrawalUsd: Number(data.minimumWithdrawalUsd) }
-        : item));
-      setEditingWithdrawalUserId(null);
-      setMinimumWithdrawalDraft('');
-    } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : 'Could not update the minimum withdrawal.');
-    } finally {
-      setBusyId(null);
-    }
-  };
-
   const logOutAdmin = async () => {
     try {
       await auth.logout();
@@ -296,7 +265,7 @@ export default function AdminPage() {
                       <p className="mb-2 flex items-center gap-2 text-sm font-medium text-emerald-600"><Shield className="h-4 w-4" /> Administration</p>
                       <h1 className="text-3xl font-semibold">{section === 'funds' ? 'Funds Management' : 'Withdrawal requests'}</h1>
                       {section === 'funds' && <p className="mt-2 text-sm text-muted-foreground">{isLoading && users.length === 0 ? 'Loading users from the database…' : error && users.length === 0 ? 'Could not load users' : `${users.length} users loaded`}</p>}
-                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">Daraja sends withdrawals automatically. Check callback-backed status or reject requests before payout starts.</p>}
+                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">M-Pesa sends withdrawals automatically. Check payout status or reject requests before payout starts.</p>}
                     </div>
                     <button type="button" onClick={() => void (section === 'funds' ? loadFunds() : loadWithdrawals())} disabled={isLoading} className="flex h-10 items-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50">
                       {isLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
@@ -308,7 +277,7 @@ export default function AdminPage() {
                 <>
                 {error && <p className="mb-4 border-l-2 border-destructive pl-3 text-sm text-destructive" role="alert">{error}</p>}
                 <div className="overflow-x-auto border-y border-border">
-                  <table className="w-full min-w-[1320px] text-left text-sm">
+                  <table className="w-full min-w-[1180px] text-left text-sm">
                     <thead>
                       <tr className="text-xs text-muted-foreground">
                         <th className="px-3 py-3 font-medium">User</th>
@@ -316,7 +285,6 @@ export default function AdminPage() {
                         <th className="px-3 py-3 text-right font-medium">Demo</th>
                         <th className="px-3 py-3 text-right font-medium">Real Wallet</th>
                         <th className="px-3 py-3 text-right font-medium">Min. deposit</th>
-                        <th className="px-3 py-3 text-right font-medium">Min. withdrawal</th>
                         <th className="px-3 py-3 text-right font-medium">Real</th>
                         <th className="px-3 py-3 text-right font-medium">Action</th>
                       </tr>
@@ -348,7 +316,6 @@ export default function AdminPage() {
                             <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.demoBalance)}</td>
                             <td className="px-3 py-4 text-right font-semibold tabular-nums">{money.format(user.siteWalletBalance)}</td>
                             <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.minimumDepositUsd)}</td>
-                            <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.minimumWithdrawalUsd)}</td>
                             <td className="px-3 py-4 text-right font-medium tabular-nums">{money.format(user.realBalance)}</td>
                             <td className="px-3 py-4">
                               <div className="ml-auto flex w-64 flex-col items-stretch gap-2 text-left">
@@ -375,31 +342,6 @@ export default function AdminPage() {
                                 </div>
                               ) : (
                                 <button type="button" onClick={() => { setEditingDepositUserId(user.id); setMinimumDepositDraft(user.minimumDepositUsd.toFixed(2)); }} className="h-8 border border-border px-3 text-xs font-semibold hover:bg-muted">Minimum deposit</button>
-                              )}
-                              {editingWithdrawalUserId === user.id ? (
-                                <div className="space-y-2 border-b border-border pb-3">
-                                  <label className="block text-xs font-medium" htmlFor={`minimum-withdrawal-${user.id}`}>Minimum withdrawal (USD)</label>
-                                  <input
-                                    id={`minimum-withdrawal-${user.id}`}
-                                    type="number"
-                                    inputMode="decimal"
-                                    min="20"
-                                    max="1000000"
-                                    step="0.01"
-                                    value={minimumWithdrawalDraft}
-                                    onChange={event => setMinimumWithdrawalDraft(event.target.value)}
-                                    className="h-9 w-full border border-input bg-background px-2 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                  />
-                                  <p className="text-xs text-muted-foreground">The platform minimum is $20.00.</p>
-                                  <div className="flex justify-end gap-2">
-                                    <button type="button" onClick={() => { setEditingWithdrawalUserId(null); setMinimumWithdrawalDraft(''); }} className="h-8 border border-border px-2.5 text-xs font-medium hover:bg-muted">Cancel</button>
-                                    <button type="button" disabled={busyId === user.id || !/^\d+(?:\.\d{1,2})?$/.test(minimumWithdrawalDraft) || Number(minimumWithdrawalDraft) < 20 || Number(minimumWithdrawalDraft) > 1000000} onClick={() => void saveMinimumWithdrawal(user)} className="flex h-8 items-center gap-1 bg-primary px-2.5 text-xs font-semibold text-primary-foreground disabled:opacity-50">
-                                      {busyId === user.id ? <LoaderCircle className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />} Save minimum
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <button type="button" onClick={() => { setEditingWithdrawalUserId(user.id); setMinimumWithdrawalDraft(user.minimumWithdrawalUsd.toFixed(2)); }} className="h-8 border border-border px-3 text-xs font-semibold hover:bg-muted">Minimum withdrawal</button>
                               )}
                               {editingUserId === user.id ? (
                                 <div className="ml-auto w-64 space-y-2 text-left">
