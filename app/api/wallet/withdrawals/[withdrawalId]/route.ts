@@ -1,6 +1,7 @@
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getPayHeroConfig, getPayHeroTransactionStatus, PayHeroApiError } from '@/lib/payhero';
+import { getUserFacingWithdrawalReason } from '@/lib/wallet-withdrawals';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -54,7 +55,7 @@ export async function POST(
         payoutStatus: withdrawal.payout_status,
         balanceUsd: Number(wallet?.balance_usd ?? 0),
         rejectionReason: withdrawal.status === 'rejected' && withdrawal.payout_status !== 'failed'
-          ? withdrawal.admin_note
+          ? getUserFacingWithdrawalReason(withdrawal.admin_note)
           : null,
       });
     }

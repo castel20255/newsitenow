@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getMegaPayConfig, MegaPayApiError, postMegaPay } from '@/lib/megapay';
 import { getWalletPaymentProvider } from '@/lib/wallet-payment-provider';
+import { getUserFacingWithdrawalReason } from '@/lib/wallet-withdrawals';
 
 const USD_TO_KES = 131.21;
 const DEPOSIT_TIMEOUT_MS = 60_000;
@@ -168,7 +169,7 @@ export async function GET(request: Request) {
           ? 'Rejected withdrawal request'
           : withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
         status: withdrawal.status,
-        admin_note: withdrawal.admin_note,
+        admin_note: getUserFacingWithdrawalReason(withdrawal.admin_note),
       }))),
     ].sort((left, right) => new Date(right.created_at).valueOf() - new Date(left.created_at).valueOf());
 

@@ -189,7 +189,7 @@ export default function WalletHistoryPage() {
       amountLabel: money.format(Number(deposit.credited_usd ?? deposit.amount_usd)),
     })),
     ...history.withdrawals.map(withdrawal => {
-      const rejectedForTradeVolume = withdrawal.status === 'rejected' && withdrawal.admin_note?.startsWith('Withdrawal auto-rejected:');
+      const rejectedForTradeVolume = withdrawal.status === 'rejected' && withdrawal.admin_note?.includes('Real Wallet trade volume is $');
       const amount = rejectedForTradeVolume
         ? 0
         : withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd);
