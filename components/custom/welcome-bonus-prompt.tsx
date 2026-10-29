@@ -59,7 +59,7 @@ export function WelcomeBonusPrompt() {
           </div>
           <p className="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">A welcome gift for you</p>
           <DialogTitle className="mt-2 text-4xl font-semibold tabular-nums sm:text-5xl">$20 <span className="text-2xl text-emerald-200">USD</span></DialogTitle>
-          <DialogDescription className="mt-3 max-w-sm text-sm leading-6 text-white/75">Make your first deposit of at least $5 through this offer to unlock a one-time bonus. The reward is withdrawable and tradable.</DialogDescription>
+          <DialogDescription className="mt-3 max-w-sm text-sm leading-6 text-white/75">Make your first deposit of at least $10 through this offer to unlock a one-time bonus. The reward is withdrawable and tradable.</DialogDescription>
           <button type="button" onClick={() => { setDismissed(true); router.push('/wallet?welcomeBonus=1'); }} className="mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-300 px-5 text-sm font-bold text-emerald-950 transition-colors hover:bg-emerald-200">
             Deposit now <ArrowRight className="h-4 w-4" />
           </button>

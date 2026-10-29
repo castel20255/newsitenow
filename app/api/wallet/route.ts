@@ -6,7 +6,6 @@ import { getMegaPayConfig, MegaPayApiError, postMegaPay } from '@/lib/megapay';
 import { getWalletPaymentProvider } from '@/lib/wallet-payment-provider';
 
 const USD_TO_KES = 131.21;
-const HOURLY_DEPOSIT_LIMIT = 5;
 const DEPOSIT_TIMEOUT_MS = 60_000;
 const WALLET_ACTIVITY_PAGE_SIZE = 1000;
 
@@ -58,7 +57,7 @@ export async function GET(request: Request) {
     if (!user) return Response.json({ error: 'Sign in to access your wallet.' }, { status: 401 });
 
     const admin = createSupabaseAdminClient();
-    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult, depositSettingsResult] = await Promise.all([
+    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult, depositSettingsResult, withdrawalSettingsResult] = await Promise.all([
       admin.from('app_wallets').select('balance_usd').eq('user_id', user.id).maybeSingle(),
       loadAllWalletRows((from, to) => admin
         .from('wallet_deposits')
@@ -85,9 +84,10 @@ export async function GET(request: Request) {
         .order('created_at', { ascending: false })
         .range(from, to)),
       admin.from('user_deposit_settings').select('minimum_deposit_usd').eq('user_id', user.id).maybeSingle(),
+      admin.from('user_withdrawal_settings').select('minimum_withdrawal_usd').eq('user_id', user.id).maybeSingle(),
     ]);
 
-    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error || depositSettingsResult.error) {
+    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error || depositSettingsResult.error || withdrawalSettingsResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     }
 
@@ -171,6 +171,7 @@ export async function GET(request: Request) {
     return Response.json({
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
       minimumDepositUsd: Math.max(Number(depositSettingsResult.data?.minimum_deposit_usd ?? 5), 5),
+      minimumWithdrawalUsd: Math.max(Number(withdrawalSettingsResult.data?.minimum_withdrawal_usd ?? 20), 20),
       welcomeBonusClaimed: (appTransactionsResult.data ?? []).some(transaction => transaction.transaction_type === 'welcome_bonus'),
       latestDeposit: deposits[0] ?? null,
       deposits,
@@ -213,6 +214,9 @@ export async function POST(request: Request) {
     if (!Number.isFinite(amountUsd) || amountCents < requiredMinimumUsd * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
       return Response.json({ error: `The minimum deposit is $${requiredMinimumUsd.toFixed(2)} USD.` }, { status: 400 });
     }
+    if (isWelcomeBonusDeposit && amountCents < 1000) {
+      return Response.json({ error: 'The welcome bonus requires a deposit of at least $10.00 USD.' }, { status: 400 });
+    }
 
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');
     if (!phoneNumber?.isValid() || phoneNumber.country !== 'KE') {
@@ -238,17 +242,6 @@ export async function POST(request: Request) {
     if (openDepositError) return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     if (openDeposit) {
       return Response.json({ error: 'Finish or check your current deposit before starting another.' }, { status: 409 });
-    }
-
-    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-    const { count: recentDepositCount, error: countError } = await admin
-      .from('wallet_deposits')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .gte('created_at', oneHourAgo);
-    if (countError) return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
-    if ((recentDepositCount ?? 0) >= HOURLY_DEPOSIT_LIMIT) {
-      return Response.json({ error: 'Too many deposit requests. Try again later.' }, { status: 429 });
     }
 
     const reference = randomUUID();

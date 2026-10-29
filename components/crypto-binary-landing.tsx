@@ -248,7 +248,7 @@ export function CryptoBinaryLanding() {
               <div className="cb-welcome-copy">
                 <span className="cb-welcome-label">A one-time welcome gift</span>
                 <strong>$20 USD bonus</strong>
-                <p>Make your first deposit of at least $5 to unlock withdrawable, tradable funds.</p>
+                <p>Make your first deposit of at least $10 to unlock withdrawable, tradable funds.</p>
               </div>
               <div className="cb-welcome-actions">
                 <button className="cb-button-primary" onClick={() => openAuth('login')}>Login</button>
