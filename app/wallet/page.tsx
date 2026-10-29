@@ -99,6 +99,7 @@ export default function WalletPage() {
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
   const [minimumDepositUsd, setMinimumDepositUsd] = useState(5);
+  const [minimumWithdrawalUsd, setMinimumWithdrawalUsd] = useState(20);
   const [welcomeBonusClaimed, setWelcomeBonusClaimed] = useState(false);
   const [isWelcomeBonusDeposit, setIsWelcomeBonusDeposit] = useState(false);
   const [welcomeBonusAwarded, setWelcomeBonusAwarded] = useState(false);
@@ -119,6 +120,9 @@ export default function WalletPage() {
   const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= minimumDepositUsd && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
   const isValidPhone = isValidKenyanMobile(msisdn);
   const withdrawalAmountNumber = Number(withdrawalAmount);
+  const isValidWithdrawalAmount = Number.isFinite(withdrawalAmountNumber)
+    && withdrawalAmountNumber >= minimumWithdrawalUsd
+    && Math.abs(withdrawalAmountNumber * 100 - Math.round(withdrawalAmountNumber * 100)) < 0.000001;
   const expectedWithdrawalKes = Number.isFinite(withdrawalAmountNumber) && withdrawalAmountNumber > 0
     ? withdrawalAmountNumber * WITHDRAWAL_USD_TO_KES
     : null;
@@ -143,6 +147,7 @@ export default function WalletPage() {
         setBalanceUsd(Number(data.balanceUsd ?? 0));
         const savedMinimum = Number(data.minimumDepositUsd ?? 5);
         setMinimumDepositUsd(savedMinimum);
+        setMinimumWithdrawalUsd(Math.max(Number(data.minimumWithdrawalUsd ?? 20), 20));
         setWelcomeBonusClaimed(Boolean(data.welcomeBonusClaimed));
         setAmountUsd(current => Number(current) < savedMinimum ? savedMinimum.toFixed(2) : current);
         const recentDeposits = Array.isArray(data.deposits)
@@ -177,7 +182,7 @@ export default function WalletPage() {
     handledWelcomeBonus.current = true;
     auth.switchAccount('app-wallet');
     setIsWelcomeBonusDeposit(true);
-    setAmountUsd(current => Math.max(Number(current), minimumDepositUsd, 5).toFixed(2));
+    setAmountUsd(current => Math.max(Number(current), minimumDepositUsd, 10).toFixed(2));
     setAction('deposit');
   }, [auth.authState, auth.switchAccount, minimumDepositUsd]);
 
@@ -749,7 +754,7 @@ export default function WalletPage() {
                       <input
                         id="withdrawal-amount"
                         type="number"
-                        min="0.01"
+                        min={minimumWithdrawalUsd.toFixed(2)}
                         step="0.01"
                         inputMode="decimal"
                         required
@@ -757,6 +762,7 @@ export default function WalletPage() {
                         onChange={event => setWithdrawalAmount(event.target.value)}
                         className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
+                      <p className="mt-2 text-xs text-muted-foreground">Minimum withdrawal: {money.format(minimumWithdrawalUsd)}.</p>
                       {expectedWithdrawalKes !== null && (
                         <p className="mt-2 text-sm font-medium text-foreground" aria-live="polite">
                           Expected KES: {kesMoney.format(expectedWithdrawalKes)}
@@ -779,7 +785,7 @@ export default function WalletPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isSubmittingWithdrawal || auth.authState !== 'authenticated'}
+                      disabled={isSubmittingWithdrawal || !isValidWithdrawalAmount || auth.authState !== 'authenticated'}
                       className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
                     >
                       {isSubmittingWithdrawal && <LoaderCircle className="h-4 w-4 animate-spin" />}

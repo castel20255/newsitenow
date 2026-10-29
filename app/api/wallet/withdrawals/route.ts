@@ -36,9 +36,10 @@ export async function POST(request: Request) {
       p_msisdn: phoneNumber.number.slice(1),
     });
     if (error) {
+      const minimumMessage = error.message.match(/Minimum withdrawal is \$\d+(?:\.\d{2}) USD/)?.[0];
       const message = error.message.includes('Insufficient')
         ? 'Your Real Wallet balance is insufficient.'
-        : 'Could not submit the withdrawal request.';
+        : minimumMessage ?? 'Could not submit the withdrawal request.';
       return Response.json({ error: message }, { status: 400 });
     }
 

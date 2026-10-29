@@ -30,7 +30,7 @@ export function generateMetadata(): Metadata {
   const faviconUri = buildFaviconUri();
   const siteName = 'Crypto Binary';
   const title = `Get a $20 Welcome Bonus | ${siteName}`;
-  const description = 'Join Crypto Binary and unlock a one-time $20 withdrawable, tradable welcome bonus with your first deposit of at least $5.';
+  const description = 'Join Crypto Binary and unlock a one-time $20 withdrawable, tradable welcome bonus with your first deposit of at least $10.';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim()
     || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
   const shareImage = getLogoSrc() ?? '/logo.jpg';

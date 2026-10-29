@@ -44,14 +44,15 @@ export async function GET() {
       if (data.users.length < perPage) break;
     }
 
-    const [profilesResult, accountsResult, walletsResult, adminsResult, depositSettingsResult] = await Promise.all([
+    const [profilesResult, accountsResult, walletsResult, adminsResult, depositSettingsResult, withdrawalSettingsResult] = await Promise.all([
       admin.from('profiles').select('id, username, full_name, last_seen_at'),
       admin.from('trading_accounts').select('user_id, account_type, balance'),
       admin.from('app_wallets').select('user_id, balance_usd'),
       admin.from('site_admins').select('email'),
       admin.from('user_deposit_settings').select('user_id, minimum_deposit_usd'),
+      admin.from('user_withdrawal_settings').select('user_id, minimum_withdrawal_usd'),
     ]);
-    if (profilesResult.error || accountsResult.error || walletsResult.error || adminsResult.error || depositSettingsResult.error) {
+    if (profilesResult.error || accountsResult.error || walletsResult.error || adminsResult.error || depositSettingsResult.error || withdrawalSettingsResult.error) {
       return Response.json({ error: 'Could not load user balances.' }, { status: 503 });
     }
 
@@ -59,6 +60,8 @@ export async function GET() {
     const adminEmails = new Set((adminsResult.data ?? []).map(record => record.email.toLowerCase()));
     const depositMinimums = new Map((depositSettingsResult.data ?? [])
       .map(setting => [setting.user_id, Number(setting.minimum_deposit_usd)]));
+    const withdrawalMinimums = new Map((withdrawalSettingsResult.data ?? [])
+      .map(setting => [setting.user_id, Number(setting.minimum_withdrawal_usd)]));
     const demoBalances = new Map((accountsResult.data ?? [])
       .filter(account => account.account_type === 'demo')
       .map(account => [account.user_id, Number(account.balance)]));
@@ -77,6 +80,7 @@ export async function GET() {
         fullName: profile?.full_name ?? '',
         isAdmin: adminEmails.has((user.email ?? '').toLowerCase()),
         minimumDepositUsd: Math.max(depositMinimums.get(user.id) ?? 5, 5),
+        minimumWithdrawalUsd: Math.max(withdrawalMinimums.get(user.id) ?? 20, 20),
         lastSeenAt: profile?.last_seen_at ?? user.last_sign_in_at ?? null,
         demoBalance: demoBalances.get(user.id) ?? 0,
         siteWalletBalance: siteBalances.get(user.id) ?? 0,
@@ -98,6 +102,25 @@ export async function PATCH(request: Request) {
     const body: unknown = await request.json().catch(() => null);
     if (!isRecord(body) || typeof body.userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(body.userId)) {
       return Response.json({ error: 'Enter a valid user and balance.' }, { status: 400 });
+    }
+
+    if (typeof body.minimumWithdrawalUsd === 'string') {
+      if (!/^\d+(?:\.\d{1,2})?$/.test(body.minimumWithdrawalUsd)) {
+        return Response.json({ error: 'Enter a valid minimum withdrawal with up to two decimal places.' }, { status: 400 });
+      }
+      const minimumWithdrawalUsd = Number(body.minimumWithdrawalUsd);
+      if (!Number.isFinite(minimumWithdrawalUsd) || minimumWithdrawalUsd < 20 || minimumWithdrawalUsd > 1_000_000) {
+        return Response.json({ error: 'Minimum withdrawal must be between $20 and $1,000,000.' }, { status: 400 });
+      }
+
+      const admin = createSupabaseAdminClient();
+      const { data, error } = await admin
+        .from('user_withdrawal_settings')
+        .upsert({ user_id: body.userId, minimum_withdrawal_usd: minimumWithdrawalUsd }, { onConflict: 'user_id' })
+        .select('minimum_withdrawal_usd')
+        .single();
+      if (error) return Response.json({ error: 'Could not save the minimum withdrawal.' }, { status: 409 });
+      return Response.json({ minimumWithdrawalUsd: Number(data.minimum_withdrawal_usd) });
     }
 
     if (typeof body.minimumDepositUsd === 'string') {
