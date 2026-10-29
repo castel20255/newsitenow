@@ -193,11 +193,16 @@ export default function WalletHistoryPage() {
       const amount = rejectedForTradeVolume
         ? 0
         : withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd);
+      const detail = withdrawal.status === 'rejected'
+        ? `Reason: ${withdrawal.admin_note || 'No rejection reason was recorded.'}${rejectedForTradeVolume ? ' No funds were deducted.' : ''}`
+        : withdrawal.payout_reference
+          ? `Real Wallet · Ref ${withdrawal.payout_reference}`
+          : 'Real Wallet';
       return {
         id: `withdrawal-${withdrawal.id}`,
         category: 'withdrawals' as const,
         title: rejectedForTradeVolume ? 'Rejected withdrawal request' : withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
-        detail: withdrawal.admin_note || (withdrawal.payout_reference ? `Real Wallet · Ref ${withdrawal.payout_reference}` : 'Real Wallet'),
+        detail,
         date: withdrawal.created_at,
         status: withdrawal.status,
         amount,

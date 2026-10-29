@@ -66,7 +66,7 @@ export async function POST(
     }
 
     const config = getPayHeroConfig();
-    if (!config) return Response.json({ error: 'PayHero payments are not configured.' }, { status: 503 });
+    if (!config) return Response.json({ error: 'M-Pesa withdrawal status checks are not configured.' }, { status: 503 });
 
     let providerResponse: unknown;
     try {
@@ -76,8 +76,8 @@ export async function POST(
       );
     } catch (error) {
       const message = error instanceof PayHeroApiError
-        ? `PayHero status check failed (${error.status}): ${error.message}`
-        : 'Could not reach PayHero to check this withdrawal.';
+        ? `M-Pesa withdrawal status check failed (${error.status}): ${error.message}`
+        : 'Could not reach M-Pesa to check this withdrawal.';
       return Response.json({ error: message }, { status: 502 });
     }
 
@@ -86,7 +86,7 @@ export async function POST(
       const amountText = getStringField(providerResponse, ['amount', 'transaction_amount', 'TransactionAmount']);
       const amountKes = amountText === null ? null : Number(amountText);
       if (amountKes !== null && (!Number.isFinite(amountKes) || amountKes !== Number(withdrawal.payout_amount_kes))) {
-        return Response.json({ error: 'PayHero reported success, but the amount does not match this withdrawal. Contact support.' }, { status: 502 });
+        return Response.json({ error: 'M-Pesa reported success, but the amount does not match this withdrawal. Contact support.' }, { status: 502 });
       }
       const payoutReference = getStringField(providerResponse, [
         'transaction_id', 'TransactionID', 'receipt', 'transaction_receipt', 'TransactionReceipt', 'provider_reference',
@@ -100,7 +100,7 @@ export async function POST(
         .in('payout_status', ['initiating', 'queued'])
         .select('id')
         .maybeSingle();
-      if (updateError) return Response.json({ error: 'PayHero confirmed payment, but the withdrawal could not be finalized.' }, { status: 503 });
+      if (updateError) return Response.json({ error: 'M-Pesa confirmed payment, but the withdrawal could not be finalized.' }, { status: 503 });
       if (!updated) {
         const { data: current } = await admin.from('wallet_withdrawals').select('status, payout_status').eq('id', withdrawal.id).maybeSingle();
         if (current?.status !== 'paid') return Response.json({ error: 'Withdrawal status changed while confirming payment.' }, { status: 409 });
@@ -113,7 +113,7 @@ export async function POST(
       const { data: refundResult, error: refundError } = await admin.rpc('fail_payhero_wallet_withdrawal', {
         p_withdrawal_id: withdrawal.id,
       });
-      if (refundError) return Response.json({ error: 'PayHero failed the payout, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
+      if (refundError) return Response.json({ error: 'The M-Pesa payout failed, but the reserved balance could not be refunded. Contact support.' }, { status: 503 });
       const refund = Array.isArray(refundResult) ? refundResult[0] : refundResult;
       return Response.json({
         status: 'rejected',

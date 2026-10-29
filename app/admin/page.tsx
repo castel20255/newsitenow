@@ -265,7 +265,7 @@ export default function AdminPage() {
                       <p className="mb-2 flex items-center gap-2 text-sm font-medium text-emerald-600"><Shield className="h-4 w-4" /> Administration</p>
                       <h1 className="text-3xl font-semibold">{section === 'funds' ? 'Funds Management' : 'Withdrawal requests'}</h1>
                       {section === 'funds' && <p className="mt-2 text-sm text-muted-foreground">{isLoading && users.length === 0 ? 'Loading users from the database…' : error && users.length === 0 ? 'Could not load users' : `${users.length} users loaded`}</p>}
-                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">Daraja sends withdrawals automatically. Check callback-backed status or reject requests before payout starts.</p>}
+                      {section === 'withdrawals' && <p className="mt-2 text-sm text-muted-foreground">M-Pesa sends withdrawals automatically. Check payout status or reject requests before payout starts.</p>}
                     </div>
                     <button type="button" onClick={() => void (section === 'funds' ? loadFunds() : loadWithdrawals())} disabled={isLoading} className="flex h-10 items-center gap-2 border border-border px-3 text-sm font-medium hover:bg-muted/50 disabled:opacity-50">
                       {isLoading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
