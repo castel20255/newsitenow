@@ -57,7 +57,7 @@ export async function GET(request: Request) {
     if (!user) return Response.json({ error: 'Sign in to access your wallet.' }, { status: 401 });
 
     const admin = createSupabaseAdminClient();
-    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult, depositSettingsResult, withdrawalSettingsResult] = await Promise.all([
+    const [walletResult, depositResult, withdrawalResult, appTransactionsResult, demoTransactionsResult, depositSettingsResult] = await Promise.all([
       admin.from('app_wallets').select('balance_usd').eq('user_id', user.id).maybeSingle(),
       loadAllWalletRows((from, to) => admin
         .from('wallet_deposits')
@@ -84,10 +84,9 @@ export async function GET(request: Request) {
         .order('created_at', { ascending: false })
         .range(from, to)),
       admin.from('user_deposit_settings').select('minimum_deposit_usd').eq('user_id', user.id).maybeSingle(),
-      admin.from('user_withdrawal_settings').select('minimum_withdrawal_usd').eq('user_id', user.id).maybeSingle(),
     ]);
 
-    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error || depositSettingsResult.error || withdrawalSettingsResult.error) {
+    if (walletResult.error || depositResult.error || withdrawalResult.error || appTransactionsResult.error || demoTransactionsResult.error || depositSettingsResult.error) {
       return Response.json({ error: 'Wallet service is unavailable.' }, { status: 503 });
     }
 
@@ -158,20 +157,24 @@ export async function GET(request: Request) {
       ...((withdrawalResult.data ?? []).map(withdrawal => ({
         id: withdrawal.id,
         transaction_type: withdrawal.status === 'rejected' ? 'withdrawal_reversed' : 'withdrawal',
-        amount: withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd),
+        amount: withdrawal.status === 'rejected' && withdrawal.admin_note?.startsWith('Withdrawal auto-rejected:')
+          ? 0
+          : withdrawal.status === 'rejected' ? Number(withdrawal.amount_usd) : -Number(withdrawal.amount_usd),
         balance_after: null,
         reference_id: withdrawal.id,
         created_at: withdrawal.created_at,
         account: 'app_wallet' as const,
-        description: withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
+        description: withdrawal.status === 'rejected' && withdrawal.admin_note?.startsWith('Withdrawal auto-rejected:')
+          ? 'Rejected withdrawal request'
+          : withdrawal.status === 'rejected' ? 'Rejected withdrawal refund' : 'M-Pesa withdrawal',
         status: withdrawal.status,
+        admin_note: withdrawal.admin_note,
       }))),
     ].sort((left, right) => new Date(right.created_at).valueOf() - new Date(left.created_at).valueOf());
 
     return Response.json({
       balanceUsd: Number(walletResult.data?.balance_usd ?? 0),
       minimumDepositUsd: Math.max(Number(depositSettingsResult.data?.minimum_deposit_usd ?? 5), 5),
-      minimumWithdrawalUsd: Math.max(Number(withdrawalSettingsResult.data?.minimum_withdrawal_usd ?? 20), 20),
       welcomeBonusClaimed: (appTransactionsResult.data ?? []).some(transaction => transaction.transaction_type === 'welcome_bonus'),
       latestDeposit: deposits[0] ?? null,
       deposits,
@@ -213,9 +216,6 @@ export async function POST(request: Request) {
     const amountCents = Math.round(amountUsd * 100);
     if (!Number.isFinite(amountUsd) || amountCents < requiredMinimumUsd * 100 || Math.abs(amountUsd * 100 - amountCents) > 0.000001) {
       return Response.json({ error: `The minimum deposit is $${requiredMinimumUsd.toFixed(2)} USD.` }, { status: 400 });
-    }
-    if (isWelcomeBonusDeposit && amountCents < 1000) {
-      return Response.json({ error: 'The welcome bonus requires a deposit of at least $10.00 USD.' }, { status: 400 });
     }
 
     const phoneNumber = parsePhoneNumberFromString(body.msisdn, 'KE');

@@ -30,7 +30,7 @@ Without the Supabase URL and anon key, the site's account forms still open but s
 
 Apply every SQL migration in `supabase/migrations/` in filename order before enabling wallet payments, including `202610260002_megapay_wallet_default.sql`. New deposits use MegaPay STK; historical deposits retain their saved provider for verification. Never expose payment credentials to browser code or commit production credentials.
 
-The wallet is a separate app-owned USD ledger and does not fund or read a Deriv account. Deposits require at least the configured user minimum (at least $5.00) and use the fixed rate of $1 = KES 131.21; the STK amount is rounded up to whole KES. The one-time $20 welcome bonus requires a first qualifying deposit of at least $10.00. Funds are credited only after checking the MegaPay transaction-status endpoint. Configure `MEGAPAY_API_KEY` and `MEGAPAY_EMAIL` as server-only Vercel Production variables.
+The wallet is a separate app-owned USD ledger and does not fund or read a Deriv account. Deposits require at least the configured user minimum (at least $5.00) and use the fixed rate of $1 = KES 131.21; the STK amount is rounded up to whole KES. Funds are credited only after checking the MegaPay transaction-status endpoint. Configure `MEGAPAY_API_KEY` and `MEGAPAY_EMAIL` as server-only Vercel Production variables.
 
 The supplied MegaPay API documentation supports STK deposits and transaction-status checks. It does not document a B2C withdrawal endpoint, so withdrawals continue through admin approval and manual M-Pesa payout until MegaPay provides a supported disbursement API.
 
@@ -38,7 +38,7 @@ The supplied MegaPay API documentation supports STK deposits and transaction-sta
 
 Apply every SQL migration in `supabase/migrations/` in filename order. Admins are managed in `public.site_admins`; no user or email is hardcoded in migrations. To grant one existing Supabase user access, resolve their email from `auth.users` using their UUID in a one-time SQL statement. This does not create an account or set a password; manage credentials in Supabase Auth.
 
-Users can request an M-Pesa withdrawal of at least $20.00 from Real Wallet. Admins can raise the minimum withdrawal separately for each user in Funds Management. The amount is reserved immediately; an admin approves or rejects it. After manually sending the M-Pesa payout, the admin records its reference to mark the request paid. Real Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
+Users can request an M-Pesa withdrawal from Real Wallet after cumulative Real Wallet trade stakes meet or exceed their completed deposit total plus welcome bonuses. Demo trades and withdrawals do not count toward this volume. Requests below the requirement are automatically rejected with the traded and required amounts shown to the user; no funds are deducted. Eligible requests remain pending and reserve the amount until an admin approves or rejects them. After manually sending the M-Pesa payout, the admin records its reference to mark the request paid. Apply `202610290002_withdrawal_trade_volume_requirement.sql` after the preceding wallet migrations. Real Wallet funds remain separate from the demo trading balance; demo trades are not real Deriv trades.
 
 ## Deploy to Vercel
 

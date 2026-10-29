@@ -34,10 +34,11 @@ type PaymentMethod = 'bank-agent' | 'crypto' | 'mpesa';
 type DepositStatus = 'initiating' | 'pending' | 'completed' | 'failed' | 'expired' | 'review';
 type WithdrawalConfirmation = {
   withdrawalId: string;
-  status: 'processing' | 'pending' | 'paid' | 'failed';
+  status: 'processing' | 'pending' | 'paid' | 'rejected' | 'failed';
   amountUsd: number;
   fullName: string;
   msisdn: string;
+  rejectionReason?: string | null;
 };
 
 interface WalletDeposit {
@@ -99,7 +100,6 @@ export default function WalletPage() {
   const [withdrawalAmount, setWithdrawalAmount] = useState('');
   const [balanceUsd, setBalanceUsd] = useState<number | null>(null);
   const [minimumDepositUsd, setMinimumDepositUsd] = useState(5);
-  const [minimumWithdrawalUsd, setMinimumWithdrawalUsd] = useState(20);
   const [welcomeBonusClaimed, setWelcomeBonusClaimed] = useState(false);
   const [isWelcomeBonusDeposit, setIsWelcomeBonusDeposit] = useState(false);
   const [welcomeBonusAwarded, setWelcomeBonusAwarded] = useState(false);
@@ -120,9 +120,6 @@ export default function WalletPage() {
   const isValidAmount = Number.isFinite(amountNumber) && amountNumber >= minimumDepositUsd && Math.abs(amountCents - Math.round(amountCents)) < 0.000001;
   const isValidPhone = isValidKenyanMobile(msisdn);
   const withdrawalAmountNumber = Number(withdrawalAmount);
-  const isValidWithdrawalAmount = Number.isFinite(withdrawalAmountNumber)
-    && withdrawalAmountNumber >= minimumWithdrawalUsd
-    && Math.abs(withdrawalAmountNumber * 100 - Math.round(withdrawalAmountNumber * 100)) < 0.000001;
   const expectedWithdrawalKes = Number.isFinite(withdrawalAmountNumber) && withdrawalAmountNumber > 0
     ? withdrawalAmountNumber * WITHDRAWAL_USD_TO_KES
     : null;
@@ -147,7 +144,6 @@ export default function WalletPage() {
         setBalanceUsd(Number(data.balanceUsd ?? 0));
         const savedMinimum = Number(data.minimumDepositUsd ?? 5);
         setMinimumDepositUsd(savedMinimum);
-        setMinimumWithdrawalUsd(Math.max(Number(data.minimumWithdrawalUsd ?? 20), 20));
         setWelcomeBonusClaimed(Boolean(data.welcomeBonusClaimed));
         setAmountUsd(current => Number(current) < savedMinimum ? savedMinimum.toFixed(2) : current);
         const recentDeposits = Array.isArray(data.deposits)
@@ -182,7 +178,7 @@ export default function WalletPage() {
     handledWelcomeBonus.current = true;
     auth.switchAccount('app-wallet');
     setIsWelcomeBonusDeposit(true);
-    setAmountUsd(current => Math.max(Number(current), minimumDepositUsd, 10).toFixed(2));
+    setAmountUsd(current => Math.max(Number(current), minimumDepositUsd, 5).toFixed(2));
     setAction('deposit');
   }, [auth.authState, auth.switchAccount, minimumDepositUsd]);
 
@@ -288,23 +284,25 @@ export default function WalletPage() {
       }
       setBalanceUsd(Number(data.balanceUsd));
       void auth.refresh().catch(() => {});
+      const wasRejected = data.status === 'rejected';
       const withdrawalActivity: WalletActivity = {
         id: String(data.withdrawalId),
         account: 'app_wallet',
-        description: 'M-Pesa withdrawal',
-        transaction_type: 'withdrawal',
-        amount: -Number(withdrawalAmount),
+        description: wasRejected ? 'Rejected withdrawal request' : 'M-Pesa withdrawal',
+        transaction_type: wasRejected ? 'withdrawal_reversed' : 'withdrawal',
+        amount: wasRejected ? 0 : -Number(withdrawalAmount),
         created_at: new Date().toISOString(),
-        status: 'pending',
+        status: wasRejected ? 'rejected' : 'pending',
       };
       setTransactions(current => [withdrawalActivity, ...current]);
       setAction(null);
       setWithdrawalConfirmation({
         withdrawalId: String(data.withdrawalId),
-        status: 'processing',
+        status: wasRejected ? 'rejected' : 'processing',
         amountUsd: Number(withdrawalAmount),
         fullName: submittedFullName,
         msisdn: withdrawalMsisdn,
+        rejectionReason: typeof data.rejectionReason === 'string' ? data.rejectionReason : null,
       });
       setWithdrawalAmount('');
     } catch (error) {
@@ -334,7 +332,11 @@ export default function WalletPage() {
           : item));
         void auth.refresh().catch(() => {});
       } else if (data.status === 'rejected') {
-        setWithdrawalConfirmation(current => current ? { ...current, status: 'failed' } : current);
+        setWithdrawalConfirmation(current => current ? {
+          ...current,
+          status: data.payoutStatus === 'failed' ? 'failed' : 'rejected',
+          rejectionReason: typeof data.rejectionReason === 'string' ? data.rejectionReason : null,
+        } : current);
         setTransactions(current => current.map(item => item.id === withdrawalConfirmation.withdrawalId
           ? { ...item, status: 'rejected', transaction_type: 'withdrawal_reversed', amount: Math.abs(Number(item.amount)) }
           : item));
@@ -565,11 +567,19 @@ export default function WalletPage() {
                 <h2 className="mt-4 text-2xl font-semibold">Withdrawal sent</h2>
                 <p className="mt-2 text-base text-muted-foreground">Daraja confirmed the M-Pesa payout.</p>
               </>
+            ) : withdrawalConfirmation.status === 'rejected' ? (
+              <>
+                <X className="mx-auto h-16 w-16 text-destructive" aria-hidden="true" />
+                <h2 className="mt-4 text-2xl font-semibold">Withdrawal rejected</h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {withdrawalConfirmation.rejectionReason || 'This request was rejected. Check your wallet history for details or contact support.'}
+                </p>
+              </>
             ) : withdrawalConfirmation.status === 'failed' ? (
               <>
                 <X className="mx-auto h-16 w-16 text-destructive" aria-hidden="true" />
                 <h2 className="mt-4 text-2xl font-semibold">Withdrawal failed</h2>
-                <p className="mt-2 text-base text-muted-foreground">Daraja failed the payout. The reserved balance has been returned to your wallet.</p>
+                <p className="mt-2 text-base text-muted-foreground">The M-Pesa payout failed. The reserved balance has been returned to your wallet.</p>
               </>
             ) : (
               <>
@@ -754,7 +764,7 @@ export default function WalletPage() {
                       <input
                         id="withdrawal-amount"
                         type="number"
-                        min={minimumWithdrawalUsd.toFixed(2)}
+                        min="0.01"
                         step="0.01"
                         inputMode="decimal"
                         required
@@ -762,7 +772,6 @@ export default function WalletPage() {
                         onChange={event => setWithdrawalAmount(event.target.value)}
                         className="h-11 w-full border border-input bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
-                      <p className="mt-2 text-xs text-muted-foreground">Minimum withdrawal: {money.format(minimumWithdrawalUsd)}.</p>
                       {expectedWithdrawalKes !== null && (
                         <p className="mt-2 text-sm font-medium text-foreground" aria-live="polite">
                           Expected KES: {kesMoney.format(expectedWithdrawalKes)}
@@ -785,7 +794,7 @@ export default function WalletPage() {
                     </div>
                     <button
                       type="submit"
-                      disabled={isSubmittingWithdrawal || !isValidWithdrawalAmount || auth.authState !== 'authenticated'}
+                      disabled={isSubmittingWithdrawal || auth.authState !== 'authenticated'}
                       className="flex h-11 w-full items-center justify-center gap-2 bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:min-w-52"
                     >
                       {isSubmittingWithdrawal && <LoaderCircle className="h-4 w-4 animate-spin" />}
